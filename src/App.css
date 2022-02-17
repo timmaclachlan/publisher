@@ -1,38 +1,141 @@
-.App {
-  text-align: center;
+* {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+    width: 90%;
+    margin: 2em auto;
+    font: 1em/1.3 Arial, Helvetica, sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+header {
+    background-color: purple;
+    padding: 30px;
+    text-align: center;
+    font-size: 2em;
+    color: white;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+nav {
+    -webkit-flex: 0.5;
+    -ms-flex: 0.5;
+    flex: 0.5;
+    background: white;
+    padding: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+nav ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+nav ul li {
+    padding: 5px;
+    color: purple;
+    font-weight: bold;
+}
+
+nav ul li {
+    padding: 5px;
+    color: purple;
+    font-weight: bold;
+}
+
+nav ul li.active {
+    text-decoration: underline;
+}
+
+nav ul li:hover {
+    color: blue;
+}
+
+article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 0.25fr;
+    column-gap: 20px;
+}
+
+footer {
+    background-color: purple;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+.listing-image {
+    padding: 10px;
+    width: 100%;
+}
+.listing-image img {
+    border-radius: 5%;
+    border: solid darkorchid 2px;
+
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(3px 5px 4px black);
+}
+
+.listing-info-header {
+    display: flex;
+}
+
+.listing-info-header-top {
+    color: purple;
+    font-size: 1em;
+    padding-top: 10px;
+}
+
+.listing-info-header-price {
+    color: purple;
+    font-size: 2em;
+    padding-bottom: 10px;
+}
+
+.listing-info-address {
+    padding-top: 10px;
+    font-size: 0.75rem;
+    color: darkslategray;
+}
+
+.listing-info-features {
+    background-color: white;
+    font-size: 0.75em;
+    padding-top: 0.5em;
+}
+
+.listing-info-description {
+    padding-top: 10px;
+    font-size: 1rem;
+    color: darkslategray;
+    font-weight: bold;
+    grid-column: 1 / span 2;
+}
+
+.listing-info-status {
+    padding-top: 1em;
+    font-size: 1em;
+    color: purple;
+    padding-left: 1em;
+}
+
+.listing-info-status input.status {
+    height: 1.5em;
+    width: 1.5em;
+    background-color: darkorchid;
+}
+
+.listing-info-status label {
+    position: relative;
+    top: -5px;
+    left: 5px;
+}
+
+@media screen and (min-width: 40em) {
+    section {
+        display: grid;
+        grid-template-columns: 0.2fr 1fr;
+    }
 }
