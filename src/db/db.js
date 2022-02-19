@@ -1,21 +1,25 @@
-import { v4 as uuid4 } from 'uuid';
 
-const idOne = uuid4();
-const idTwo = uuid4();
-const idThree = uuid4();
 
-let authors = {
-  [idOne]: {
+export const authors = [
+  {
     id: 1,
     name: 'Enid Blyton',
-    address: '1 Test Street, Test Town'
+    address: '1 Test Street, Test Town',
+    active: true
   },
-  [idTwo]: {
+  {
     id: 2,
     name: 'Edgar Poe',
-    address: '2 Test Street, Test Town'
+    address: '2 Test Street, Test Town',
+    active: true
+  },
+  {
+    id: 3,
+    name: 'William Shakespeare',
+    address: '3 Test Street, Test Town',
+    active: false
   }
-}
+]
 
 export const books = [
   {

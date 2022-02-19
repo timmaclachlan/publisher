@@ -1,7 +1,7 @@
 import React from "react";
 import { AgGridReact } from 'ag-grid-react';
 
-import { books } from '../db/db.js';
+import { getBooks } from "../api/books.js";
 
 const Books = () => {
 
@@ -19,7 +19,7 @@ const columnDefs = [
                 style={{ height: 400, width: 600 }}
             >
                 <AgGridReact
-                    rowData={books}
+                    rowData={getBooks()}
                     columnDefs={columnDefs}
                 ></AgGridReact>
             </div>

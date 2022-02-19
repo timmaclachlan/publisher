@@ -1,5 +1,4 @@
-// synchronous
-const getAuthors = () => Object.values(authors);
+import { authors } from '../db/db.js';
 
-// asynchronous
-const getAuthorsAsync = () => Promise.resolve(getAuthors());
+// synchronous
+export const getAuthors = () => Object.values(authors);
