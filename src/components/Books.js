@@ -1,12 +1,21 @@
 import React from "react";
 import { AgGridReact } from 'ag-grid-react';
+import { Link } from "react-router-dom";
 
 import { getBooks } from "../api/books.js";
+
+const LinkComponent = ({ data }) => {
+    return <Link to={"/books/" + data.id}>{data.title}</Link>
+}
+
 
 const Books = () => {
 
 const columnDefs = [
-    { field: "title" },
+    {
+        field: "title",
+        cellRenderer: "LinkComponent"
+    },
     { field: "format" },
     { field: "price" },
 ];
@@ -21,6 +30,9 @@ const columnDefs = [
                 <AgGridReact
                     rowData={getBooks()}
                     columnDefs={columnDefs}
+                    frameworkComponents={{
+                        LinkComponent
+                    }}
                 ></AgGridReact>
             </div>
         </>

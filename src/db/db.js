@@ -37,7 +37,7 @@ export const books = [
     price: 5
   },
   {
-    id: 2,
+    id: 3,
     title: 'Folk of Faraway Tree',
     categoryId: 1,
     format: 1,

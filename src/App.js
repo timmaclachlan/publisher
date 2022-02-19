@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 
 import "./App.css";
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -7,6 +7,8 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import Dashboard from "./components/Dashboard";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
+import BookDetail from "./components/BookDetail";
+import AuthorDetail from "./components/AuthorDetail";
 
 function App() {
     return (
@@ -36,7 +38,9 @@ function App() {
                     <Routes>
                         <Route index element={<Dashboard />} />
                         <Route path="authors" element={<Authors />} />
+                        <Route path="authors/:id" element={<AuthorDetail />} />
                         <Route path="books" element={<Books />} />
+                        <Route path="books/:id" element={<BookDetail />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>
