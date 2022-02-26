@@ -14,8 +14,13 @@ const Authors = () => {
 
     useEffect(() => {
         const retrieveAuthors = async () => {
-            const result = await getAuthors();
-            setAuthors(result);
+            try {
+                const result = await getAuthors();
+                setAuthors(result);
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
         retrieveAuthors();
     }, []);

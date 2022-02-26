@@ -14,8 +14,13 @@ const Books = () => {
 
     useEffect(() => {
         const retrieveBooks = async () => {
-            const result = await getBooks();
-            setBooks(result);
+            try {
+                const result = await getBooks();
+                setBooks(result);
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
         retrieveBooks();
     }, []);
