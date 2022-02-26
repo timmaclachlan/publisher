@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react';
 import { Link } from "react-router-dom";
 
@@ -10,6 +10,16 @@ const LinkComponent = ({ data }) => {
 
 
 const Authors = () => {
+    const [authors, setAuthors] = useState([]);
+
+    useEffect(() => {
+        const retrieveAuthors = async () => {
+            const result = await getAuthors();
+            setAuthors(result);
+        }
+        retrieveAuthors();
+    }, []);
+
   const columnDefs = [
       {
           field: "name",
@@ -27,7 +37,7 @@ const Authors = () => {
                 style={{ height: 400, width: 600 }}
             >
                 <AgGridReact
-                    rowData={getAuthors()}
+                    rowData={authors}
                     columnDefs={columnDefs}
                     frameworkComponents={{
                         LinkComponent

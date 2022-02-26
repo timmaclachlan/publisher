@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AgGridReact } from 'ag-grid-react';
 import { Link } from "react-router-dom";
 
@@ -10,6 +10,15 @@ const LinkComponent = ({ data }) => {
 
 
 const Books = () => {
+    const [books, setBooks] = useState([]);
+
+    useEffect(() => {
+        const retrieveBooks = async () => {
+            const result = await getBooks();
+            setBooks(result);
+        }
+        retrieveBooks();
+    }, []);
 
 const columnDefs = [
     {
@@ -28,7 +37,7 @@ const columnDefs = [
                 style={{ height: 400, width: 600 }}
             >
                 <AgGridReact
-                    rowData={getBooks()}
+                    rowData={books}
                     columnDefs={columnDefs}
                     frameworkComponents={{
                         LinkComponent
