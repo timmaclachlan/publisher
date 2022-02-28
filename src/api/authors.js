@@ -8,4 +8,12 @@ export const getAuthors = () => new Promise((resolve, reject) => {
   setTimeout(resolve(Object.values(authors)), 500);
 })
 
-export const getAuthorById = (id) => authors.find(x => x.id === parseInt(id));
+export const getAuthorById = (id) => new Promise((resolve, reject) => {
+  let author = authors.find(x => x.id === parseInt(id));
+  if (!author) {
+    reject(new Error('Author not found'));
+  }
+  setTimeout(() => resolve(author), 500);
+})
+  
+

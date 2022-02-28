@@ -9,9 +9,18 @@ const BookDetail = () => {
   const [book, setBook] = useState({});
   
   useEffect(() => {
-    const bookRecord = getBookById(id);
-
-    setBook(bookRecord);
+    const retrieveBook = async () => {
+      try {
+        const bookRecord = await getBookById(id);
+        console.log('bookrecord:' + bookRecord);
+        setBook(bookRecord);
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
+    retrieveBook();
+    
   }, [id])
 
   return (
