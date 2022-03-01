@@ -37,3 +37,13 @@ export const createAuthor = (data) => new Promise((resolve, reject) => {
   setTimeout(() => resolve(maxId + 1), 500);
 })
 
+
+export const deleteAuthor = (id) => new Promise((resolve, reject) => {
+  let index = authors.findIndex(x => x.id === parseInt(id));
+  if (index === -1) {
+    reject(new Error('Author not found'));
+  }
+  authors.splice(index, 1);
+
+  setTimeout(() => resolve(true), 500);
+})

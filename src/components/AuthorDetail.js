@@ -2,7 +2,7 @@ import React, { useEffect, useState} from 'react'
 
 import { useParams } from 'react-router-dom'
 
-import { getAuthorById, updateAuthor, createAuthor } from '../api/authors';
+import { getAuthorById, updateAuthor, createAuthor, deleteAuthor } from '../api/authors';
 
 const AuthorDetail = () => {
   const { id } = useParams();
@@ -50,6 +50,15 @@ const AuthorDetail = () => {
     saveAuthor();
   }
 
+  const deleteClick = (event) => {
+    event.preventDefault();
+
+    const removeAuthor = async () => {
+      const result = await deleteAuthor(id);
+    }
+    removeAuthor();
+  }
+
   return (
     <form>
       <label htmlFor="name">Name</label>
@@ -59,6 +68,7 @@ const AuthorDetail = () => {
 
       <button onClick={updateClick}>Update</button>
       <button onClick={createClick}>Create</button>
+      <button onClick={deleteClick}>Delete</button>
     </form>
   )
 }
