@@ -7,7 +7,7 @@ import { getAuthorById, updateAuthor, createAuthor, deleteAuthor } from '../api/
 const AuthorDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [author, setAuthor] = useState({name: '', address: ''});
+  const [author, setAuthor] = useState({id: 0, name: '', address: ''});
 
   useEffect(() => {
     const retrieveAuthor = async () => {
@@ -43,13 +43,20 @@ const AuthorDetail = () => {
   const updateClick = (event) => {
     event.preventDefault();
 
-     const saveAuthor = async () => {
+    const saveAuthor = async () => {    
        const result = await updateAuthor(author);
      }
     saveAuthor();
   }
 
+  const createClick = (event) => {
+    event.preventDefault();
 
+    const saveAuthor = async () => {    
+       const result = await createAuthor(author);
+     }
+    saveAuthor();
+  }
 
   const deleteClick = (event) => {
     event.preventDefault();
@@ -67,7 +74,12 @@ const AuthorDetail = () => {
       <label htmlFor="address">Address</label>
       <input type="text" name="address" value={author.address} onChange={handleChange} />
 
-      <button onClick={updateClick}>Update</button>
+      {author.id === 0 &&
+        <button onClick={createClick}>Create</button>
+      }
+      {author.id > 0 &&
+        <button onClick={updateClick}>Update</button>
+      }
 
       <button onClick={deleteClick}>Delete</button>
     </form>

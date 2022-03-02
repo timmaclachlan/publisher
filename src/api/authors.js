@@ -30,7 +30,6 @@ export const createAuthor = (data) => new Promise((resolve, reject) => {
   if (!data.name) {
     reject(new Error('Name should be provided'));
   }
-  debugger;
   const maxId = Math.max.apply(Math, authors.map(x => x.id));
   authors.push({ ...data, id: maxId + 1 });
 
