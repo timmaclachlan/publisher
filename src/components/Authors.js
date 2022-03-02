@@ -1,42 +1,46 @@
-import React, { useState, useEffect } from 'react'
-import { AgGridReact } from 'ag-grid-react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { AgGridReact } from "ag-grid-react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { getAuthors } from "../api/authors";
 
 const LinkComponent = ({ data }) => {
-    return <Link to={"/authors/" + data.id}>{data.name}</Link>
-}
-
+    return <Link to={"/authors/" + data.id}>{data.name}</Link>;
+};
 
 const Authors = () => {
     const [authors, setAuthors] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const retrieveAuthors = async () => {
             try {
                 const result = await getAuthors();
                 setAuthors(result);
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error);
             }
-        }
+        };
         retrieveAuthors();
     }, []);
 
-  const columnDefs = [
-      {
-          field: "name",
-          cellRenderer: "LinkComponent"
-      },
-    { field: "address" },
-    { field: "active" },
-];
-  
+    const createClick = (event) => {
+        navigate("/authors/new");
+    };
+
+    const columnDefs = [
+        {
+            field: "name",
+            cellRenderer: "LinkComponent",
+        },
+        { field: "address" },
+        { field: "active" },
+    ];
+
     return (
         <>
             <div>Authors</div>
+            <button onClick={createClick}>Create</button>
             <div
                 className="ag-theme-alpine"
                 style={{ height: 400, width: 600 }}
@@ -45,12 +49,12 @@ const Authors = () => {
                     rowData={authors}
                     columnDefs={columnDefs}
                     frameworkComponents={{
-                        LinkComponent
+                        LinkComponent,
                     }}
                 ></AgGridReact>
             </div>
         </>
     );
-}
+};
 
-export default Authors
+export default Authors;

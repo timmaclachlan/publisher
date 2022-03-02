@@ -1,10 +1,11 @@
 import React, { useEffect, useState} from 'react'
 
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import { getAuthorById, updateAuthor, createAuthor, deleteAuthor } from '../api/authors';
 
 const AuthorDetail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [author, setAuthor] = useState({name: '', address: ''});
 
@@ -16,10 +17,17 @@ const AuthorDetail = () => {
       }
       catch (error) {
         console.log(error);
+        navigate('/notfound');
       }
     }
-    retrieveAuthor();
-  }, [id]);
+    if (id > 0) {
+      retrieveAuthor();
+    }
+    else if (id !== undefined) {
+      navigate('/notfound');
+    }
+
+  }, [id, navigate]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -41,14 +49,7 @@ const AuthorDetail = () => {
     saveAuthor();
   }
 
-  const createClick = (event) => {
-    event.preventDefault();
 
-    const saveAuthor = async () => {
-      const result = await createAuthor(author);      
-    }
-    saveAuthor();
-  }
 
   const deleteClick = (event) => {
     event.preventDefault();
@@ -67,7 +68,7 @@ const AuthorDetail = () => {
       <input type="text" name="address" value={author.address} onChange={handleChange} />
 
       <button onClick={updateClick}>Update</button>
-      <button onClick={createClick}>Create</button>
+
       <button onClick={deleteClick}>Delete</button>
     </form>
   )

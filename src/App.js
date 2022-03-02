@@ -1,8 +1,8 @@
 import { Routes, Route, Link } from "react-router-dom";
 
 import "./App.css";
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import Dashboard from "./components/Dashboard";
 import Authors from "./components/Authors";
@@ -39,6 +39,7 @@ function App() {
                         <Route index element={<Dashboard />} />
                         <Route path="authors" element={<Authors />} />
                         <Route path="authors/:id" element={<AuthorDetail />} />
+                        <Route path="authors/new" element={<AuthorDetail />} />
                         <Route path="books" element={<Books />} />
                         <Route path="books/:id" element={<BookDetail />} />
                         <Route path="*" element={<NotFound />} />
