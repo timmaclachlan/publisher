@@ -53,7 +53,7 @@ const AuthorDetail = () => {
     event.preventDefault();
 
     const saveAuthor = async () => {    
-       const result = await createAuthor(author);
+      const result = await createAuthor(author);
      }
     saveAuthor();
   }
@@ -68,6 +68,7 @@ const AuthorDetail = () => {
   }
 
   return (
+    <div>
     <form>
       <label htmlFor="name">Name</label>
       <input type="text" name="name" value={author.name} onChange={handleChange} />
@@ -82,7 +83,11 @@ const AuthorDetail = () => {
       }
 
       <button onClick={deleteClick}>Delete</button>
-    </form>
+      </form>    
+      <div><button onClick={() => navigate('/authors')}>
+        Authors
+      </button></div>
+    </div>      
   )
 }
 
