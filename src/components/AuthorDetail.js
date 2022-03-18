@@ -2,8 +2,8 @@ import React, { useEffect, useState} from 'react'
 
 import { useParams, useNavigate } from 'react-router-dom'
 
-import { createAuthor, updateAuthor, deleteAuthor } from '../api/authors';
-import { getAuthorById} from "../fetcher";
+import { deleteAuthor } from '../api/authors';
+import { getAuthorById, createAuthor, updateAuthor } from "../fetcher";
 
 const AuthorDetail = () => {
   const navigate = useNavigate();
