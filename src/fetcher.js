@@ -21,7 +21,11 @@ export const fetcher = async (url) => {
 }
 
 
+
 export const getAuthors = () => {
   return fetcher('/api/authors');
 }
 
+export const getAuthorById = id => {
+  return fetcher('/api/authors/' + id);
+}

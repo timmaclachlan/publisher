@@ -22,7 +22,22 @@ export function makeServer() {
                 return result;
             });
 
-        
+            this.get("/authors/:id", (schema, request) => {
+                let result = {};
+
+                const retrieveAuthor = async () => {
+                    try {
+                        const data = await getAuthorById(request.params.id);
+                        return data;
+                    } catch (error) {
+                        console.log(error);
+                    }
+                };
+                result = retrieveAuthor();
+                return result;
+            });
+
+          
         },
     });
 }

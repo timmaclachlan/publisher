@@ -2,7 +2,8 @@ import React, { useEffect, useState} from 'react'
 
 import { useParams, useNavigate } from 'react-router-dom'
 
-import { getAuthorById, updateAuthor, createAuthor, deleteAuthor } from '../api/authors';
+import { createAuthor, updateAuthor, deleteAuthor } from '../api/authors';
+import { getAuthorById} from "../fetcher";
 
 const AuthorDetail = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const AuthorDetail = () => {
     const retrieveAuthor = async () => {
       try {
         const authorRecord = await getAuthorById(id);
-        setAuthor(authorRecord);
+        setAuthor(authorRecord.data);
       }
       catch (error) {
         console.log(error);
