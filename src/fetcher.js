@@ -79,3 +79,11 @@ export const getAuthors = () => {
 export const getAuthorById = id => {
   return fetcher('/api/authors/' + id);
 }
+
+export const createAuthor = (author) => {
+  return poster('/api/authors', author);
+}
+
+export const updateAuthor = (author) => {
+  return patcher('/api/authors/' + author.id, author);
+}
