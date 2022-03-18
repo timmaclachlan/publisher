@@ -1,6 +1,6 @@
 import { createServer, Response } from "miragejs";
 
-import { getAuthorById, getAuthors, createAuthor, updateAuthor } from "./authors.js";
+import { getAuthorById, getAuthors, createAuthor, updateAuthor, deleteAuthor } from "./authors.js";
 
 export function makeServer() {
     return createServer({
@@ -58,6 +58,21 @@ export function makeServer() {
                 const saveAuthor = async () => {
                     try {
                         const result = await updateAuthor(attrs);
+                        return result;
+                    } catch (error) {
+                        console.log(error);
+                    }
+                };
+                result = saveAuthor();
+                return result;
+            });
+
+            this.delete("/authors/:id", (schema, request) => {
+                const attrs = JSON.parse(request.requestBody);
+                let result = false;
+                const saveAuthor = async () => {
+                    try {
+                        const result = await deleteAuthor(attrs);
                         return result;
                     } catch (error) {
                         console.log(error);

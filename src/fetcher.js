@@ -72,6 +72,26 @@ export const patcher = async (url, body) => {
   }
 }
 
+export const deleter = async (url) => {
+  let responseObject = { errorMessage: '', data: [] };
+
+    try {
+    const response = await fetch(url, { method: 'DELETE'});
+    if (!response.ok) {
+      throw new Error(`HTTP Error ${response.status}`);
+    }
+    const responseData = await response.json();
+    responseObject.errorMessage = '';
+    responseObject.data = responseData;
+
+    return responseObject;
+  }
+  catch (err) {
+    responseObject.errorMessage = err.message;
+    return responseObject;
+  }
+}
+
 export const getAuthors = () => {
   return fetcher('/api/authors');
 }
@@ -86,4 +106,8 @@ export const createAuthor = (author) => {
 
 export const updateAuthor = (author) => {
   return patcher('/api/authors/' + author.id, author);
+}
+
+export const deleteAuthor = id => {
+  return deleter('/api/authors/' + id);
 }
