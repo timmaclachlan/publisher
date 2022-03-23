@@ -2,7 +2,7 @@ import React, { useEffect, useState} from 'react'
 
 import { useParams, useNavigate } from 'react-router-dom'
 
-import { getAuthorById, createAuthor, updateAuthor, deleteAuthor } from "../fetcher";
+import { readById, updateById, deleteById, create } from "../fetcher";
 
 const AuthorDetail = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const AuthorDetail = () => {
   useEffect(() => {
     const retrieveAuthor = async () => {
       try {
-        const authorRecord = await getAuthorById(id);
+        const authorRecord = await readById('author', id);
         setAuthor(authorRecord.data);
       }
       catch (error) {
@@ -40,32 +40,15 @@ const AuthorDetail = () => {
     });
   }
 
-  const updateClick = (event) => {
+  const callApi = (event, method) => {
     event.preventDefault();
-
-    const saveAuthor = async () => {    
-       const result = await updateAuthor(author);
+    debugger;
+    const callApi = async () => {    
+       await method('author');
      }
-    saveAuthor();
+    callApi();
   }
 
-  const createClick = (event) => {
-    event.preventDefault();
-
-    const saveAuthor = async () => {    
-      const result = await createAuthor(author);
-     }
-    saveAuthor();
-  }
-
-  const deleteClick = (event) => {
-    event.preventDefault();
-
-    const removeAuthor = async () => {
-      const result = await deleteAuthor(id);
-    }
-    removeAuthor();
-  }
 
   return (
     <div>
@@ -76,13 +59,13 @@ const AuthorDetail = () => {
       <input type="text" name="address" value={author.address} onChange={handleChange} />
 
       {author.id === 0 &&
-        <button onClick={createClick}>Create</button>
+        <button onClick={ev => callApi(ev, create.bind(null, author))}>Create</button>
       }
       {author.id > 0 &&
-        <button onClick={updateClick}>Update</button>
+        <button onClick={ev => callApi(ev, updateById.bind(null, author, id))}>Update</button>
       }
 
-      <button onClick={deleteClick}>Delete</button>
+      <button onClick={ev => callApi(ev, deleteById.bind(null, id))}>Delete</button>
       </form>    
       <div><button onClick={() => navigate('/authors')}>
         Authors

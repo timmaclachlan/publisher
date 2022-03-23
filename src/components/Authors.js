@@ -3,7 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import { Link, useNavigate } from "react-router-dom";
 
 //import { getAuthors } from "../api/authors";
-import { getAuthors } from "../fetcher";
+import { readAll, getAuthors } from "../fetcher";
 
 const LinkComponent = ({ data }) => {
     return <Link to={"/authors/" + data.id}>{data.name}</Link>;
@@ -16,7 +16,7 @@ const Authors = () => {
     useEffect(() => {
         const retrieveAuthors = async () => {
             try {
-                const result = await getAuthors();
+                const result = await readAll('author');
                 setAuthors(result.data);
             } catch (error) {
                 console.log(error);
