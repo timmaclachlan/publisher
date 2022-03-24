@@ -1,4 +1,4 @@
-import { books } from '../db/db.js';
+import { books } from './seed/db.js';
 
 export const getBooks = () => new Promise((resolve, reject) => {
   if (!books) {

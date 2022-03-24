@@ -13,7 +13,7 @@ const AuthorDetail = () => {
     const retrieveAuthor = async () => {
       try {
         const authorRecord = await readById('author', id);
-        setAuthor(authorRecord.data);
+        setAuthor(authorRecord.data.author);
       }
       catch (error) {
         console.log(error);

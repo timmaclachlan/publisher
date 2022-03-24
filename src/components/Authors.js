@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Link, useNavigate } from "react-router-dom";
 
-//import { getAuthors } from "../api/authors";
-import { readAll, getAuthors } from "../fetcher";
+import { readAll } from "../fetcher";
 
 const LinkComponent = ({ data }) => {
     return <Link to={"/authors/" + data.id}>{data.name}</Link>;

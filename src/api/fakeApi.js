@@ -1,53 +1,48 @@
-import { createServer, Response } from "miragejs";
+import { createServer, Model } from "miragejs";
 
-import {
-  getAuthorById,
-  getAuthors,
-  createAuthor,
-  updateAuthor,
-  deleteAuthor,
-} from "./authors.js";
+import { authors as authorsdb } from './seed/db.js';
+
 
 export function makeServer() {
-  const callApi = (apiMethod) => {
-    let result;
-
-    const callApi = async () => {
-      try {
-        const data = await apiMethod();
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    result = callApi();
-    return result;
-  };
 
   return createServer({
+    models: {
+      author: Model,
+    },
+    seeds(server) {
+      authorsdb.forEach((item) => {
+        server.create("author", item);
+      })
+    },
+
     routes() {
       this.namespace = "api";
 
       this.get("/authors", (schema, request) => {
-        return callApi(getAuthors);
+        let data = schema.authors.all();
+        return data.models;
       });
 
       this.get("/authors/:id", (schema, request) => {
-        return callApi(getAuthorById.bind(null, request.params.id));
+        return schema.authors.find(request.params.id);
       });
 
       this.post("/authors", (schema, request) => {
-        const attrs = JSON.parse(request.requestBody);
-        return callApi(createAuthor.bind(null, attrs));
+        const data = schema.authors.all();
+        const maxId = Math.max.apply(Math, data.models.map(x => x.id));
+        let attrs = JSON.parse(request.requestBody);
+        let result = schema.authors.create({ ...attrs, id: maxId + 1 });        
+        return result;
       });
 
       this.patch("/authors/:id", (schema, request) => {
-        const attrs = JSON.parse(request.requestBody);
-        return callApi(updateAuthor.bind(null, attrs));
+        let attrs = JSON.parse(request.requestBody);        
+        let data = schema.authors.find(request.params.id);
+        return data.update(attrs);
       });
 
       this.delete("/authors/:id", (schema, request) => {
-        return callApi(deleteAuthor.bind(null, request.params.id));
+        return schema.authors.find(request.params.id).destroy();
       });
     },
   });
