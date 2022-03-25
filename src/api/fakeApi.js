@@ -1,6 +1,6 @@
 import { createServer, Model } from "miragejs";
 
-import { authors as authorsdb } from './seed/db.js';
+import { authors as authorsdb, books as booksdb } from './seed/db.js';
 
 
 export function makeServer() {
@@ -8,10 +8,14 @@ export function makeServer() {
   return createServer({
     models: {
       author: Model,
+      book: Model
     },
     seeds(server) {
       authorsdb.forEach((item) => {
         server.create("author", item);
+      });
+      booksdb.forEach((item) => {
+        server.create("book", item);
       })
     },
 
@@ -43,6 +47,15 @@ export function makeServer() {
 
       this.delete("/authors/:id", (schema, request) => {
         return schema.authors.find(request.params.id).destroy();
+      });
+
+      this.get("/books", (schema, request) => {
+        let data = schema.books.all();
+        return data.models;
+      });
+
+      this.get("/books/:id", (schema, request) => {
+        return schema.books.find(request.params.id);
       });
     },
   });

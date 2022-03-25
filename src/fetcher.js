@@ -37,7 +37,6 @@ export const readById = (schema, id) => {
 }
 
 export const updateById = (model, id, schema) => {
-  debugger;
   return makeRequest(schema, id, 'PATCH', model);
 }
 

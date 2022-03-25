@@ -42,7 +42,6 @@ const AuthorDetail = () => {
 
   const callApi = (event, method) => {
     event.preventDefault();
-    debugger;
     const callApi = async () => {    
        await method('author');
      }

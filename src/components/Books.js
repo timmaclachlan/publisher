@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AgGridReact } from 'ag-grid-react';
 import { Link } from "react-router-dom";
 
-import { getBooks } from "../api/books.js";
+import { readAll } from "../fetcher";
 
 const LinkComponent = ({ data }) => {
     return <Link to={"/books/" + data.id}>{data.title}</Link>
@@ -15,8 +15,8 @@ const Books = () => {
     useEffect(() => {
         const retrieveBooks = async () => {
             try {
-                const result = await getBooks();
-                setBooks(result);
+                const result = await readAll('book');
+                setBooks(result.data);
             }
             catch (error) {
                 console.log(error);
