@@ -1,4 +1,4 @@
-import { createServer, Model, belongsTo, hasMany } from "miragejs";
+import { createServer, Model, belongsTo, hasMany, Response } from "miragejs";
 
 import { authors as authorsdb, books as booksdb } from './seed/db.js';
 
@@ -8,7 +8,7 @@ export function makeServer() {
   return createServer({
     models: {
       author: Model.extend({
-        book: hasMany()
+        books: hasMany()
       }),
       book: Model.extend({
         author: belongsTo()
@@ -33,9 +33,9 @@ export function makeServer() {
 
       this.get("/authors/:id", (schema, request) => {
         let author = schema.authors.find(request.params.id);
-        let books = author.books;
-        debugger;
-        return author;
+
+        let newAuthor = {...author.attrs, books: [...author.books.models]}
+        return newAuthor;
       });
 
       this.post("/authors", (schema, request) => {
