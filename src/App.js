@@ -5,10 +5,10 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import Dashboard from "./components/Dashboard";
-import Authors from "./components/Authors";
-import Books from "./components/Books";
-import BookDetail from "./components/BookDetail";
-import AuthorDetail from "./components/AuthorDetail";
+import AuthorsPage from "./components/AuthorsPage";
+import BooksPage from "./components/BooksPage";
+import BookDetailPage from "./components/BookDetailPage";
+import AuthorDetailPage from "./components/AuthorDetailPage";
 
 function App() {
     return (
@@ -37,11 +37,11 @@ function App() {
                 <main>
                     <Routes>
                         <Route index element={<Dashboard />} />
-                        <Route path="authors" element={<Authors />} />
-                        <Route path="authors/:id" element={<AuthorDetail />} />
-                        <Route path="authors/new" element={<AuthorDetail />} />
-                        <Route path="books" element={<Books />} />
-                        <Route path="books/:id" element={<BookDetail />} />
+                        <Route path="authors" element={<AuthorsPage />} />
+                        <Route path="authors/:id" element={<AuthorDetailPage />} />
+                        <Route path="authors/new" element={<AuthorDetailPage />} />
+                        <Route path="books" element={<BooksPage />} />
+                        <Route path="books/:id" element={<BookDetailPage />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>

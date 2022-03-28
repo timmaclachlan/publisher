@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { AgGridReact } from 'ag-grid-react';
-
 import { useParams, useNavigate } from "react-router-dom";
 
-import { readById, updateById, deleteById, create } from "../fetcher";
+import Books from "./Books";
+
+import { readById, updateById, deleteById } from "../fetcher";
 
 const AuthorDetail = () => {
   const navigate = useNavigate();
@@ -51,13 +51,6 @@ const AuthorDetail = () => {
     callApi();
   };
 
-  const columnDefs = [
-    {
-        field: "title",
-    },
-    { field: "format" },
-    { field: "price" },
-];
 
   return (
     <div>
@@ -112,12 +105,7 @@ const AuthorDetail = () => {
         )}
 
         <section className="bookDetails">
-          <div className="ag-theme-alpine" style={{width: 620,height: 400}}>
-            <AgGridReact
-                columnDefs={columnDefs}
-            rowData={author.books}
-            ></AgGridReact>
-            </div>
+          <Books books={author.books} />
         </section>
       </section>
 
