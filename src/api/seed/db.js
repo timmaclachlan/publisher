@@ -24,13 +24,15 @@ export const authors = [
 export const books = [
   {
     id: 1,
+    authorId: 1,
     title: 'Magic Faraway Tree',
     categoryId: 1,
     format: 1,
-    price: 4
+    price: 4,
   },
   {
     id: 2,
+    authorId: 1,    
     title: 'Enchanted Wood',
     categoryId: 1,
     format: 1,
@@ -38,6 +40,7 @@ export const books = [
   },
   {
     id: 3,
+    authorId: 1,    
     title: 'Folk of Faraway Tree',
     categoryId: 1,
     format: 1,
