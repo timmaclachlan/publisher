@@ -58,12 +58,13 @@ export function makeServer() {
 
       this.get("/books", (schema, request) => {
         let data = schema.books.all();
-        debugger;
         return data.models;
       });
 
       this.get("/books/:id", (schema, request) => {
-        return schema.books.find(request.params.id);
+        let book = schema.books.find(request.params.id);
+        let newBook = { ...book.attrs, author: { ...book.author.attrs } }
+        return newBook;
       });
     },
   });

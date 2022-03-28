@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react'
 
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 import { readById } from "../fetcher";
 
@@ -13,7 +13,7 @@ const BookDetail = () => {
       try {
         const bookRecord = await readById('book', id);
         console.log('bookrecord:' + bookRecord);
-        setBook(bookRecord.data.book);
+        setBook(bookRecord.data);
       }
       catch (error) {
         console.log(error);
@@ -24,7 +24,12 @@ const BookDetail = () => {
   }, [id])
 
   return (
-    <div>BookDetail title: {book.title}</div>
+    <>
+      <div>BookDetail title: {book.title}</div>
+      {book.author &&
+        <div>Author: <Link to={"/authors/" + book.author.id}>{book.author.name}</Link></div>
+      }
+      </>
   )
 }
 

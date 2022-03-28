@@ -16,7 +16,6 @@ const AuthorDetail = () => {
     const retrieveAuthor = async () => {
       try {
         const authorRecord = await readById("author", id);
-        debugger;
         setAuthor(authorRecord.data);
       } catch (error) {
         console.log(error);
