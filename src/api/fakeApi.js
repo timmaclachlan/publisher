@@ -1,7 +1,8 @@
-import { createServer, Model, belongsTo, hasMany, Factory } from "miragejs";
-import faker from "@faker-js/faker";
+import { createServer, Model, belongsTo, hasMany } from "miragejs";
 
 import { authors as authorsdb, books as booksdb } from "./seed/db.js";
+import { AuthorFactory } from "./seed/AuthorFactory.js";
+import { BookFactory } from "./seed/BookFactory.js";
 
 const NOAUTHORS = 10;
 const NOBOOKS = 10;
@@ -17,44 +18,8 @@ export function makeServer() {
       }),
     },
     factories: {
-      author: Factory.extend({
-        name() {
-          return faker.name.findName();
-        },
-        address() {
-          return faker.address.streetAddress(true);
-        },
-        active() {
-          return faker.random.arrayElement([true, false]);
-        },
-      }),
-      book: Factory.extend({
-        price() {
-          return faker.finance.amount(3, 10);
-        },
-        title() {
-          const capitalize = (sentence) => {
-            const words = sentence.split(" ");
-            return words
-              .map((word) => {
-                return word[0].toUpperCase() + word.substring(1);
-              })
-              .join(" ");
-          };
-
-          return capitalize(
-            `${faker.word.adjective()} ${faker.word.adjective()} ${faker.word.noun()}`
-          );
-        },
-        authorId() {
-          function randomNum(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-          }
-
-          //https://www.w3schools.com/js/js_random.asp
-          return randomNum(3, NOAUTHORS);
-        },
-      }),
+      author: AuthorFactory,
+      book: BookFactory
     },
     seeds(server) {
       authorsdb.forEach((item) => {
