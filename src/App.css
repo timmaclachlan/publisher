@@ -58,14 +58,14 @@ article {
   column-gap: 20px;
 }
 
-section.authorDetailsContainer {
+section.detailsContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 20px;
   padding-top: 20px;
 }
 
-section.authorDetails {
+section.details {
   display: grid;
   grid-template-columns: 0.25fr 0.5fr 0.1fr 0.1fr;
   grid-template-rows: 1fr 1fr 1fr;
@@ -74,21 +74,21 @@ section.authorDetails {
   align-self: start;
 }
 
-input.authorDetails {
+input.details {
   grid-column: 2 / span 3;
 }
 
-label.authorDetails {
+label.details {
   grid-column: 2 / span 3;
 }
 
-button.authorDetailsDeleteButton,
-button.authorDetailsCancelButton {
+button.detailsDeleteButton,
+button.detailsCancelButton {
   grid-column: 3;
 }
 
-button.authorDetailsSaveButton,
-button.authorDetailsEditButton {
+button.detailsSaveButton,
+button.detailsEditButton {
   grid-column: 4;
 }
 

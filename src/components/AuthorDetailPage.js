@@ -53,30 +53,30 @@ const AuthorDetail = () => {
 
   return (
     <div>
-        <section className="authorDetailsContainer">
+        <section className="detailsContainer">
         {!editMode && (
-          <section className="authorDetails">
+          <section className="details">
             <button
-                className="authorDetailsDeleteButton"
+                className="detailsDeleteButton"
                 onClick={ev => makeChange(ev, deleteById.bind(null, id))}
               >Delete</button>
-            <button className="authorDetailsEditButton" onClick={() => setEditMode(true)}>
+            <button className="detailsEditButton" onClick={() => setEditMode(true)}>
               Edit
             </button>
             <label>Name</label>
-            <label className="authorDetails">{author.name}</label>
+            <label className="details">{author.name}</label>
             <label>Address</label>
-            <label className="authorDetails">{author.address}</label>
+            <label className="details">{author.address}</label>
           </section>
         )}
 
         {editMode && (
           <form>
-            <section className="authorDetails">
-              <button className="authorDetailsCancelButton" 
+            <section className="details">
+              <button className="detailsCancelButton" 
               onClick={() => setEditMode(false)}>Cancel</button>
               <button
-                className="authorDetailsSaveButton"
+                className="detailsSaveButton"
                 onClick={ev => makeChange(ev, updateById.bind(null, author, id))}
               >
                 Save
@@ -88,7 +88,7 @@ const AuthorDetail = () => {
                 name="name"
                 value={author.name}
                 onChange={handleChange}
-                className="authorDetails"
+                className="details"
               />
 
               <label htmlFor="address">Address</label>
@@ -97,7 +97,7 @@ const AuthorDetail = () => {
                 name="address"
                 value={author.address}
                 onChange={handleChange}
-                className="authorDetails"
+                className="details"
               />
             </section>
           </form>
