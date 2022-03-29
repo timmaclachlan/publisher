@@ -12,6 +12,7 @@ const Books = ({books}) => {
 const columnDefs = [
     {
         field: "title",
+        width: 350,
         cellRenderer: "LinkComponent"
     },
     { field: "format" },
@@ -22,7 +23,7 @@ const columnDefs = [
         <>
             <div
                 className="ag-theme-alpine"
-                style={{ height: 400, width: 620 }}
+                style={{ height: 400, width: 800 }}
             >
                 <AgGridReact
                     rowData={books}
