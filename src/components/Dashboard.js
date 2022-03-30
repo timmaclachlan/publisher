@@ -1,8 +1,11 @@
 import React from 'react'
+import { Button } from '@mui/material'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div>Dashboard
+      <Button variant="contained" >Hello World</Button>
+    </div>
   )
 }
 
