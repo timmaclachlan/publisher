@@ -1,6 +1,6 @@
 import * as React from "react";
 
-
+import { Link as RouterLink } from "react-router-dom";
 
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -13,11 +13,14 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 
 function ListItemLink(props) {
-  const { icon, primary } = props;
+  const { icon, to, primary } = props;
 
+  const renderLink = (itemProps) => {
+    return <RouterLink to={to} {...itemProps}>{itemProps.children}</RouterLink>;
+  };
 
   return (
-    <ListItemButton>
+    <ListItemButton component={renderLink}>
       {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
       <ListItemText primary={primary} />
     </ListItemButton>
@@ -26,10 +29,10 @@ function ListItemLink(props) {
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemLink primary="Dashboard" icon={<DashboardIcon />} />
-    <ListItemLink primary="Sales" icon={<ShoppingCartIcon />} />
-    <ListItemLink primary="Authors" icon={<PeopleIcon />} />
-    <ListItemLink primary="Books" icon={<LayersIcon />} />
-    <ListItemLink primary="Royalties" icon={<BarChartIcon />} />
+    <ListItemLink to="/" primary="Dashboard" icon={<DashboardIcon />} />
+    <ListItemLink to="/sales" primary="Sales" icon={<ShoppingCartIcon />} />
+    <ListItemLink to="/authors" primary="Authors" icon={<PeopleIcon />} />
+    <ListItemLink to="/books/" primary="Books" icon={<LayersIcon />} />
+    <ListItemLink to="/royalties" primary="Royalties" icon={<BarChartIcon />} />
   </React.Fragment>
 );
