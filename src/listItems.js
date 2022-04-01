@@ -15,9 +15,9 @@ import LayersIcon from "@mui/icons-material/Layers";
 function ListItemLink(props) {
   const { icon, to, primary } = props;
 
-  const renderLink = (itemProps) => {
-    return <RouterLink to={to} {...itemProps}>{itemProps.children}</RouterLink>;
-  };
+  const renderLink = React.forwardRef((itemProps, ref) => {
+    return <RouterLink to={to} ref={ref} {...itemProps}>{itemProps.children}</RouterLink>;
+  });
 
   return (
     <ListItemButton component={renderLink}>
