@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Routes, Route } from "react-router-dom";
 
+import "ag-grid-community/dist/styles/ag-grid.css";
+
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";

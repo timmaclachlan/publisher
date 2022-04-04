@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { Typography } from "@mui/material";
+
 import Books  from "./Books";
 
 import { readAll } from "../fetcher";
@@ -24,7 +26,7 @@ const BooksPage = () => {
   
     return (
         <>
-            <div>Books</div>
+                  <Typography variant="h4">Books</Typography>
             <Books books={books} />
         </>
     );
