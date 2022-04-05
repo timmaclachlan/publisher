@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
+import { Grid, Box, TextField, Button } from "@mui/material";
+
 import Books from "./Books";
 
 import { readById, updateById, deleteById } from "../fetcher";
@@ -31,7 +33,6 @@ const AuthorDetail = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setAuthor((prevState) => {
       return {
         ...prevState,
@@ -50,68 +51,95 @@ const AuthorDetail = () => {
     callApi();
   };
 
-
   return (
-    <div>
-        <section className="detailsContainer">
-        {!editMode && (
-          <section className="details">
-            <button
-                className="detailsDeleteButton"
-                onClick={ev => makeChange(ev, deleteById.bind(null, id))}
-              >Delete</button>
-            <button className="detailsEditButton" onClick={() => setEditMode(true)}>
-              Edit
-            </button>
-            <label>Name</label>
-            <label className="details">{author.name}</label>
-            <label>Address</label>
-            <label className="details">{author.address}</label>
-          </section>
-        )}
+    <Box>
+      <Grid container spacing={2}>
+        <Grid item md={8}>
+          {!editMode && (
+            <Grid container spacing={2}>
+              <Grid item md={8}></Grid>
 
-        {editMode && (
-          <form>
-            <section className="details">
-              <button className="detailsCancelButton" 
-              onClick={() => setEditMode(false)}>Cancel</button>
-              <button
-                className="detailsSaveButton"
-                onClick={ev => makeChange(ev, updateById.bind(null, author, id))}
-              >
-                Save
-              </button>
+              <Grid item md={2}>
+                <Button
+                  variant="outlined"
+                  onClick={(ev) => makeChange(ev, deleteById.bind(null, id))}
+                >
+                  Delete
+                </Button>
+              </Grid>
+              <Grid item md={2}>
+                <Button variant="contained" onClick={() => setEditMode(true)}>
+                  Edit
+                </Button>
+              </Grid>
 
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={author.name}
-                onChange={handleChange}
-                className="details"
-              />
+              <Grid item md={2}>
+                <label>Name</label>
+              </Grid>
+              <Grid item md={10}>
+                <label className="details">{author.name}</label>
+              </Grid>
 
-              <label htmlFor="address">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={author.address}
-                onChange={handleChange}
-                className="details"
-              />
-            </section>
-          </form>
-        )}
+              <Grid item md={2}>
+                <label>Address</label>
+              </Grid>
+              <Grid item md={10}>
+                <label className="details">{author.address}</label>
+              </Grid>
+            </Grid>
+          )}
 
-        <section className="bookDetails">
+          {editMode && (
+            <form>
+              <Grid container spacing={2}>
+                <Grid item md={8} />
+
+                <Grid item md={2}>
+                  <Button variant="outlined" onClick={() => setEditMode(false)}>
+                    Cancel
+                  </Button>
+                </Grid>
+
+                <Grid item md={2}>
+                  <Button
+                    variant="contained"
+                    onClick={(ev) =>
+                      makeChange(ev, updateById.bind(null, author, id))
+                    }
+                  >
+                    Save
+                  </Button>
+                </Grid>
+
+                <Grid item md={6}>
+                  <TextField
+                    label="Name"
+                    name="name"
+                    variant="outlined"
+                    value={author.name}
+                    onChange={handleChange}
+                  />
+                </Grid>
+
+                <Grid item md={6}>
+                  <TextField
+                    label="Address"
+                    name="address"
+                    variant="outlined"
+                    value={author.address}
+                    onChange={handleChange}
+                  />
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Grid>
+
+        <Grid item md={4}>
           <Books books={author.books} />
-        </section>
-      </section>
-
-      <div>
-        <button onClick={() => navigate("/authors")}>Authors</button>
-      </div>
-    </div>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

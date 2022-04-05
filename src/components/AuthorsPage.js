@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Grid, Button } from "@mui/material";
+import PeopleIcon from "@mui/icons-material/People";
 
 import { readAll } from "../fetcher";
 
@@ -46,11 +47,19 @@ const Authors = () => {
 
   return (
     <>
-      <Typography variant="h4">Authors</Typography>
-
-			<Box sx={{ mt: 3}}>
-			<Button color="primary" variant="contained" aria-label="add" onClick={createClick}>Create</Button>
-			</Box>
+      <Grid container>
+        <Grid item>
+          <PeopleIcon color="primary" sx={{fontSize: 60, mr: 2}} />
+        </Grid>
+        <Grid item>
+          <Typography variant="h4" sx={{pt: 1}}>Authors</Typography>
+        </Grid>
+        <Grid item md={3} />
+        <Grid item md={2}>
+          <Button color="primary" variant="contained" sx={{mt: 1}} aria-label="add" onClick={createClick}>Create</Button>
+        </Grid>
+      </Grid>
+            
 
 			<Box className="ag-theme-material" style={{ height: 800, width: 800 }}>
 
