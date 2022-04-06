@@ -4,7 +4,7 @@ import { useParams, Link } from "react-router-dom";
 
 import { readById, updateById, deleteById } from "../fetcher";
 
-const BookDetail = () => {
+const BookDetail = ({onRecordChange}) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [editMode, setEditMode] = useState(false);
@@ -15,6 +15,7 @@ const BookDetail = () => {
         const bookRecord = await readById("book", id);
         console.log("bookrecord:" + bookRecord);
         setBook(bookRecord.data);
+        onRecordChange(bookRecord.data.title);
       } catch (error) {
         console.log(error);
       }

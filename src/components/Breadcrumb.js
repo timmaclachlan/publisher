@@ -4,7 +4,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { stringToArray } from "ag-grid-community";
+
 
 const breadcrumbNameMap = {
   'authors': 'Authors',
@@ -14,10 +14,10 @@ const breadcrumbNameMap = {
 
 const LinkWithRouter = props => <Link {...props} component={RouterLink} />;
 
-const Breadcrumb = () => {
+const Breadcrumb = ({record}) => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(x => x); // filter where not empty string
-
+  debugger;
   return (
     <Breadcrumbs aria-label="breadcrumb">
       <LinkWithRouter to="/"
@@ -26,11 +26,20 @@ const Breadcrumb = () => {
         Dashboard
       </LinkWithRouter>
 
-      {pathnames.length &&
+      {pathnames.length === 1 &&
         <Typography color="primary">{pathnames[0][0].toUpperCase() + pathnames[0].substring(1)}</Typography>
       }
+      {
+        pathnames.length > 1 &&
+        <LinkWithRouter to={pathnames[0]}
+        underline="hover" color="secondary" sx={{ display: "flex", alignItems: "center" }}>
+        <Typography color="primary">{pathnames[0][0].toUpperCase() + pathnames[0].substring(1)}</Typography>
+      </LinkWithRouter>
+      }
 
-
+      {record &&
+        <Typography color="primary">{record}</Typography>
+      }
     </Breadcrumbs>
   );
 };

@@ -14,7 +14,7 @@ const LinkComponent = ({ data }) => {
 
 
 
-const Authors = () => {
+const Authors = ({onRecordChange}) => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
 
@@ -23,6 +23,7 @@ const Authors = () => {
       try {
         const result = await readAll("author");
         setAuthors(result.data);
+        onRecordChange("");
       } catch (error) {
         console.log(error);
       }

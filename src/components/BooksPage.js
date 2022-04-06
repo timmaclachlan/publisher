@@ -7,7 +7,7 @@ import Books from "./Books";
 
 import { readAll } from "../fetcher";
 
-const BooksPage = () => {
+const BooksPage = ({onRecordChange}) => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ const BooksPage = () => {
       try {
         const result = await readAll("book");
         setBooks(result.data);
+        onRecordChange("");
       } catch (error) {
         console.log(error);
       }

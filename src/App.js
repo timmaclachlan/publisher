@@ -10,10 +10,8 @@ import {
   Box,
   Container,
   Drawer,
-  CssBaseline
+  CssBaseline,
 } from "@mui/material";
-
-
 
 import { mainListItems } from "./listItems";
 import Breadcrumb from "./components/Breadcrumb";
@@ -26,6 +24,8 @@ import BookDetailPage from "./components/BookDetailPage";
 import NotFound from "./components/NotFound";
 
 function App() {
+  const [currentRecord, setCurrentRecord] = React.useState("");
+
   return (
     <Box>
       <CssBaseline />
@@ -38,18 +38,46 @@ function App() {
       </Drawer>
 
       <Container sx={{ marginTop: "80px", marginLeft: "180px" }}>
-       <Breadcrumb/>
+        <Breadcrumb record={currentRecord} />
 
         <Container sx={{ marginTop: "20px", marginLeft: "-20px" }}>
-        <Routes>
-          <Route index element={<Dashboard />} />
-          <Route path="authors" element={<AuthorsPage />} />
-          <Route path="authors/:id" element={<AuthorDetailPage />} />
-          <Route path="authors/new" element={<AuthorDetailPage />} />
-          <Route path="books" element={<BooksPage />} />
-          <Route path="books/:id" element={<BookDetailPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+          <Routes>
+            <Route index element={<Dashboard />} />
+            <Route
+              path="authors"
+              element={
+                <AuthorsPage
+                  onRecordChange={(record) => setCurrentRecord(record)}
+                />
+              }
+            />
+            <Route
+              path="authors/:id"
+              element={
+                <AuthorDetailPage
+                  onRecordChange={(record) => setCurrentRecord(record)}
+                />
+              }
+            />
+            <Route path="authors/new" element={<AuthorDetailPage />} />
+            <Route
+              path="books"
+              element={
+                <BooksPage
+                  onRecordChange={(record) => setCurrentRecord(record)}
+                />
+              }
+            />
+            <Route
+              path="books/:id"
+              element={
+                <BookDetailPage
+                  onRecordChange={(record) => setCurrentRecord(record)}
+                />
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </Container>
       </Container>
     </Box>

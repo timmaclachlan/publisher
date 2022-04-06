@@ -8,7 +8,7 @@ import Books from "./Books";
 
 import { readById, updateById, deleteById } from "../fetcher";
 
-const AuthorDetail = () => {
+const AuthorDetail = ({onRecordChange}) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [author, setAuthor] = useState({ id: 0, name: "", address: "" });
@@ -19,6 +19,7 @@ const AuthorDetail = () => {
       try {
         const authorRecord = await readById("author", id);
         setAuthor(authorRecord.data);
+        onRecordChange(authorRecord.data.name);
       } catch (error) {
         console.log(error);
         navigate("/notfound");
@@ -29,7 +30,7 @@ const AuthorDetail = () => {
     } else if (id !== undefined) {
       navigate("/notfound");
     }
-  }, [id, navigate]);
+  }, [id, navigate, onRecordChange]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
