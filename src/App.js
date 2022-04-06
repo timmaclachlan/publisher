@@ -38,7 +38,7 @@ function App() {
       </Drawer>
 
       <Container sx={{ marginTop: "80px", marginLeft: "180px" }}>
-       <Breadcrumb />
+       <Breadcrumb/>
 
         <Container sx={{ marginTop: "20px", marginLeft: "-20px" }}>
         <Routes>
