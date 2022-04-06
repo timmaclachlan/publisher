@@ -3,15 +3,20 @@ import { Routes, Route } from "react-router-dom";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 
-import CssBaseline from "@mui/material/CssBaseline";
-import Drawer from "@mui/material/Drawer";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
+import {
+  List,
+  Toolbar,
+  AppBar,
+  Box,
+  Container,
+  Drawer,
+  CssBaseline
+} from "@mui/material";
+
+
 
 import { mainListItems } from "./listItems";
+import Breadcrumb from "./components/Breadcrumb";
 
 import Dashboard from "./components/Dashboard";
 import AuthorsPage from "./components/AuthorsPage";
@@ -33,6 +38,9 @@ function App() {
       </Drawer>
 
       <Container sx={{ marginTop: "80px", marginLeft: "180px" }}>
+       <Breadcrumb />
+
+        <Container sx={{ marginTop: "20px", marginLeft: "-20px" }}>
         <Routes>
           <Route index element={<Dashboard />} />
           <Route path="authors" element={<AuthorsPage />} />
@@ -42,6 +50,7 @@ function App() {
           <Route path="books/:id" element={<BookDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Container>
       </Container>
     </Box>
   );
