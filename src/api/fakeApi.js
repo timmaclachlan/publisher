@@ -19,7 +19,7 @@ export function makeServer() {
     },
     factories: {
       author: AuthorFactory,
-      book: BookFactory
+      book: BookFactory,
     },
     seeds(server) {
       authorsdb.forEach((item) => {
@@ -61,8 +61,14 @@ export function makeServer() {
 
       this.patch("/authors/:id", (schema, request) => {
         let attrs = JSON.parse(request.requestBody);
-        let data = schema.authors.find(request.params.id);
-        return data.update(attrs);
+        let author = schema.authors.find(request.params.id);
+        let updateAuthor = author.update(
+          {
+            name: attrs.name,
+            address: attrs.address
+          }
+        )
+        return updateAuthor;
       });
 
       this.delete("/authors/:id", (schema, request) => {
@@ -76,9 +82,42 @@ export function makeServer() {
 
       this.get("/books/:id", (schema, request) => {
         let book = schema.books.find(request.params.id);
-        debugger;
         let newBook = { ...book.attrs, author: { ...book.author?.attrs } };
         return newBook;
+      });
+
+      this.post("/books", (schema, request) => {
+        const data = schema.books.all();
+        const maxId = Math.max.apply(
+          Math,
+          data.models.map((x) => x.id)
+        );
+        let attrs = JSON.parse(request.requestBody);
+        let result = schema.books.create({ ...attrs, id: maxId + 1 });
+        return result;
+      });
+
+      this.patch("/books/:id", (schema, request) => {
+        debugger;
+        let attrs = JSON.parse(request.requestBody);
+        let book = schema.books.find(request.params.id);
+
+        let updateBook = book.update({
+          title: attrs.title,
+          genre: attrs.genre,
+          published: attrs.published,
+          publicationDate: attrs.publicationDate,
+          service: attrs.service,
+          stillSelling: attrs.stillSelling,
+          terminated: attrs.terminated,
+          onHold: attrs.onHold,
+          matureContent: attrs.matureContent,
+        });
+        return updateBook;
+      });
+
+      this.delete("/books/:id", (schema, request) => {
+        return schema.books.find(request.params.id).destroy();
       });
     },
   });

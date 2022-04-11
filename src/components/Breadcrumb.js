@@ -17,7 +17,7 @@ const LinkWithRouter = props => <Link {...props} component={RouterLink} />;
 const Breadcrumb = ({record}) => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(x => x); // filter where not empty string
-  debugger;
+
   return (
     <Breadcrumbs aria-label="breadcrumb">
       <LinkWithRouter to="/"

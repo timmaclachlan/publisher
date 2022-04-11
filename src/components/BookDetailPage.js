@@ -42,7 +42,6 @@ const BookDetail = ({ onRecordChange }) => {
   }, [id, onRecordChange]);
 
   const makeChange = (method) => {
-    debugger;
     const callApi = async () => {
       await method("book");
     };
@@ -51,7 +50,6 @@ const BookDetail = ({ onRecordChange }) => {
 
   const saveBook = (ev) => {
     ev.preventDefault();    
-    debugger;
     makeChange(updateById.bind(null, book, id))
   }
 

@@ -32,8 +32,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const handleChange = (name, value) => {
     onUpdateBook((prevState) => {
       return {
         ...prevState,
@@ -42,13 +41,18 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
     });
   };
 
-  const handleDatePickerChange = (value) => {
-    onUpdateBook((prevState) => {
-      return {
-        ...prevState,
-        publicationDate: value,
-      };
-    });
+  const valueChange = (event) => {
+    const { name, value } = event.target;    
+    handleChange(name, value);
+  }
+
+  const checkedChange = (event) => {
+    const { name, checked } = event.target;
+    handleChange(name, checked);
+  }
+
+  const dateChange = (name, value) => {
+    handleChange(name, value);
   };
 
   const authors = [{ label: "Enid Blyton" }, { label: "John Doe" }];
@@ -107,14 +111,17 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
                 variant="outlined"
                 value={book.title}
                 fullWidth
-                onChange={handleChange}
+                onChange={valueChange}
               />
             </Grid>
 
             <Grid item md={3}>
               <FormControlLabel
-                control={<Switch defaultChecked />}
+                control={<Switch  />}
                 label="Published"
+                name="published"
+                checked={book.published}
+                onChange={checkedChange}
               />
             </Grid>
 
@@ -134,7 +141,7 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
                 name="genre"
                 variant="outlined"
                 value={book.genre}
-                onChange={handleChange}
+                onChange={valueChange}
               />
             </Grid>
 
@@ -146,7 +153,7 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
                   name="service"
                   value={book.service}
                   labelId="service-label"
-                  onChange={handleChange}
+                  onChange={valueChange}
                 >
                   <MenuItem value="EPPS">EPPS</MenuItem>
                   <MenuItem value="PPS">PPS</MenuItem>
@@ -158,9 +165,8 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
             <Grid item md={3}>
               <DesktopDatePicker
                 label="Publication Date"
-                name="publicationDate"
                 value={book.publicationDate}
-                onChange={handleDatePickerChange}
+                onChange={(value) => dateChange("publicationDate", value)}
                 inputFormat="dd/MM/yyyy"
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -303,22 +309,34 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
                     <FormControlLabel
                       label="Still Selling"
                       labelPlacement="start"
-                      control={<Checkbox defaultChecked />}
+                      control={<Checkbox  />}
+                      name="stillSelling"
+                      checked={book.stillSelling}
+                      onChange={checkedChange}
                     />
                     <FormControlLabel
                       label="Terminated"
                       labelPlacement="start"
-                      control={<Checkbox defaultChecked />}
+                      control={<Checkbox  />}
+                      name="terminated"
+                      checked={book.terminated}
+                      onChange={checkedChange}
                     />
                     <FormControlLabel
                       label="On Hold"
                       labelPlacement="start"
-                      control={<Checkbox defaultChecked />}
+                      control={<Checkbox  />}
+                      name="onHold"
+                      checked={book.onHold}
+                      onChange={checkedChange}
                     />
                     <FormControlLabel
                       label="Mature Content"
                       labelPlacement="start"
-                      control={<Checkbox defaultChecked />}
+                      control={<Checkbox  />}
+                      name="matureContent"
+                      checked={book.matureContent}
+                      onChange={checkedChange}
                     />
                   </FormGroup>
                 </AccordionDetails>
