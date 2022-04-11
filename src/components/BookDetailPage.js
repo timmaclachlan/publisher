@@ -53,6 +53,15 @@ const BookDetail = ({ onRecordChange }) => {
     makeChange(updateById.bind(null, book, id))
   }
 
+  const updateBook = (field, value) => {
+    setBook((prevState) => {
+      return {
+        ...prevState,
+        [field]: value,
+      };
+    });
+  }
+
   return (
     <>
       <Box>
@@ -118,7 +127,7 @@ const BookDetail = ({ onRecordChange }) => {
               <BookEdit
                 book={book}
                 id={id}
-                onUpdateBook={setBook}
+                onUpdateBook={updateBook}
                 onUpdateEditMode={setEditMode}
                 onSaveBook={saveBook}
               />

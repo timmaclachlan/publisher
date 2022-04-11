@@ -33,12 +33,9 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
   const handleChange = (name, value) => {
-    onUpdateBook((prevState) => {
-      return {
-        ...prevState,
-        [name]: value,
-      };
-    });
+    if (onUpdateBook) {
+      onUpdateBook(name, value);
+    }
   };
 
   const valueChange = (event) => {
