@@ -31,7 +31,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
-const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
+import AutoSuggest from "../AutoSuggest";
+
+const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, getAuthors }) => {
   const handleChange = (name, value) => {
     if (onUpdateBook) {
       onUpdateBook(name, value);
@@ -51,8 +53,6 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
   const dateChange = (name, value) => {
     handleChange(name, value);
   };
-
-  const authors = [{ label: "Enid Blyton" }, { label: "John Doe" }];
 
   return (
     <form>
@@ -123,13 +123,7 @@ const BookEdit = ({ book, onUpdateBook, onUpdateEditMode, onSaveBook }) => {
             </Grid>
 
             <Grid item md={4}>
-              <Autocomplete
-                options={authors}
-                disablePortal
-                renderInput={(params) => (
-                  <TextField {...params} label="Author" />
-                )}
-              />
+              <AutoSuggest data={authors} onOpenAutoSuggest={getAuthors} />
             </Grid>
 
             <Grid item md={3}>

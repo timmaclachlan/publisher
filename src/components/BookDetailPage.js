@@ -19,11 +19,12 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 import BookEdit from "./BookDetail/BookEdit";
 
-import { readById, updateById } from "../fetcher";
+import { readAll, readById, updateById } from "../fetcher";
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
+  const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const navigate = useNavigate();
 
@@ -40,6 +41,21 @@ const BookDetail = ({ onRecordChange }) => {
     };
     retrieveBook();
   }, [id, onRecordChange]);
+
+  const getAuthors = () => {
+    const retrieveAuthors = async () => {
+      try {
+        const authorRecords = await readAll("author");
+        let authors = authorRecords.data.map((author) => {
+          return { id: author.id, name: author.name }
+        });
+        setAuthors(authors);
+      } catch (error) {
+        console.log(error);
+      }      
+    }
+    retrieveAuthors();
+  }
 
   const makeChange = (method) => {
     const callApi = async () => {
@@ -126,10 +142,12 @@ const BookDetail = ({ onRecordChange }) => {
             {editMode && (
               <BookEdit
                 book={book}
+                authors={authors}
                 id={id}
                 onUpdateBook={updateBook}
                 onUpdateEditMode={setEditMode}
                 onSaveBook={saveBook}
+                getAuthors={getAuthors}
               />
             )}
           </Grid>
