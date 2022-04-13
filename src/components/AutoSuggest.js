@@ -1,16 +1,43 @@
 import React from "react";
 
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 
 
-const AutoSuggest = ({data, onOpenAutoSuggest}) => {
+const AutoSuggest = ({ data, value, onOpenAutoSuggest, onChange }) => {
+  const [open, setOpen] = React.useState(false);
+  const loading = open && data.length === 0;
+
+  const handleChange = (ev, value) => {
+    if (onChange) {
+      onChange("authorId", parseInt(value.id));
+    }
+}
+
   return (
     <Autocomplete
       options={data}
       getOptionLabel={(option) => option.name}
-      disablePortal
-      onOpen={onOpenAutoSuggest}
-      renderInput={(params) => <TextField {...params} label="Author" />}
+      onOpen={() => { setOpen(true); onOpenAutoSuggest() }}
+      onClose={() => setOpen(false)}
+      loading={loading}
+      autoSelect
+      isOptionEqualToValue={(option, value) => option.name === value.name}
+      value={value}
+      onChange={handleChange}
+      renderInput={(params) => (
+        <TextField {...params}
+          label="Author"
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
     />
   );
 };

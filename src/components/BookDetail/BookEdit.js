@@ -33,7 +33,14 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 import AutoSuggest from "../AutoSuggest";
 
-const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, getAuthors }) => {
+const BookEdit = ({
+  book,
+  authors,
+  onUpdateBook,
+  onUpdateEditMode,
+  onSaveBook,
+  getAuthors,
+}) => {
   const handleChange = (name, value) => {
     if (onUpdateBook) {
       onUpdateBook(name, value);
@@ -41,14 +48,14 @@ const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, g
   };
 
   const valueChange = (event) => {
-    const { name, value } = event.target;    
+    const { name, value } = event.target;
     handleChange(name, value);
-  }
+  };
 
   const checkedChange = (event) => {
     const { name, checked } = event.target;
     handleChange(name, checked);
-  }
+  };
 
   const dateChange = (name, value) => {
     handleChange(name, value);
@@ -114,7 +121,7 @@ const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, g
 
             <Grid item md={3}>
               <FormControlLabel
-                control={<Switch  />}
+                control={<Switch />}
                 label="Published"
                 name="published"
                 checked={book.published}
@@ -123,7 +130,12 @@ const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, g
             </Grid>
 
             <Grid item md={4}>
-              <AutoSuggest data={authors} onOpenAutoSuggest={getAuthors} />
+              <AutoSuggest
+                data={authors}
+                value={book.author}
+                onOpenAutoSuggest={getAuthors}
+                onChange={handleChange}
+              />
             </Grid>
 
             <Grid item md={3}>
@@ -300,7 +312,7 @@ const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, g
                     <FormControlLabel
                       label="Still Selling"
                       labelPlacement="start"
-                      control={<Checkbox  />}
+                      control={<Checkbox />}
                       name="stillSelling"
                       checked={book.stillSelling}
                       onChange={checkedChange}
@@ -308,7 +320,7 @@ const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, g
                     <FormControlLabel
                       label="Terminated"
                       labelPlacement="start"
-                      control={<Checkbox  />}
+                      control={<Checkbox />}
                       name="terminated"
                       checked={book.terminated}
                       onChange={checkedChange}
@@ -316,7 +328,7 @@ const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, g
                     <FormControlLabel
                       label="On Hold"
                       labelPlacement="start"
-                      control={<Checkbox  />}
+                      control={<Checkbox />}
                       name="onHold"
                       checked={book.onHold}
                       onChange={checkedChange}
@@ -324,7 +336,7 @@ const BookEdit = ({ book, authors, onUpdateBook, onUpdateEditMode, onSaveBook, g
                     <FormControlLabel
                       label="Mature Content"
                       labelPlacement="start"
-                      control={<Checkbox  />}
+                      control={<Checkbox />}
                       name="matureContent"
                       checked={book.matureContent}
                       onChange={checkedChange}

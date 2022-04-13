@@ -110,6 +110,7 @@ export function makeServer() {
 
         let updateBook = book.update({
           title: attrs.title,
+          authorId: attrs.authorId,
           genre: attrs.genre,
           published: attrs.published,
           publicationDate: attrs.publicationDate,
