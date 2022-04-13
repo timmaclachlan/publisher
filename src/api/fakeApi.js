@@ -41,6 +41,12 @@ export function makeServer() {
         return data.models;
       });
 
+      this.get("/lookup/authors", (schema, request) => {
+        let data = schema.authors.all();
+        let subData = data.models.map(selectProps("id", "name"));
+        return subData;
+      });
+
       this.get("/authors/:id", (schema, request) => {
         let author = schema.authors.find(request.params.id);
 
@@ -121,4 +127,15 @@ export function makeServer() {
       });
     },
   });
+}
+
+// levelup.gitconnected.com/how-to-select-specific-properties-from-an-array-of-objects-bd9f6c15dbd0
+const selectProps = (...props) => {
+  return function (obj) {
+    const newObj = {};
+    props.forEach(name => {
+      newObj[name] = obj[name];
+    });
+    return newObj;
+  }
 }

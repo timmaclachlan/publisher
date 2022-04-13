@@ -1,12 +1,18 @@
 const BASE_URL = "/api";
 
-const getSchemaUrl = (schema) => `${BASE_URL}/${schema}s`;
+const getSchemaUrl = (schema) => `${schema}s`;
 
-const makeRequest = async (schema, id = 0, method = 'GET', body = undefined) => {
+const makeRequest = async (schema, isLookup = false, id = 0, method = 'GET', body = undefined) => {
   let responseObject = { errorMessage: '', data: [] };
 
   const requestInit = { method: method, body: JSON.stringify(body) };
-  let url = getSchemaUrl(schema);
+  let url = `${BASE_URL}/`;
+  if (isLookup) {
+    url = `${url}lookup/`;
+  }
+
+  url = `${url}${getSchemaUrl(schema)}`;
+  
   if (id > 0) {
     url = `${url}/${id}`;
   }
@@ -32,18 +38,22 @@ export const readAll = (schema) => {
   return makeRequest(schema);
 }
 
+export const readLookupAll = (schema) => {
+  return makeRequest(schema, true);
+}
+
 export const readById = (schema, id) => {
-  return makeRequest(schema, id)
+  return makeRequest(schema, false, id)
 }
 
 export const updateById = (model, id, schema) => {
-  return makeRequest(schema, id, 'PATCH', model);
+  return makeRequest(schema, false, id, 'PATCH', model);
 }
 
 export const deleteById = (id, schema) => {
-  return makeRequest(schema, id, 'DELETE');
+  return makeRequest(schema, false, id, 'DELETE');
 }
 
 export const create = (model, schema) => {
-  return makeRequest(schema, 0, 'POST', model);
+  return makeRequest(schema, false, 0, 'POST', model);
 }

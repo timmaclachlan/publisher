@@ -19,7 +19,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 import BookEdit from "./BookDetail/BookEdit";
 
-import { readAll, readById, updateById } from "../fetcher";
+import { readAll, readLookupAll, readById, updateById } from "../fetcher";
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
@@ -45,11 +45,8 @@ const BookDetail = ({ onRecordChange }) => {
   const getAuthors = () => {
     const retrieveAuthors = async () => {
       try {
-        const authorRecords = await readAll("author");
-        let authors = authorRecords.data.map((author) => {
-          return { id: author.id, name: author.name }
-        });
-        setAuthors(authors);
+        const authorRecords = await readLookupAll("author");
+        setAuthors(authorRecords.data);
       } catch (error) {
         console.log(error);
       }      
