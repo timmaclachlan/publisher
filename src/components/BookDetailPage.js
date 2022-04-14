@@ -11,6 +11,8 @@ import {
   CardContent,
   Input,
   Typography,
+  Snackbar,
+  Alert as MuiAlert
 } from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
@@ -19,13 +21,14 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 import BookEdit from "./BookDetail/BookEdit";
 
-import { readAll, readLookupAll, readById, updateById } from "../fetcher";
+import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [notification, setNotification] = useState({show: false, severity: '', message: ''});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,10 +52,10 @@ const BookDetail = ({ onRecordChange }) => {
         setAuthors(authorRecords.data);
       } catch (error) {
         console.log(error);
-      }      
-    }
+      }
+    };
     retrieveAuthors();
-  }
+  };
 
   const makeChange = (method) => {
     const callApi = async () => {
@@ -62,9 +65,14 @@ const BookDetail = ({ onRecordChange }) => {
   };
 
   const saveBook = (ev) => {
-    ev.preventDefault();    
-    makeChange(updateById.bind(null, book, id))
-  }
+    ev.preventDefault();
+    makeChange(updateById.bind(null, book, id));
+    setNotification((prevState) => ({
+      ...prevState,
+      show: true,
+      severity: 'success',
+      message: 'Changes saved successfully'}));
+  };
 
   const updateBook = (field, value) => {
     setBook((prevState) => {
@@ -73,10 +81,38 @@ const BookDetail = ({ onRecordChange }) => {
         [field]: value,
       };
     });
+  };
+
+  const deleteBook = () => {
+    makeChange(deleteById.bind(null, id));
+    setNotification((prevState) => ({
+      ...prevState,
+      show: true,
+      severity: 'warning',
+      message: 'Book deleted successfully'}));
   }
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={20} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleCloseNotification = (event, reason) => {
+    setNotification((prevState) => ({...prevState,show: false}));
+  };
+
 
   return (
     <>
+      <Snackbar
+        open={notification.show}
+        autoHideDuration={5000}
+        onClose={handleCloseNotification}
+      >
+        <Alert severity={notification.severity} onClose={handleCloseNotification}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
+
       <Box>
         <Grid container spacing={2}>
           <Grid item md={10}>
@@ -143,6 +179,7 @@ const BookDetail = ({ onRecordChange }) => {
                 id={id}
                 onUpdateBook={updateBook}
                 onUpdateEditMode={setEditMode}
+                onDeleteBook={deleteBook}
                 onSaveBook={saveBook}
                 getAuthors={getAuthors}
               />
