@@ -12,7 +12,8 @@ import {
   Input,
   Typography,
   Snackbar,
-  Alert as MuiAlert
+  Alert as MuiAlert,
+  Backdrop
 } from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
@@ -22,13 +23,14 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import BookEdit from "./BookDetail/BookEdit";
 
 import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
+import { FastRewindTwoTone } from "@mui/icons-material";
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
-  const [notification, setNotification] = useState({show: false, severity: '', message: ''});
+  const [notification, setNotification] = useState({show: false, severity: '', message: '', autoHide: false});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,6 +73,7 @@ const BookDetail = ({ onRecordChange }) => {
       ...prevState,
       show: true,
       severity: 'success',
+      autoHide: true,
       message: 'Changes saved successfully'}));
   };
 
@@ -89,6 +92,7 @@ const BookDetail = ({ onRecordChange }) => {
       ...prevState,
       show: true,
       severity: 'warning',
+      autoHide: false,
       message: 'Book deleted successfully'}));
   }
 
@@ -105,13 +109,23 @@ const BookDetail = ({ onRecordChange }) => {
     <>
       <Snackbar
         open={notification.show}
-        autoHideDuration={5000}
+        autoHideDuration={notification.autoHide ? 5000 : null}
         onClose={handleCloseNotification}
+        action={
+          <>
+            <Button color="secondary">Authors</Button>
+          </>
+        }
       >
         <Alert severity={notification.severity} onClose={handleCloseNotification}>
           {notification.message}
         </Alert>
       </Snackbar>
+
+      {notification.show && notification.severity === 'warning' &&
+        <Backdrop sx={{ color: '#fff', zIndex: 500 }} open={true} />
+      }
+
 
       <Box>
         <Grid container spacing={2}>
