@@ -13,24 +13,27 @@ import {
   Typography,
   Snackbar,
   Alert as MuiAlert,
-  Backdrop
+  Backdrop,
 } from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
-
 import BookEdit from "./BookDetail/BookEdit";
 
 import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
-import { FastRewindTwoTone } from "@mui/icons-material";
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
-  const [notification, setNotification] = useState({show: false, severity: '', message: '', autoHide: false});
+  const [notification, setNotification] = useState({
+    show: false,
+    severity: "",
+    message: "",
+    autoHide: false,
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,9 +75,10 @@ const BookDetail = ({ onRecordChange }) => {
     setNotification((prevState) => ({
       ...prevState,
       show: true,
-      severity: 'success',
+      severity: "success",
       autoHide: true,
-      message: 'Changes saved successfully'}));
+      message: "Changes saved successfully",
+    }));
   };
 
   const updateBook = (field, value) => {
@@ -91,17 +95,19 @@ const BookDetail = ({ onRecordChange }) => {
     setNotification((prevState) => ({
       ...prevState,
       show: true,
-      severity: 'warning',
+      severity: "warning",
       autoHide: false,
-      message: 'Book deleted successfully'}));
-  }
+      message: "Book deleted successfully",
+    }));
+  };
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={20} ref={ref} variant="filled" {...props} />;
   });
 
   const handleCloseNotification = (event, reason) => {
-    setNotification((prevState) => ({...prevState,show: false}));
+    setNotification((prevState) => ({ ...prevState, show: false }));
+    navigate("/authors");
   };
 
 
@@ -111,21 +117,23 @@ const BookDetail = ({ onRecordChange }) => {
         open={notification.show}
         autoHideDuration={notification.autoHide ? 5000 : null}
         onClose={handleCloseNotification}
-        action={
-          <>
-            <Button color="secondary">Authors</Button>
-          </>
-        }
+        
       >
-        <Alert severity={notification.severity} onClose={handleCloseNotification}>
+        <Alert
+          severity={notification.severity}
+          onClose={handleCloseNotification}
+        >
           {notification.message}
         </Alert>
       </Snackbar>
 
-      {notification.show && notification.severity === 'warning' &&
-        <Backdrop sx={{ color: '#fff', zIndex: 500 }} open={true} />
-      }
-
+      {notification.show && notification.severity === "warning" && (
+        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true} >
+          <Alert
+          severity="warning"         
+        >Book has been deleted</Alert>
+        </Backdrop>
+      )}
 
       <Box>
         <Grid container spacing={2}>
