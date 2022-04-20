@@ -1,20 +1,18 @@
 import React from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import {
-  Grid,
-  Button,
-  Typography
-} from "@mui/material";
+import { Grid, Button, Typography, Link } from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-const BookView = ({book, onUpdateEditMode}) => {
+const LinkWithRouter = (props) => <Link {...props} component={RouterLink} />;
+
+const BookView = ({ book, onUpdateEditMode }) => {
   const navigate = useNavigate();
-  
+
   return (
     <Grid container spacing={2}>
       <Grid item md={1}>
@@ -48,23 +46,40 @@ const BookView = ({book, onUpdateEditMode}) => {
         </Button>
       </Grid>
 
-      <Grid item md={8}></Grid>
+      <Grid item md={1}>
+        <Typography variant="subtitle1">Title</Typography>
+      </Grid>
+      <Grid item md={11}>
+        <Typography variant="body1">{book.title}</Typography>
+      </Grid>
 
+      <Grid item md={1}>
+        <Typography variant="subtitle1">Author</Typography>
+      </Grid>
+
+      <Grid item md={3}>
+        <LinkWithRouter
+          to={"/authors/" + book.author?.id}
+          underline="hover"
+          color="secondary"
+        >
+          <Typography color="primary">{book.author?.name}</Typography>
+        </LinkWithRouter>
+      </Grid>
+
+      <Grid item md={1}>
+        <Typography variant="subtitle1">Genre</Typography>
+      </Grid>
       <Grid item md={2}>
-        <label>Title</label>
-      </Grid>
-      <Grid item md={10}>
-        <label className="details">{book.title}</label>
+        <Typography variant="body1">{book.genre}</Typography>
       </Grid>
 
-      <Grid item md={2}>
-        <label>Author</label>
+      <Grid item md={1}>
+        <Typography variant="subtitle1">Service</Typography>
       </Grid>
 
-      <Grid item md={10}>
-        <label className="details">
-          <Link to={"/authors/" + book.author?.id}>{book.author?.name}</Link>
-        </label>
+      <Grid item md={1}>
+        <Typography variant="subtitle1">{book.service}</Typography>
       </Grid>
     </Grid>
   );
