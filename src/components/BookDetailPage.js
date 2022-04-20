@@ -16,10 +16,8 @@ import {
   Backdrop,
 } from "@mui/material";
 
-import LayersIcon from "@mui/icons-material/Layers";
-import EditIcon from "@mui/icons-material/Edit";
-import CancelIcon from "@mui/icons-material/Cancel";
 import BookEdit from "./BookDetail/BookEdit";
+import BookView from "./BookDetail/BookView";
 
 import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
 
@@ -107,11 +105,10 @@ const BookDetail = ({ onRecordChange }) => {
 
   const handleCloseNotification = (event, reason) => {
     setNotification((prevState) => ({ ...prevState, show: false }));
-    if (notification.severity === 'warning') {
+    if (notification.severity === "warning") {
       navigate("/authors");
     }
   };
-
 
   return (
     <>
@@ -119,7 +116,6 @@ const BookDetail = ({ onRecordChange }) => {
         open={notification.show}
         autoHideDuration={notification.autoHide ? 5000 : null}
         onClose={handleCloseNotification}
-        
       >
         <Alert
           severity={notification.severity}
@@ -130,10 +126,8 @@ const BookDetail = ({ onRecordChange }) => {
       </Snackbar>
 
       {notification.show && notification.severity === "warning" && (
-        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true} >
-          <Alert
-          severity="warning"         
-        >Book has been deleted</Alert>
+        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true}>
+          <Alert severity="warning">Book has been deleted</Alert>
         </Backdrop>
       )}
 
@@ -141,59 +135,7 @@ const BookDetail = ({ onRecordChange }) => {
         <Grid container spacing={2}>
           <Grid item md={10}>
             {!editMode && (
-              <Grid container spacing={2}>
-                <Grid item md={1}>
-                  <LayersIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
-                </Grid>
-                <Grid item md={3}>
-                  <Typography variant="h4" sx={{ pt: 1 }}>
-                    View Book
-                  </Typography>
-                </Grid>
-                <Grid item md={4} />
-                <Grid item md={2}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<CancelIcon />}
-                    onClick={() => navigate("/books")}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
-
-                <Grid item md={2}>
-                  <Button
-                    variant="contained"
-                    sx={{ width: "100px" }}
-                    color="success"
-                    startIcon={<EditIcon />}
-                    onClick={() => setEditMode(true)}
-                  >
-                    Edit
-                  </Button>
-                </Grid>
-
-                <Grid item md={8}></Grid>
-
-                <Grid item md={2}>
-                  <label>Title</label>
-                </Grid>
-                <Grid item md={10}>
-                  <label className="details">{book.title}</label>
-                </Grid>
-
-                <Grid item md={2}>
-                  <label>Author</label>
-                </Grid>
-
-                <Grid item md={10}>
-                  <label className="details">
-                    <Link to={"/authors/" + book.author?.id}>
-                      {book.author?.name}
-                    </Link>
-                  </label>
-                </Grid>
-              </Grid>
+              <BookView book={book} onUpdateEditMode={setEditMode} />
             )}
 
             {editMode && (
