@@ -107,7 +107,9 @@ const BookDetail = ({ onRecordChange }) => {
 
   const handleCloseNotification = (event, reason) => {
     setNotification((prevState) => ({ ...prevState, show: false }));
-    navigate("/authors");
+    if (notification.severity === 'warning') {
+      navigate("/authors");
+    }
   };
 
 
