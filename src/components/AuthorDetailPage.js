@@ -11,7 +11,7 @@ import { readById, updateById, deleteById } from "../fetcher";
 const AuthorDetail = ({onRecordChange}) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [author, setAuthor] = useState({ id: 0, name: "", address: "" });
+  const [author, setAuthor] = useState({ id: 0, fullName: "", address1: "" });
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const AuthorDetail = ({onRecordChange}) => {
       try {
         const authorRecord = await readById("author", id);
         setAuthor(authorRecord.data);
-        onRecordChange(authorRecord.data.name);
+        onRecordChange(authorRecord.data.fullName);
       } catch (error) {
         console.log(error);
         navigate("/notfound");
@@ -78,14 +78,14 @@ const AuthorDetail = ({onRecordChange}) => {
                 <label>Name</label>
               </Grid>
               <Grid item md={10}>
-                <label className="details">{author.name}</label>
+                <label className="details">{author.fullName}</label>
               </Grid>
 
               <Grid item md={2}>
                 <label>Address</label>
               </Grid>
               <Grid item md={10}>
-                <label className="details">{author.address}</label>
+                <label className="details">{author.address1}</label>
               </Grid>
             </Grid>
           )}
@@ -117,7 +117,7 @@ const AuthorDetail = ({onRecordChange}) => {
                     label="Name"
                     name="name"
                     variant="outlined"
-                    value={author.name}
+                    value={author.fullName}
                     onChange={handleChange}
                   />
                 </Grid>
@@ -127,7 +127,7 @@ const AuthorDetail = ({onRecordChange}) => {
                     label="Address"
                     name="address"
                     variant="outlined"
-                    value={author.address}
+                    value={author.address1}
                     onChange={handleChange}
                   />
                 </Grid>

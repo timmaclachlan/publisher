@@ -29,8 +29,8 @@ export function makeServer() {
         server.create("book", item);
       });
 
-      server.createList("author", NOAUTHORS);
-      server.createList("book", NOBOOKS);
+      //server.createList("author", NOAUTHORS);
+      //server.createList("book", NOBOOKS);
     },
 
     routes() {
@@ -43,7 +43,7 @@ export function makeServer() {
 
       this.get("/lookup/authors", (schema, request) => {
         let data = schema.authors.all();
-        let subData = data.models.map(selectProps("id", "name"));
+        let subData = data.models.map(selectProps("id", "fullName"));
         return subData;
       });
 

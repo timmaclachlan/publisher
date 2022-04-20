@@ -11,6 +11,8 @@ import {
   Container,
   Drawer,
   CssBaseline,
+  Card,
+  CardMedia,
 } from "@mui/material";
 
 import { mainListItems } from "./listItems";
@@ -33,7 +35,13 @@ function App() {
         <Toolbar></Toolbar>
       </AppBar>
       <Drawer variant="permanent">
-        <Toolbar />
+        <Card>
+          <CardMedia
+            component="img"
+            image="/rowanvale.jpg"
+            height="180"
+          ></CardMedia>
+        </Card>
         <List component="nav">{mainListItems}</List>
       </Drawer>
 

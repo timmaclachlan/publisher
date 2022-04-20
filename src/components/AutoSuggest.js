@@ -16,12 +16,12 @@ const AutoSuggest = ({ data, value, onOpenAutoSuggest, onChange }) => {
   return (
     <Autocomplete
       options={data}
-      getOptionLabel={(option) => option.name}
+      getOptionLabel={(option) => option.fullName}
       onOpen={() => { setOpen(true); onOpenAutoSuggest() }}
       onClose={() => setOpen(false)}
       loading={loading}
       autoSelect
-      isOptionEqualToValue={(option, value) => option.name === value.name}
+      isOptionEqualToValue={(option, value) => option.fullName === value.fullName}
       value={value}
       onChange={handleChange}
       renderInput={(params) => (

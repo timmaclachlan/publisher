@@ -6,8 +6,10 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { ThemeProvider } from '@mui/material';
 
 import { makeServer } from './api/fakeApi';
+import { theme } from './theme/theme';
 
 makeServer();
 
@@ -15,7 +17,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <App />
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>          
       </LocalizationProvider>
     </BrowserRouter>
   </React.StrictMode>,

@@ -212,7 +212,7 @@ const BookDetail = ({ onRecordChange }) => {
             <Card>
               <CardMedia
                 component="img"
-                image="/assets/The_Magic_Faraway_Tree.jpg"
+                image="/assets/amber_a_fairy_tale.jpg"
               ></CardMedia>
               <CardContent>
                 <label htmlFor="contained-button-file">
