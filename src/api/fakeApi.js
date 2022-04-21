@@ -7,6 +7,8 @@ import { BookFactory } from "./seed/BookFactory.js";
 const NOAUTHORS = 10;
 const NOBOOKS = 10;
 
+const NOT_FOUND = 404;
+
 export function makeServer() {
   return createServer({
     models: {
@@ -49,9 +51,11 @@ export function makeServer() {
 
       this.get("/authors/:id", (schema, request) => {
         let author = schema.authors.find(request.params.id);
-
-        let newAuthor = { ...author.attrs, books: [...author.books?.models] };
-        return newAuthor;
+        if (author) {
+          let newAuthor = { ...author.attrs, books: [...author.books?.models] };
+          return newAuthor;
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.post("/authors", (schema, request) => {
@@ -68,17 +72,24 @@ export function makeServer() {
       this.patch("/authors/:id", (schema, request) => {
         let attrs = JSON.parse(request.requestBody);
         let author = schema.authors.find(request.params.id);
-        let updateAuthor = author.update(
-          {
-            name: attrs.name,
-            address: attrs.address
-          }
-        )
-        return updateAuthor;
+        if (author) {
+          let updateAuthor = author.update(
+            {
+              name: attrs.name,
+              address: attrs.address
+            }
+          )
+          return updateAuthor;
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.delete("/authors/:id", (schema, request) => {
-        return schema.authors.find(request.params.id).destroy();
+        let author = schema.authors.find(request.params.id);
+        if (author) {
+          author.destroy();
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.get("/books", (schema, request) => {
@@ -92,7 +103,7 @@ export function makeServer() {
           let newBook = { ...book.attrs, author: { ...book.author?.attrs } };
           return newBook;
         }
-        return new Response(404, { errors: 'Not found' });
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.post("/books", (schema, request) => {
@@ -110,24 +121,30 @@ export function makeServer() {
         debugger;
         let attrs = JSON.parse(request.requestBody);
         let book = schema.books.find(request.params.id);
-
-        let updateBook = book.update({
-          title: attrs.title,
-          authorId: attrs.authorId,
-          genre: attrs.genre,
-          published: attrs.published,
-          publicationDate: attrs.publicationDate,
-          service: attrs.service,
-          stillSelling: attrs.stillSelling,
-          terminated: attrs.terminated,
-          onHold: attrs.onHold,
-          matureContent: attrs.matureContent,
-        });
-        return updateBook;
+        if (book) {
+          let updateBook = book.update({
+            title: attrs.title,
+            authorId: attrs.authorId,
+            genre: attrs.genre,
+            published: attrs.published,
+            publicationDate: attrs.publicationDate,
+            service: attrs.service,
+            stillSelling: attrs.stillSelling,
+            terminated: attrs.terminated,
+            onHold: attrs.onHold,
+            matureContent: attrs.matureContent,
+          });
+          return updateBook;
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.delete("/books/:id", (schema, request) => {
-        return schema.books.find(request.params.id).destroy();
+        let book = schema.books.find(request.params.id);
+        if (book) {
+          book.destroy();
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
     },
   });

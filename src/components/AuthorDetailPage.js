@@ -2,37 +2,75 @@ import React, { useEffect, useState } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
-import { Grid, Box, TextField, Button } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Button,
+  Snackbar,
+  Backdrop,
+  Alert as MuiAlert,
+} from "@mui/material";
 
 import Books from "./Books";
+import AuthorEdit from "./AuthorDetail/AuthorEdit";
 
 import { readById, updateById, deleteById } from "../fetcher";
+import { isEmptyObject } from "../utils";
 
-const AuthorDetail = ({onRecordChange}) => {
+const AuthorDetail = ({ onRecordChange }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [author, setAuthor] = useState({ id: 0, name: "", address: "" });
   const [editMode, setEditMode] = useState(false);
+  const [createMode, setCreateMode] = useState(false);
+  const [notification, setNotification] = useState({
+    show: false,
+    severity: "",
+    message: "",
+    autoHide: false,
+  });
 
   useEffect(() => {
     const retrieveAuthor = async () => {
       try {
         const authorRecord = await readById("author", id);
+        if (isEmptyObject(authorRecord.data)) {
+          navigate("/notfound");
+        }
         setAuthor(authorRecord.data);
         onRecordChange(authorRecord.data.name);
       } catch (error) {
         console.log(error);
-        navigate("/notfound");
       }
     };
     if (id > 0) {
       retrieveAuthor();
-    } else if (id !== undefined) {
-      navigate("/notfound");
+    }
+    if (id === undefined) {
+      setCreateMode(true);
     }
   }, [id, navigate, onRecordChange]);
 
-  const handleChange = (event) => {
+  const makeChange = (method) => {
+    const callApi = async () => {
+      await method("author");
+    };
+    callApi();
+  };
+
+  const saveAuthor = (ev) => {
+    ev.preventDefault();
+    makeChange(updateById.bind(null, author, id));
+    setNotification((prevState) => ({
+      ...prevState,
+      show: true,
+      severity: "success",
+      autoHide: true,
+      message: "Changes saved successfully",
+    }));
+  };
+
+  const updateAuthor = (event) => {
     const { name, value } = event.target;
     setAuthor((prevState) => {
       return {
@@ -42,105 +80,91 @@ const AuthorDetail = ({onRecordChange}) => {
     });
   };
 
-  const makeChange = (event, method) => {
-    event.preventDefault();
-    setEditMode(false);
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={20} ref={ref} variant="filled" {...props} />;
+  });
 
-    const callApi = async () => {
-      await method("author");
-    };
-    callApi();
+  const handleCloseNotification = (event, reason) => {
+    setNotification((prevState) => ({ ...prevState, show: false }));
+    if (notification.severity === "warning") {
+      navigate("/authors");
+    }
   };
 
   return (
-    <Box>
-      <Grid container spacing={2}>
-        <Grid item md={8}>
-          {!editMode && (
-            <Grid container spacing={2}>
-              <Grid item md={8}></Grid>
+    <>
+      <Snackbar
+        open={notification.show}
+        autoHideDuration={notification.autoHide ? 5000 : null}
+        onClose={handleCloseNotification}
+      >
+        <Alert
+          severity={notification.severity}
+          onClose={handleCloseNotification}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
 
-              <Grid item md={2}>
-                <Button
-                  variant="outlined"
-                  onClick={(ev) => makeChange(ev, deleteById.bind(null, id))}
-                >
-                  Delete
-                </Button>
-              </Grid>
-              <Grid item md={2}>
-                <Button variant="contained" onClick={() => setEditMode(true)}>
-                  Edit
-                </Button>
-              </Grid>
+      {notification.show && notification.severity === "warning" && (
+        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true}>
+          <Alert severity="warning">Book has been deleted</Alert>
+        </Backdrop>
+      )}
 
-              <Grid item md={2}>
-                <label>Name</label>
-              </Grid>
-              <Grid item md={10}>
-                <label className="details">{author.name}</label>
-              </Grid>
-
-              <Grid item md={2}>
-                <label>Address</label>
-              </Grid>
-              <Grid item md={10}>
-                <label className="details">{author.address}</label>
-              </Grid>
-            </Grid>
-          )}
-
-          {editMode && (
-            <form>
+      <Box>
+        <Grid container spacing={2}>
+          <Grid item md={8}>
+            {!editMode && (
               <Grid container spacing={2}>
-                <Grid item md={8} />
-
-                <Grid item md={2}>
-                  <Button variant="outlined" onClick={() => setEditMode(false)}>
-                    Cancel
-                  </Button>
-                </Grid>
+                <Grid item md={8}></Grid>
 
                 <Grid item md={2}>
                   <Button
-                    variant="contained"
-                    onClick={(ev) =>
-                      makeChange(ev, updateById.bind(null, author, id))
-                    }
+                    variant="outlined"
+                    onClick={(ev) => makeChange(ev, deleteById.bind(null, id))}
                   >
-                    Save
+                    Delete
+                  </Button>
+                </Grid>
+                <Grid item md={2}>
+                  <Button variant="contained" onClick={() => setEditMode(true)}>
+                    Edit
                   </Button>
                 </Grid>
 
-                <Grid item md={6}>
-                  <TextField
-                    label="Name"
-                    name="name"
-                    variant="outlined"
-                    value={author.name}
-                    onChange={handleChange}
-                  />
+                <Grid item md={2}>
+                  <label>Name</label>
+                </Grid>
+                <Grid item md={10}>
+                  <label className="details">{author.name}</label>
                 </Grid>
 
-                <Grid item md={6}>
-                  <TextField
-                    label="Address"
-                    name="address"
-                    variant="outlined"
-                    value={author.address}
-                    onChange={handleChange}
-                  />
+                <Grid item md={2}>
+                  <label>Address</label>
+                </Grid>
+                <Grid item md={10}>
+                  <label className="details">{author.address}</label>
                 </Grid>
               </Grid>
-            </form>
-          )}
-        </Grid>
+            )}
 
-        <Grid item md={4}>
-          <Books books={author.books} />
+            {editMode && (
+              <AuthorEdit
+                author={author}
+                onUpdateAuthor={updateAuthor}
+                onUpdateEditMode={setEditMode}
+                onSaveAuthor={saveAuthor}
+              />
+            )}
+          </Grid>
+
+          <Grid item md={4}>
+            <Books books={author.books} />
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 };
 

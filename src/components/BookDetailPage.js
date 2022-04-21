@@ -20,10 +20,7 @@ import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
 
 import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
-
-const isEmptyObject = (value) => {
-  return value && value.constructor === Object && Object.keys(value).length === 0;
-}
+import { isEmptyObject } from "../utils";
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
@@ -47,10 +44,8 @@ const BookDetail = ({ onRecordChange }) => {
         if (isEmptyObject(bookRecord.data)) {
           navigate("/notfound")
         }
-
         setBook(bookRecord.data);
-        onRecordChange(bookRecord.data.title);
-        
+        onRecordChange(bookRecord.data.title);        
       } catch (error) {
         console.log(error);
       }
