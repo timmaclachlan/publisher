@@ -2,11 +2,21 @@ import React from "react";
 
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import { Grid, Button, Typography, Link } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Typography,
+  Link,
+  Card,
+  CardContent,
+  Stack
+} from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+
+import BookViewOptions from "./BookViewOptions";
 
 const LinkWithRouter = (props) => <Link {...props} component={RouterLink} />;
 
@@ -46,41 +56,43 @@ const BookView = ({ book, onUpdateEditMode }) => {
         </Button>
       </Grid>
 
-      <Grid item md={1}>
-        <Typography variant="subtitle1">Title</Typography>
-      </Grid>
-      <Grid item md={11}>
-        <Typography variant="body1">{book.title}</Typography>
+      <Grid item md={12}>
+        <Card>
+          <CardContent>
+            <Grid container>
+              <Grid item md={10}>
+                <Typography variant="h5">{book.title}</Typography>
+                <LinkWithRouter
+                  to={"/authors/" + book.author?.id}
+                  underline="hover"
+                  color="secondary"
+                >
+                  <Typography color="primary" variant="h6">
+                    {book.author?.name}
+                  </Typography>
+                </LinkWithRouter>
+                <Typography variant="subtitle1">{book.genre}</Typography>
+              </Grid>
+              <Grid item md={2}>
+                
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
       </Grid>
 
-      <Grid item md={1}>
-        <Typography variant="subtitle1">Author</Typography>
-      </Grid>
-
-      <Grid item md={3}>
-        <LinkWithRouter
-          to={"/authors/" + book.author?.id}
-          underline="hover"
-          color="secondary"
-        >
-          <Typography color="primary">{book.author?.name}</Typography>
-        </LinkWithRouter>
-      </Grid>
-
-      <Grid item md={1}>
-        <Typography variant="subtitle1">Genre</Typography>
-      </Grid>
       <Grid item md={2}>
-        <Typography variant="body1">{book.genre}</Typography>
+        <Stack spacing={1}>
+          
+          
+          
+        </Stack>
       </Grid>
 
-      <Grid item md={1}>
-        <Typography variant="subtitle1">Service</Typography>
+      <Grid item md={12}>
+        <BookViewOptions book={book} />
       </Grid>
-
-      <Grid item md={1}>
-        <Typography variant="subtitle1">{book.service}</Typography>
-      </Grid>
+      
     </Grid>
   );
 };

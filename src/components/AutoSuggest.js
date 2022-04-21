@@ -18,7 +18,7 @@ import SaveIcon from "@mui/icons-material/Save";
 
 const filter = createFilterOptions();
 
-const AutoSuggest = ({ data, value, onOpenAutoSuggest, onChange }) => {
+const AutoSuggest = ({ data, label, value, onOpenAutoSuggest, onChange }) => {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const loading = open && data.length === 0;
@@ -69,7 +69,7 @@ const AutoSuggest = ({ data, value, onOpenAutoSuggest, onChange }) => {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Author"
+            label={label}
             InputProps={{
               ...params.InputProps,
               endAdornment: (
