@@ -21,11 +21,16 @@ import BookView from "./BookDetail/BookView";
 
 import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
 
+const isEmptyObject = (value) => {
+  return value && value.constructor === Object && Object.keys(value).length === 0;
+}
+
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [createMode, setCreateMode] = useState(false);
   const [notification, setNotification] = useState({
     show: false,
     severity: "",
@@ -39,14 +44,24 @@ const BookDetail = ({ onRecordChange }) => {
       try {
         const bookRecord = await readById("book", id);
         console.log("bookrecord:" + bookRecord);
+        if (isEmptyObject(bookRecord.data)) {
+          navigate("/notfound")
+        }
+
         setBook(bookRecord.data);
         onRecordChange(bookRecord.data.title);
+        
       } catch (error) {
         console.log(error);
       }
     };
-    retrieveBook();
-  }, [id, onRecordChange]);
+    if (id > 0) {
+      retrieveBook();
+    }
+    if (id === undefined) {
+      setCreateMode(true);
+    }
+  }, [id, navigate, onRecordChange]);
 
   const getAuthors = () => {
     const retrieveAuthors = async () => {
@@ -134,15 +149,15 @@ const BookDetail = ({ onRecordChange }) => {
       <Box>
         <Grid container spacing={2}>
           <Grid item md={10}>
-            {!editMode && (
+            {!editMode && !createMode && (
               <BookView book={book} onUpdateEditMode={setEditMode} />
             )}
 
-            {editMode && (
+            {(editMode || createMode) && (
               <BookEdit
                 book={book}
                 authors={authors}
-                id={id}
+                isNew={createMode}
                 onUpdateBook={updateBook}
                 onUpdateEditMode={setEditMode}
                 onDeleteBook={deleteBook}

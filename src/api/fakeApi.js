@@ -1,4 +1,4 @@
-import { createServer, Model, belongsTo, hasMany } from "miragejs";
+import { createServer, Model, belongsTo, hasMany, Response } from "miragejs";
 
 import { authors as authorsdb, books as booksdb } from "./seed/db.js";
 import { AuthorFactory } from "./seed/AuthorFactory.js";
@@ -88,8 +88,11 @@ export function makeServer() {
 
       this.get("/books/:id", (schema, request) => {
         let book = schema.books.find(request.params.id);
-        let newBook = { ...book.attrs, author: { ...book.author?.attrs } };
-        return newBook;
+        if (book) {
+          let newBook = { ...book.attrs, author: { ...book.author?.attrs } };
+          return newBook;
+        }
+        return new Response(404, { errors: 'Not found' });
       });
 
       this.post("/books", (schema, request) => {

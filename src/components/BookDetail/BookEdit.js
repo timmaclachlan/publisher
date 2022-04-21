@@ -40,6 +40,7 @@ import AutoSuggest from "../AutoSuggest";
 const BookEdit = ({
   book,
   authors,
+  isNew,
   onUpdateBook,
   onUpdateEditMode,
   onDeleteBook,
@@ -84,23 +85,27 @@ const BookEdit = ({
         open={showDeleteConfirmation}
         onClose={handleCloseDeleteConfirmation}
       >
-        <DialogTitle>
-            Warning
-        </DialogTitle>
+        <DialogTitle>Warning</DialogTitle>
         <DialogContent>
           <Typography variant="h6">
             Are you sure you wish to delete this book?
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" color="error"
+          <Button
+            variant="contained"
+            color="error"
             onClick={handleConfirmDelete}
-            startIcon={<WarningIcon />}>
+            startIcon={<WarningIcon />}
+          >
             Yes
           </Button>
-          <Button variant="outlined" autoFocus
+          <Button
+            variant="outlined"
+            autoFocus
             onClick={() => setShowDeleteConfirmation(false)}
-            startIcon={<CancelIcon />}>
+            startIcon={<CancelIcon />}
+          >
             No
           </Button>
         </DialogActions>
@@ -112,41 +117,42 @@ const BookEdit = ({
           </Grid>
           <Grid item md={3}>
             <Typography variant="h4" sx={{ pt: 1 }}>
-              Edit Book
+              {isNew ? "Create Book" : "Edit Book"}
             </Typography>
           </Grid>
           <Grid item md={2} />
-          <Grid item md={2}>
-            <Button
-              variant="outlined"
-              startIcon={<CancelIcon />}
-              onClick={() => onUpdateEditMode(false)}
-            >
-              Cancel
-            </Button>
-          </Grid>
 
-          <Grid item md={2}>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteIcon />}
-              onClick={() => setShowDeleteConfirmation(true)}
-            >
-              Delete
-            </Button>
-          </Grid>
+          <Grid item md={6}>
+            <Stack direction="row-reverse" spacing={2}>
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                color="success"
+                sx={{ width: "100px" }}
+                onClick={onSaveBook}
+              >
+                Save
+              </Button>
 
-          <Grid item md={2}>
-            <Button
-              variant="contained"
-              startIcon={<SaveIcon />}
-              color="success"
-              sx={{ width: "100px" }}
-              onClick={onSaveBook}
-            >
-              Save
-            </Button>
+              {!isNew && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => setShowDeleteConfirmation(true)}
+                >
+                  Delete
+                </Button>
+              )}
+
+              <Button
+                variant="outlined"
+                startIcon={<CancelIcon />}
+                onClick={() => onUpdateEditMode(false)}
+              >
+                Cancel
+              </Button>
+            </Stack>
           </Grid>
 
           <Grid item md={9}>
@@ -192,7 +198,7 @@ const BookEdit = ({
               </Grid>
 
               <Grid item md={2}>
-                <FormControl>
+                <FormControl fullWidth>
                   <InputLabel id="service-label">Service</InputLabel>
                   <Select
                     label="Service"

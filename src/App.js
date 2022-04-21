@@ -19,8 +19,8 @@ import Breadcrumb from "./components/Breadcrumb";
 import Dashboard from "./components/Dashboard";
 import AuthorsPage from "./components/AuthorsPage";
 import AuthorDetailPage from "./components/AuthorDetailPage";
-import BooksPage from "./components/BooksPage";
 import BookDetailPage from "./components/BookDetailPage";
+import BooksPage from "./components/BooksPage";
 import NotFound from "./components/NotFound";
 
 function App() {
@@ -76,6 +76,7 @@ function App() {
                 />
               }
             />
+            <Route path="books/new" element={<BookDetailPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>

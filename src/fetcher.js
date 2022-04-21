@@ -20,7 +20,8 @@ const makeRequest = async (schema, isLookup = false, id = 0, method = 'GET', bod
   try {
     const response = await fetch(url, requestInit);
     if (!response.ok) {
-      throw new Error(`HTTP Error ${response.status}`);
+      if (response.status !== 404)        
+        throw new Error(`HTTP Error ${response.status} - ${response.message}`);
     }
     const responseData = await response.json();
     responseObject.errorMessage = '';
