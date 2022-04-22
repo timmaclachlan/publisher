@@ -9,10 +9,14 @@ import {
   Snackbar,
   Backdrop,
   Alert as MuiAlert,
+  Typography
 } from "@mui/material";
+
+
 
 import Books from "./Books";
 import AuthorEdit from "./AuthorDetail/AuthorEdit";
+import AuthorView from "./AuthorDetail/AuthorView";
 
 import { readById, updateById, deleteById } from "../fetcher";
 import { isEmptyObject } from "../utils";
@@ -70,14 +74,24 @@ const AuthorDetail = ({ onRecordChange }) => {
     }));
   };
 
-  const updateAuthor = (event) => {
-    const { name, value } = event.target;
+  const updateAuthor = (field, value) => {
     setAuthor((prevState) => {
       return {
         ...prevState,
-        [name]: value,
+        [field]: value,
       };
     });
+  };
+
+  const deleteAuthor = () => {
+    makeChange(deleteById.bind(null, id));
+    setNotification((prevState) => ({
+      ...prevState,
+      show: true,
+      severity: "warning",
+      autoHide: false,
+      message: "Author deleted successfully",
+    }));
   };
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -108,45 +122,15 @@ const AuthorDetail = ({ onRecordChange }) => {
 
       {notification.show && notification.severity === "warning" && (
         <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true}>
-          <Alert severity="warning">Book has been deleted</Alert>
+          <Alert severity="warning">Author has been deleted</Alert>
         </Backdrop>
       )}
 
       <Box>
         <Grid container spacing={2}>
-          <Grid item md={8}>
+          <Grid item md={10}>
             {!editMode && (
-              <Grid container spacing={2}>
-                <Grid item md={8}></Grid>
-
-                <Grid item md={2}>
-                  <Button
-                    variant="outlined"
-                    onClick={(ev) => makeChange(ev, deleteById.bind(null, id))}
-                  >
-                    Delete
-                  </Button>
-                </Grid>
-                <Grid item md={2}>
-                  <Button variant="contained" onClick={() => setEditMode(true)}>
-                    Edit
-                  </Button>
-                </Grid>
-
-                <Grid item md={2}>
-                  <label>Name</label>
-                </Grid>
-                <Grid item md={10}>
-                  <label className="details">{author.name}</label>
-                </Grid>
-
-                <Grid item md={2}>
-                  <label>Address</label>
-                </Grid>
-                <Grid item md={10}>
-                  <label className="details">{author.address}</label>
-                </Grid>
-              </Grid>
+              <AuthorView author={author} onUpdateEditMode={setEditMode} />
             )}
 
             {editMode && (
@@ -154,12 +138,13 @@ const AuthorDetail = ({ onRecordChange }) => {
                 author={author}
                 onUpdateAuthor={updateAuthor}
                 onUpdateEditMode={setEditMode}
+                onDeleteAuthor={deleteAuthor}
                 onSaveAuthor={saveAuthor}
               />
             )}
           </Grid>
 
-          <Grid item md={4}>
+          <Grid item md={2}>
             <Books books={author.books} />
           </Grid>
         </Grid>

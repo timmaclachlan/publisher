@@ -1,8 +1,34 @@
 import React from "react";
 
-import { Grid, Button, TextField } from "@mui/material";
+import {
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+} from "@mui/material";
 
-const AuthorEdit = ({ author, onUpdateAuthor, onUpdateEditMode, onSaveAuthor }) => {
+import PeopleIcon from "@mui/icons-material/People";
+import CancelIcon from "@mui/icons-material/Cancel";
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
+import WarningIcon from "@mui/icons-material/Warning";
+
+const AuthorEdit = ({
+  author,
+  isNew,
+  onUpdateAuthor,
+  onUpdateEditMode,
+  onDeleteAuthor,
+  onSaveAuthor,
+}) => {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] =
+    React.useState(false);
+
   const handleChange = (name, value) => {
     if (onUpdateAuthor) {
       onUpdateAuthor(name, value);
@@ -14,47 +40,113 @@ const AuthorEdit = ({ author, onUpdateAuthor, onUpdateEditMode, onSaveAuthor }) 
     handleChange(name, value);
   };
 
+  const handleCloseDeleteConfirmation = () => setShowDeleteConfirmation(false);
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirmation(false);
+    if (onDeleteAuthor) {
+      onDeleteAuthor();
+    }
+  };
+
   return (
-    <form>
-      <Grid container spacing={2}>
-        <Grid item md={8} />
-
-        <Grid item md={2}>
-          <Button variant="outlined" onClick={() => onUpdateEditMode(false)}>
-            Cancel
-          </Button>
-        </Grid>
-
-        <Grid item md={2}>
+    <>
+      <Dialog
+        open={showDeleteConfirmation}
+        onClose={handleCloseDeleteConfirmation}
+      >
+        <DialogTitle>Warning</DialogTitle>
+        <DialogContent>
+          <Typography variant="h6">
+            Are you sure you wish to delete this author?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
           <Button
             variant="contained"
-            onClick={onSaveAuthor}
+            color="error"
+            onClick={handleConfirmDelete}
+            startIcon={<WarningIcon />}
           >
-            Save
+            Yes
           </Button>
-        </Grid>
-
-        <Grid item md={6}>
-          <TextField
-            label="Name"
-            name="name"
+          <Button
             variant="outlined"
-            value={author.name}
-            onChange={valueChange}
-          />
-        </Grid>
+            autoFocus
+            onClick={() => setShowDeleteConfirmation(false)}
+            startIcon={<CancelIcon />}
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <form>
+        <Grid container spacing={2}>
+          <Grid item md={1}>
+            <PeopleIcon color="primary" sx={{ fontSize: 60, mr: 2 } } />
+          </Grid>
+          <Grid item md={3}>
+            <Typography variant="h4" sx={{ pt: 1 }}>
+              {isNew ? "Create Author" : "Edit Author"}
+            </Typography>
+          </Grid>
+          <Grid item md={2} />
 
-        <Grid item md={6}>
-          <TextField
-            label="Address"
-            name="address"
-            variant="outlined"
-            value={author.address}
-            onChange={valueChange}
-          />
+          <Grid item md={6}>
+            <Stack direction="row-reverse" spacing={2}>
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                color="success"
+                sx={{ width: "100px" }}
+                onClick={onSaveAuthor}
+              >
+                Save
+              </Button>
+
+              {!isNew && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => setShowDeleteConfirmation(true)}
+                >
+                  Delete
+                </Button>
+              )}
+
+              <Button
+                variant="outlined"
+                startIcon={<CancelIcon />}
+                onClick={() => onUpdateEditMode(false)}
+              >
+                Cancel
+              </Button>
+            </Stack>
+          </Grid>
+
+          <Grid item md={6}>
+            <TextField
+              label="Name"
+              name="name"
+              variant="outlined"
+              value={author.name}
+              onChange={valueChange}
+            />
+          </Grid>
+
+          <Grid item md={6}>
+            <TextField
+              label="Address"
+              name="address"
+              variant="outlined"
+              value={author.address}
+              onChange={valueChange}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    </form>
+      </form>
+    </>
   );
 };
 
