@@ -9,7 +9,9 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Backdrop,
+  Alert
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
@@ -28,6 +30,7 @@ const AuthorEdit = ({
 }) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
     React.useState(false);
+  const [booksWarning, setBooksWarning] = React.useState(false);
 
   const handleChange = (name, value) => {
     if (onUpdateAuthor) {
@@ -49,8 +52,23 @@ const AuthorEdit = ({
     }
   };
 
+  const handleDeleteClick = () => {
+    if (author.books.length > 0) {
+      setBooksWarning(true);
+      return;
+    }
+    setShowDeleteConfirmation(true);
+  };
+
   return (
     <>
+      {booksWarning && (
+        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true} onClick={() => setBooksWarning(false)}>
+          <Alert severity="warning" sx={{ height: '60px', pt: 1.5 }}>
+            Can't delete author when books assigned.
+          </Alert>
+        </Backdrop>
+      )}
       <Dialog
         open={showDeleteConfirmation}
         onClose={handleCloseDeleteConfirmation}
@@ -83,7 +101,7 @@ const AuthorEdit = ({
       <form>
         <Grid container spacing={2}>
           <Grid item md={1}>
-            <PeopleIcon color="primary" sx={{ fontSize: 60, mr: 2 } } />
+            <PeopleIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
           </Grid>
           <Grid item md={3}>
             <Typography variant="h4" sx={{ pt: 1 }}>
@@ -109,7 +127,7 @@ const AuthorEdit = ({
                   variant="contained"
                   color="error"
                   startIcon={<DeleteIcon />}
-                  onClick={() => setShowDeleteConfirmation(true)}
+                  onClick={handleDeleteClick}
                 >
                   Delete
                 </Button>

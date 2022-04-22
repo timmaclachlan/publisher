@@ -72,6 +72,9 @@ const AuthorDetail = ({ onRecordChange }) => {
       autoHide: true,
       message: "Changes saved successfully",
     }));
+    if (onRecordChange) {
+      onRecordChange(author.name);
+    }
   };
 
   const updateAuthor = (field, value) => {
@@ -126,16 +129,18 @@ const AuthorDetail = ({ onRecordChange }) => {
         </Backdrop>
       )}
 
+     
       <Box>
         <Grid container spacing={2}>
           <Grid item md={10}>
-            {!editMode && (
+            {!editMode && !createMode && (
               <AuthorView author={author} onUpdateEditMode={setEditMode} />
             )}
 
-            {editMode && (
+            {(editMode || createMode) && (
               <AuthorEdit
                 author={author}
+                isNew={createMode}
                 onUpdateAuthor={updateAuthor}
                 onUpdateEditMode={setEditMode}
                 onDeleteAuthor={deleteAuthor}

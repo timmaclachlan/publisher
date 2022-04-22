@@ -42,10 +42,10 @@ const BookDetail = ({ onRecordChange }) => {
         const bookRecord = await readById("book", id);
         console.log("bookrecord:" + bookRecord);
         if (isEmptyObject(bookRecord.data)) {
-          navigate("/notfound")
+          navigate("/notfound");
         }
         setBook(bookRecord.data);
-        onRecordChange(bookRecord.data.title);        
+        onRecordChange(bookRecord.data.title);
       } catch (error) {
         console.log(error);
       }
@@ -87,6 +87,9 @@ const BookDetail = ({ onRecordChange }) => {
       autoHide: true,
       message: "Changes saved successfully",
     }));
+    if (onRecordChange) {
+      onRecordChange(book.name);
+    }
   };
 
   const updateBook = (field, value) => {
