@@ -4,6 +4,8 @@ import { authors as authorsdb, books as booksdb } from "./seed/db.js";
 import { AuthorFactory } from "./seed/AuthorFactory.js";
 import { BookFactory } from "./seed/BookFactory.js";
 
+import { selectProps } from "../utils.js";
+
 const NOAUTHORS = 10;
 const NOBOOKS = 10;
 
@@ -177,13 +179,4 @@ export function makeServer() {
   });
 }
 
-// levelup.gitconnected.com/how-to-select-specific-properties-from-an-array-of-objects-bd9f6c15dbd0
-const selectProps = (...props) => {
-  return function (obj) {
-    const newObj = {};
-    props.forEach(name => {
-      newObj[name] = obj[name];
-    });
-    return newObj;
-  }
-}
+
