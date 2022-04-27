@@ -3,11 +3,13 @@ import { createServer, Model, belongsTo, hasMany, Response } from "miragejs";
 import { authors as authorsdb, books as booksdb } from "./seed/db.js";
 import { AuthorFactory } from "./seed/AuthorFactory.js";
 import { BookFactory } from "./seed/BookFactory.js";
+import { OrdersB2BFactory } from "./seed/OrdersB2BFactory.js";
 
 import { selectProps } from "../utils.js";
 
 const NOAUTHORS = 10;
 const NOBOOKS = 10;
+const NOORDERS = 50;
 
 const NOT_FOUND = 404;
 
@@ -28,6 +30,7 @@ export function makeServer() {
     factories: {
       author: AuthorFactory,
       book: BookFactory,
+      order: OrdersB2BFactory
     },
     seeds(server) {
       authorsdb.forEach((item) => {
@@ -39,6 +42,7 @@ export function makeServer() {
 
       server.createList("author", NOAUTHORS);
       server.createList("book", NOBOOKS);
+      server.createList("order", NOORDERS);
     },
 
     routes() {
@@ -171,7 +175,7 @@ export function makeServer() {
         return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
-      this.get("/orders/retail", (schema, request) => {
+      this.get("/orders", (schema, request) => {
         let data = schema.orders.all();
         return data.models;
       })

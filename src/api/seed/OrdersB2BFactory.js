@@ -1,6 +1,5 @@
 import { Factory } from "miragejs";
 import faker from "@faker-js/faker";
-import { FormatStrikethroughRounded } from "@mui/icons-material";
 
 const NOBOOKS = 10;
 
@@ -21,7 +20,7 @@ export const OrdersB2BFactory = Factory.extend({
     return faker.finance.amount(1, 100);
   },
   quantity() {
-    return faker.datatype.number();
+    return faker.datatype.number(1, 20);
   },
   royaltyAuthor() {
     return faker.finance.amount(1, 30);
