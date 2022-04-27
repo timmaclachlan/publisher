@@ -30,7 +30,7 @@ function ListItemLink(props) {
 export const mainListItems = (
   <React.Fragment>
     <ListItemLink to="/" primary="Dashboard" icon={<DashboardIcon />} />
-    <ListItemLink to="/sales" primary="Sales" icon={<ShoppingCartIcon />} />
+    <ListItemLink to="/orders/retail" primary="Sales" icon={<ShoppingCartIcon />} />
     <ListItemLink to="/authors" primary="Authors" icon={<PeopleIcon />} />
     <ListItemLink to="/books/" primary="Books" icon={<LayersIcon />} />
     <ListItemLink to="/royalties" primary="Royalties" icon={<BarChartIcon />} />
