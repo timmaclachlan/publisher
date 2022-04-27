@@ -17,7 +17,11 @@ export function makeServer() {
       }),
       book: Model.extend({
         author: belongsTo(),
+        orders: hasMany()
       }),
+      order: Model.extend({
+        book: belongsTo()
+      })
     },
     factories: {
       author: AuthorFactory,
@@ -164,6 +168,11 @@ export function makeServer() {
         }
         return new Response(NOT_FOUND, { errors: 'Not found' });
       });
+
+      this.get("/orders/retail", (schema, request) => {
+        let data = schema.orders.all();
+        return data.models;
+      })
     },
   });
 }

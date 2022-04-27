@@ -1,6 +1,6 @@
 import { Factory } from "miragejs";
 import faker from "@faker-js/faker";
-import { FormatAlignJustifyRounded } from "@mui/icons-material";
+
 
 const NOAUTHORS = 10;
 
