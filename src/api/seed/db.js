@@ -3,19 +3,22 @@
 export const authors = [
   {
     id: 1,
-    name: 'Enid Blyton',
+    realName: 'Enid Blyton',
+    penName: 'Enid Blyton',
     address: '1 Test Street, Test Town',
     active: true
   },
   {
     id: 2,
-    name: 'Edgar Poe',
+    realName: 'Edgar Poe',
+    penName: 'Edgar Poe',
     address: '2 Test Street, Test Town',
     active: true
   },
   {
     id: 3,
-    name: 'William Shakespeare',
+    realName: 'William Shakespeare',
+    penName: 'William Shakespeare',
     address: '3 Test Street, Test Town',
     active: false
   }

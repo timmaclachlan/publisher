@@ -18,13 +18,12 @@ import SaveIcon from "@mui/icons-material/Save";
 
 const filter = createFilterOptions();
 
-const AutoSuggest = ({ data, label, value, onOpenAutoSuggest, onChange }) => {
+const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange }) => {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const loading = open && data.length === 0;
 
   const handleChange = (ev, value) => {
-    debugger;
     if (value && value.inputValue) {
       debugger;
       setOpenDialog(true);
@@ -38,7 +37,7 @@ const AutoSuggest = ({ data, label, value, onOpenAutoSuggest, onChange }) => {
     <>
       <Autocomplete
         options={data}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option[field]}
         onOpen={() => {
           setOpen(true);
           onOpenAutoSuggest();
@@ -46,7 +45,7 @@ const AutoSuggest = ({ data, label, value, onOpenAutoSuggest, onChange }) => {
         onClose={() => setOpen(false)}
         loading={loading}
         autoSelect
-        isOptionEqualToValue={(option, value) => option.name === value.name}
+        isOptionEqualToValue={(option, value) => option[field] === value[field]}
         value={value}
         onChange={handleChange}
         filterOptions={(options, params) => {
@@ -55,7 +54,7 @@ const AutoSuggest = ({ data, label, value, onOpenAutoSuggest, onChange }) => {
           const { inputValue } = params;
           // Suggest the creation of a new value
           const isExisting = options.some(
-            (option) => inputValue === option.name
+            (option) => inputValue === option[field]
           );
           if (inputValue !== "" && !isExisting) {
             filtered.push({

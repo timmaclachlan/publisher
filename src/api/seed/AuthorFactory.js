@@ -9,7 +9,7 @@ export const AuthorFactory = Factory.extend({
     return faker.name.findName();
   },
   email() {
-    return faker.email.findName();
+    return faker.internet.email();
   },
   phoneNumber() {
     return faker.phone.phoneNumber();
@@ -18,25 +18,31 @@ export const AuthorFactory = Factory.extend({
     return faker.address.country();
   },
   address1() {
-    return faker.address.address1();
+    return faker.address.streetAddress();
   },
   address2() {
-    return faker.address.address2();
+    return faker.address.streetName();
   },
   address3() {
-    return faker.address.address3();
+    return faker.address.city();
   },
   address4() {
-    return faker.address.address4();
+    return faker.address.state();
   },
   postCode() {
-    return faker.address.postCode();
+    return faker.address.zipCode();
   },
   sortCode() {
     return faker.finance.account(6);
   },
   accountNo() {
     return faker.finance.account(8);
+  },
+  iban() {
+    return faker.finance.iban();
+  },
+  bic() {
+    return faker.finance.bic();
   },
   retainedClient() {
     return faker.random.arrayElement([true, false]);

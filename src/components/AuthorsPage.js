@@ -9,7 +9,7 @@ import { readAll } from "../fetcher";
 
 
 const LinkComponent = ({ data }) => {
-	return <Button component={RouterLink} sx={{ p: 0}} to={"/authors/" + data.id}>{data.name}</Button>
+	return <Button component={RouterLink} sx={{ p: 0}} to={"/authors/" + data.id}>{data.realName}</Button>
 };
 
 
@@ -37,7 +37,7 @@ const Authors = ({onRecordChange}) => {
 
   const columnDefs = [
     {
-      field: "name",
+      field: "realName",
       cellRenderer: "LinkComponent",
     },
     { field: "address", width: 300 },

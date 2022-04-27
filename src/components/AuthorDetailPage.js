@@ -24,7 +24,7 @@ import { isEmptyObject } from "../utils";
 const AuthorDetail = ({ onRecordChange }) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [author, setAuthor] = useState({ id: 0, name: "", address: "" });
+  const [author, setAuthor] = useState({ id: 0, realName: "", address: "" });
   const [editMode, setEditMode] = useState(false);
   const [createMode, setCreateMode] = useState(false);
   const [notification, setNotification] = useState({
@@ -42,7 +42,7 @@ const AuthorDetail = ({ onRecordChange }) => {
           navigate("/notfound");
         }
         setAuthor(authorRecord.data);
-        onRecordChange(authorRecord.data.name);
+        onRecordChange(authorRecord.data.realName);
       } catch (error) {
         console.log(error);
       }
@@ -73,7 +73,7 @@ const AuthorDetail = ({ onRecordChange }) => {
       message: "Changes saved successfully",
     }));
     if (onRecordChange) {
-      onRecordChange(author.name);
+      onRecordChange(author.realName);
     }
   };
 

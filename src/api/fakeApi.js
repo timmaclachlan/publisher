@@ -45,7 +45,7 @@ export function makeServer() {
 
       this.get("/lookup/authors", (schema, request) => {
         let data = schema.authors.all();
-        let subData = data.models.map(selectProps("id", "name"));
+        let subData = data.models.map(selectProps("id", "realName"));        
         return subData;
       });
 
@@ -75,8 +75,26 @@ export function makeServer() {
         if (author) {
           let updateAuthor = author.update(
             {
-              name: attrs.name,
-              address: attrs.address
+              realName: attrs.realName,
+              penName: attrs.penName,
+              email: attrs.email,
+              phoneNumber: attrs.phoneNumber,
+              location: attrs.location,
+
+              address1: attrs.address,
+              address2: attrs.address2,
+              address3: attrs.address3,
+              address4: attrs.address4,
+              postCode: attrs.postCode,
+
+              sortCode: attrs.sortCode,
+              accountNo: attrs.accountNo,
+              iban: attrs.iban,
+              bic: attrs.bic,
+              retainedClient: attrs.retainedClient,
+              gender: attrs.gender,
+              notes: attrs.notes,
+              active: attrs.active
             }
           )
           return updateAuthor;

@@ -2,6 +2,7 @@ import React from "react";
 
 import {
   Grid,
+  Box,
   Button,
   TextField,
   Typography,
@@ -11,9 +12,24 @@ import {
   DialogContent,
   DialogActions,
   Backdrop,
-  Alert
+  Alert,
+  Card,
+  CardHeader,
+  CardContent,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Switch,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PeopleIcon from "@mui/icons-material/People";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
@@ -43,6 +59,11 @@ const AuthorEdit = ({
     handleChange(name, value);
   };
 
+  const checkedChange = (event) => {
+    const { name, checked } = event.target;
+    handleChange(name, checked);
+  };
+
   const handleCloseDeleteConfirmation = () => setShowDeleteConfirmation(false);
 
   const handleConfirmDelete = () => {
@@ -63,8 +84,12 @@ const AuthorEdit = ({
   return (
     <>
       {booksWarning && (
-        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true} onClick={() => setBooksWarning(false)}>
-          <Alert severity="warning" sx={{ height: '60px', pt: 1.5 }}>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: 500 }}
+          open={true}
+          onClick={() => setBooksWarning(false)}
+        >
+          <Alert severity="warning" sx={{ height: "60px", pt: 1.5 }}>
             Can't delete author when books assigned.
           </Alert>
         </Backdrop>
@@ -127,7 +152,7 @@ const AuthorEdit = ({
                   variant="contained"
                   color="error"
                   startIcon={<DeleteIcon />}
-                  onClick={handleDeleteClick}
+                  onClick={() => setShowDeleteConfirmation(true)}
                 >
                   Delete
                 </Button>
@@ -143,24 +168,220 @@ const AuthorEdit = ({
             </Stack>
           </Grid>
 
-          <Grid item md={6}>
-            <TextField
-              label="Name"
-              name="name"
-              variant="outlined"
-              value={author.name}
-              onChange={valueChange}
-            />
+          <Grid item md={9}>
+            <Grid container spacing={2}>
+              <Grid item md={4}>
+                <TextField
+                  label="Real Name"
+                  name="realName"
+                  variant="outlined"
+                  value={author.realName}
+                  onChange={valueChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item md={4}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  variant="outlined"
+                  value={author.email}
+                  onChange={valueChange}
+                  fullWidth
+                />
+              </Grid>
+
+              <Grid item md={2}>
+                <FormControl>
+                  <InputLabel id="gender-label">Gender</InputLabel>
+                  <Select
+                    labelId="gender-label"
+                    label="Gender"
+                    value={author.gender}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="M">Male</MenuItem>
+                    <MenuItem value="F">Female</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item md={2}>
+                <FormControlLabel
+                  control={<Switch />}
+                  label="Active"
+                  name="active"
+                  checked={author.active}
+                  onChange={checkedChange}
+                />
+              </Grid>
+
+              <Grid item md={4}>
+                <TextField
+                  label="Pen Name"
+                  name="penName"
+                  variant="outlined"
+                  value={author.penName}
+                  onChange={valueChange}
+                  fullWidth
+                />
+              </Grid>
+
+              <Grid item md={4}>
+                <TextField
+                  label="Phone"
+                  name="phoneNumber"
+                  variant="outlined"
+                  value={author.phoneNumber}
+                  onChange={valueChange}
+                  fullWidth
+                />
+              </Grid>
+
+              <Grid item md={4}>
+                <TextField
+                  label="Location"
+                  name="location"
+                  variant="outlined"
+                  value={author.location}
+                  onChange={valueChange}
+                  fullWidth
+                />
+              </Grid>
+
+              <Grid item md={6}>
+                <Card>
+                  <CardHeader subheader="Address Details" />
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <TextField
+                        label="Building/Apartment"
+                        name="address1"
+                        variant="outlined"
+                        value={author.address1}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Street"
+                        name="address2"
+                        variant="outlined"
+                        value={author.address2}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Town/City"
+                        name="address3"
+                        variant="outlined"
+                        value={author.address3}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="County/State"
+                        name="address4"
+                        variant="outlined"
+                        value={author.address4}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Post/Zip Code"
+                        name="postCode"
+                        variant="outlined"
+                        value={author.postCode}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item md={6}>
+                <TextField
+                  label="Notes"
+                  name="notes"
+                  variant="outlined"
+                  multiline
+                  rows={8}
+                  value={author.notes}
+                  onChange={valueChange}
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
           </Grid>
 
-          <Grid item md={6}>
-            <TextField
-              label="Address"
-              name="address"
-              variant="outlined"
-              value={author.address}
-              onChange={valueChange}
-            />
+          <Grid item md={3}>
+            <Grid container spacing={2}>
+              <Grid item md={12}>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    Banking Details
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={2}>
+                      <TextField
+                        label="Sort Code"
+                        name="sortCode"
+                        variant="outlined"
+                        value={author.sortCode}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Account"
+                        name="accountNo"
+                        variant="outlined"
+                        value={author.accountNo}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="IBAN"
+                        name="iban"
+                        variant="outlined"
+                        value={author.iban}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="SwiftBic"
+                        name="bic"
+                        variant="outlined"
+                        value={author.bic}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              </Grid>
+
+              <Grid item md={12}>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    Options
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={2}>
+                      <FormGroup>
+                        <FormControlLabel
+                          label="Retained Client"
+                          labelPlacement="start"
+                          control={<Checkbox />}
+                          name="retainedClient"
+                          checked={author.retainedClient}
+                          onChange={checkedChange}
+                        />
+                      </FormGroup>
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </form>

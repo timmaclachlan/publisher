@@ -49,7 +49,7 @@ const AuthorView = ({author, onUpdateEditMode}) => {
       </Grid>
 
       <Grid item md={2}>
-        <label>Name</label>
+        <label>Real Name</label>
       </Grid>
       <Grid item md={10}>
         <label className="details">{author.name}</label>

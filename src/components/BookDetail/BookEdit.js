@@ -182,6 +182,7 @@ const BookEdit = ({
                 <AutoSuggest
                   data={authors}
                   value={book.author}
+                  field="realName"
                   onOpenAutoSuggest={getAuthors}
                   onChange={handleChange}
                 />
