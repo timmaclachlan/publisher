@@ -2,7 +2,7 @@ import React from "react";
 
 import { Stack, Divider } from "@mui/material";
 
-import BookViewChip from "./BookViewChip";
+import ViewChip from "../ViewChip";
 
 const BookViewOptions = ({ book }) => {
   return (
@@ -11,12 +11,12 @@ const BookViewOptions = ({ book }) => {
       spacing={2}
       divider={<Divider orientation="vertical" flexItem />}
     >
-      <BookViewChip value={book.published} label="Published" />
-      <BookViewChip label={book.service} color="success" />
-      <BookViewChip value={book.stillSelling} label="Selling" />
-      <BookViewChip value={book.terminated} label="Terminated" />
-      <BookViewChip value={book.onHold} label="On Hold" />
-      <BookViewChip value={book.matureContent} label="Mature" />
+      <ViewChip value={book.published} label="Published" />
+      <ViewChip label={book.service} color="success" />
+      <ViewChip value={book.stillSelling} label="Selling" />
+      <ViewChip value={book.terminated} label="Terminated" />
+      <ViewChip value={book.onHold} label="On Hold" />
+      <ViewChip value={book.matureContent} label="Mature" />
     </Stack>
   );
 };

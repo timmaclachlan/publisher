@@ -8,7 +8,7 @@ import {
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 
-const BookViewChip = ({ label, value, color }) => {
+const ViewChip = ({ label, value, color }) => {
   return (
     <Chip
       label={label}
@@ -20,4 +20,4 @@ const BookViewChip = ({ label, value, color }) => {
   );
 };
 
-export default BookViewChip;
+export default ViewChip;

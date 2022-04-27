@@ -81,13 +81,7 @@ const BookView = ({ book, onUpdateEditMode }) => {
         </Card>
       </Grid>
 
-      <Grid item md={2}>
-        <Stack spacing={1}>
-          
-          
-          
-        </Stack>
-      </Grid>
+
 
       <Grid item md={12}>
         <BookViewOptions book={book} />
