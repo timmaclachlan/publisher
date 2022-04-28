@@ -3,7 +3,7 @@
 export const authors = 
   [{
     id: 1,
-    fullName: "John Lovell",
+    realName: "John Lovell",
     penName: "John Lovell",
     email: "johnlovell@live.co.uk",
     phoneNumber: "07780644003",
@@ -21,7 +21,7 @@ export const authors =
   },
     {
       id: 2,
-      fullName: "David Gibson",
+      realName: "David Gibson",
       penName: "David Gibson",
       email: "gibsonad@msn.com",
       phoneNumber: "",
@@ -38,8 +38,8 @@ export const authors =
       notes: ""
     },
     {
-      "Id": "F63CB923-4A42-4E05-B1A3-0370513986FD",
-      fullName: "Michelle Path",
+      id: 3,
+      realName: "Michelle Path",
       penName: "Michelle Path",
       email: "cyberfox@dcsi.net.au",
       phoneNumber: "",
@@ -57,7 +57,7 @@ export const authors =
     },
     {
       "Id": "69F96989-5EF6-4EA8-91F5-042370122934",
-      fullName: "Kate Williams",
+      realName: "Kate Williams",
       penName: "Kate Williams",
       email: "kate_wil2000@yahoo.com",
       phoneNumber: "01767 262714",
@@ -74,7 +74,7 @@ export const authors =
       notes: ""
     }, {
       "Id": "9D44FF17-01BE-4D77-91C9-0523FF5839E3",
-      fullName: "David P. Philip",
+      realName: "David P. Philip",
       penName: "David P. Philip",
       email: "dpp.author@gmail.com",
       phoneNumber: "07503 047888",
@@ -92,7 +92,7 @@ export const authors =
     },
     {
       "Id": "4C6A0F05-5103-46BB-9FF6-05A350A54D52",
-      fullName: "John Davies",
+      realName: "John Davies",
       penName: "John Davies",
       email: "davies.jhndvs@btinternet.com",
       phoneNumber: "01639 881341",
@@ -110,7 +110,7 @@ export const authors =
     },
     {
       "Id": "8328596A-3B6F-4C7F-A0C9-069DF7439DEE",
-      fullName: "Tim Humphreys-Jones",
+      realName: "Tim Humphreys-Jones",
       penName: "Tim Humphreys-Jones",
       email: "preechpoetry@gmail.com",
       phoneNumber: "01978 253328, 07927 955362",
@@ -128,7 +128,7 @@ export const authors =
     },
     {
       "Id": "20D5443E-2B42-4694-90B0-09D9601C6930",
-      fullName: "Sir Arthur Lawrence",
+      realName: "Sir Arthur Lawrence",
       penName: "Sir Arthur Lawrence",
       email: "Sirarthurlawrence@btinternet.com",
       phoneNumber: "02085413935",
@@ -146,7 +146,7 @@ export const authors =
     },
     {
       "Id": "2AF4D1B2-AB77-4F12-9F30-0A78D27E15C6",
-      fullName: "Sima Patel",
+      realName: "Sima Patel",
       penName: "Sima Patel",
       email: "simapatel04@gmail.com",
       phoneNumber: "",
@@ -164,7 +164,7 @@ export const authors =
     },
     {
       "Id": "72EF359B-3E3E-4DEC-A0C6-0BC7B76F7FF5",
-      fullName: "Beth Cortese",
+      realName: "Beth Cortese",
       penName: "Beth Cortese",
       email: "b.cortese@lancaster.ac.uk",
       phoneNumber: "07985646003",
@@ -182,7 +182,7 @@ export const authors =
     },
     {
       "Id": "6F323771-98AE-49DB-8148-10BD2F798090",
-      fullName: "Mike Stenson",
+      realName: "Mike Stenson",
       penName: "Mike Stenson",
       email: "m.stenson147@btinternet.com",
       phoneNumber: "",
@@ -200,7 +200,7 @@ export const authors =
     },
     {
       "Id": "CE532A19-F515-40EE-B99E-128246F8791B",
-      fullName: "Emma Adams",
+      realName: "Emma Adams",
       penName: "Emma Adams",
       email: "memzi@live.co.uk",
       phoneNumber: "07943344159",
@@ -218,7 +218,7 @@ export const authors =
     },
     {
       "Id": "EA9CE68B-4D11-4A4F-A0EB-139D8B996706",
-      fullName: "Ryan Hoadley-Thaxter",
+      realName: "Ryan Hoadley-Thaxter",
       penName: "R. D. Thaxter",
       email: "rdhthaxter@gmail.com",
       phoneNumber: "07731682826",
@@ -236,7 +236,7 @@ export const authors =
     },
     {
       "Id": "6C5640B7-2BEE-4B82-803C-14B7B71EBD5B",
-      fullName: "Malcolm Cowper",
+      realName: "Malcolm Cowper",
       penName: "Malcolm Cowper",
       email: "malcomcowper@gmail.com",
       phoneNumber: "01656 858812, 07761 498284",
@@ -254,7 +254,7 @@ export const authors =
     },
     {
       "Id": "3AD82F8A-78AB-41E2-BD61-1A8BC7986968",
-      fullName: "Jennifer Silcox",
+      realName: "Jennifer Silcox",
       penName: "Jennifer Heapes",
       email: "jennifer_heapes@hotmail.com",
       phoneNumber: "07746136102",
@@ -272,7 +272,7 @@ export const authors =
     },
     {
       "Id": "FB3B046D-AE5C-4D54-94DF-1C8723168325",
-      fullName: "Mick Roberts",
+      realName: "Mick Roberts",
       penName: "Michael Roberts",
       email: "mick.roberts93@googlemail.com",
       phoneNumber: "07501 700402",
@@ -290,7 +290,7 @@ export const authors =
     },
     {
       "Id": "FBAF2325-778C-478B-9F33-1CBBC6609D81",
-      fullName: "Michael Evans",
+      realName: "Michael Evans",
       penName: "Michael Evans",
       email: "michael.evans@the-times.co.uk",
       phoneNumber: "07768 081797",
@@ -308,7 +308,7 @@ export const authors =
     },
     {
       "Id": "BEFF9546-1E59-4587-B848-1E9AC3FBAECD",
-      fullName: "Dannika Kendall",
+      realName: "Dannika Kendall",
       penName: "D.E. Kendall",
       email: "x_danni_x1@msn.com",
       phoneNumber: "07932478104",
@@ -326,7 +326,7 @@ export const authors =
     },
     {
       "Id": "B0622790-6995-4DC4-A5D9-1F11CEE1F729",
-      fullName: "Anthony Osae-Brown",
+      realName: "Anthony Osae-Brown",
       penName: "Anthony Osae-Brown",
       email: "osaebrown@yahoo.com",
       phoneNumber: "234 8023165438",
@@ -344,7 +344,7 @@ export const authors =
     },
     {
       "Id": "11DD239B-F9C5-425A-BD15-1F2C87E11718",
-      fullName: "Kathy Marker",
+      realName: "Kathy Marker",
       penName: "Kathy Marker",
       email: "fmarker@safelink.net",
       phoneNumber: "208-312-7309 ",
@@ -362,7 +362,7 @@ export const authors =
     },
     {
       "Id": "33BD8651-7C0C-43F3-B4F6-1F8775FB91BA",
-      fullName: "Paul Challis",
+      realName: "Paul Challis",
       penName: "P. G. Challis",
       email: "beaker@beakz.net",
       phoneNumber: "07770 274949, 01487 812839",
@@ -380,7 +380,7 @@ export const authors =
     },
     {
       "Id": "6819261A-8C39-42AD-B471-210100DBE13F",
-      fullName: "Christine Duts",
+      realName: "Christine Duts",
       penName: "Christine Duts",
       email: "chduts@gmail.com",
       phoneNumber: "",
@@ -398,7 +398,7 @@ export const authors =
     },
     {
       "Id": "DBB34EEA-A5C5-4827-8A65-282CF4E87A90",
-      fullName: "Peter David Hull",
+      realName: "Peter David Hull",
       penName: "Peter Hull",
       email: "peterdhull@talktalk.net",
       phoneNumber: "01458259292",
@@ -416,7 +416,7 @@ export const authors =
     },
     {
       "Id": "E55C56BF-FFB4-4B3B-8C19-2D3CFAD19165",
-      fullName: "Luke Sutton",
+      realName: "Luke Sutton",
       penName: "Luke Sutton",
       email: "suttonluke40@gmail.com",
       phoneNumber: "07927026300",
@@ -434,7 +434,7 @@ export const authors =
     },
     {
       "Id": "6F37A078-6BF2-4539-A0BC-2DE3824AD82B",
-      fullName: "Matthew Gilbert",
+      realName: "Matthew Gilbert",
       penName: "Matthew Gilbert",
       email: "mattgilbertwales@yahoo.com",
       phoneNumber: "07779091995",
@@ -452,7 +452,7 @@ export const authors =
     },
     {
       "Id": "02FB236B-F857-40C7-ADD8-34500B2F9C02",
-      fullName: "Lakhbinder Singh Loi",
+      realName: "Lakhbinder Singh Loi",
       penName: "Lak Loi",
       email: "auraleisure@yahoo.com, lak@auraleisure.com",
       phoneNumber: "0795 180 7982",
@@ -469,7 +469,7 @@ export const authors =
       notes: ""
     }, {
       "Id": "E9D90110-8FD2-4D48-B590-37B09F07",
-      fullName: "J. F. Cicci",
+      realName: "J. F. Cicci",
       penName: "J. F. Cicci",
       email: "jfcicci@live.com",
       phoneNumber: "",
@@ -487,7 +487,7 @@ export const authors =
     },
     {
       "Id": "2E989FE7-6F6F-457E-9BAC-38DBF26678B2",
-      fullName: "Gerald Keith Edmondson",
+      realName: "Gerald Keith Edmondson",
       penName: "Keith Edmondson",
       email: "g.edmondson@virgin.net",
       phoneNumber: "01274 612730",
@@ -505,7 +505,7 @@ export const authors =
     },
     {
       "Id": "DA2A0890-E91B-4DF9-AF2D-3B6347F2ABD8",
-      fullName: "Heather Jones",
+      realName: "Heather Jones",
       penName: "Heather Jones",
       email: "heather_n_jones@hotmail.com",
       phoneNumber: "01244 537430",
@@ -523,7 +523,7 @@ export const authors =
     },
     {
       "Id": "CF6E5C2D-5339-4EC4-9E06-42407FEE6066",
-      fullName: "Tracey Odessa Kane",
+      realName: "Tracey Odessa Kane",
       penName: "Tracey Odessa Kane",
       email: "tkane176@gmail.com, philipkane@phonecoop.coop",
       phoneNumber: "01204 528616, 07707834704",
@@ -540,7 +540,7 @@ export const authors =
     },
     {
       "Id": "82CAFCA9-021E-4CEC-803B-494FB1A81B23",
-      fullName: "Sadhek Ahmed Khan",
+      realName: "Sadhek Ahmed Khan",
       penName: "S. A. Khan",
       email: "sadhek@hotmail.com",
       phoneNumber: "07984 018 315",
@@ -558,7 +558,7 @@ export const authors =
     },
     {
       "Id": "BD022B1A-D4EE-44B4-82FC-4AA60C4A9A2A",
-      fullName: "Bas Bastinck",
+      realName: "Bas Bastinck",
       penName: "B.",
       email: "nennius@planet.nl",
       phoneNumber: "",
@@ -576,7 +576,7 @@ export const authors =
     },
     {
       "Id": "18B8C471-4331-4192-AD8E-4AABFB0985AC",
-      fullName: "n o o n e",
+      realName: "n o o n e",
       penName: "n o o n e",
       email: "chrisnoone@hotmail.co.uk",
       phoneNumber: "07990 594 449",
@@ -594,7 +594,7 @@ export const authors =
     },
     {
       "Id": "2BE058BD-83BE-4F3D-A95D-4D4368B1568D",
-      fullName: "Elijiah Pitman",
+      realName: "Elijiah Pitman",
       penName: "Elijiah Pitman",
       email: "elijiahp @gmail.com; me @davidpitman.name",
       phoneNumber: " + 1(970) 268 - 5548",
@@ -612,7 +612,7 @@ export const authors =
     },
     {
       "Id": "C07A4EF1-B45A-41ED-A526-4EB1940ACAD3",
-      fullName: "Chris Rasmussen",
+      realName: "Chris Rasmussen",
       penName: "Chris Rasmussen",
       email: "cjrmd3 @aol.com",
       phoneNumber: "(262) 219 - 6329",
@@ -630,7 +630,7 @@ export const authors =
     },
     {
       "Id": "F32E797A - 6485 - 4BE2 - BA58 - 4EC84628050A",
-      fullName: "David West",
+      realName: "David West",
       penName: "David West",
       email: "davidwest22@talktalk.net",
       phoneNumber: "01685 723028",
@@ -643,7 +643,7 @@ export const authors =
     },
     {
       "Id": "9E273739-148F-4D7A-88E7-4FCFF0EC9BCD",
-      fullName: "Erica Willmott",
+      realName: "Erica Willmott",
       penName: "Erica Willmott",
       email: "ericawillmott79@yahoo.co.uk",
       phoneNumber: "07890222050",
@@ -661,7 +661,7 @@ export const authors =
     },
     {
       "Id": "E68B03FB-E605-4B3F-B620-51E987BA6ED7",
-      fullName: "Barbara Whetton",
+      realName: "Barbara Whetton",
       penName: "Barbara Whetton",
       email: "b_whetton@yahoo.com",
       phoneNumber: "07528892095",
@@ -679,7 +679,7 @@ export const authors =
     },
     {
       "Id": "FAE4C474-B89E-496D-BA0E-56AC7AF9FF4C",
-      fullName: "Joyce Maidment",
+      realName: "Joyce Maidment",
       penName: "Joyce Maidment",
       email: "joycelb@sky.com",
       phoneNumber: "01656 856880",
@@ -696,7 +696,7 @@ export const authors =
       notes: "Warm, Informal, Slow repsonse, Not savvy, Things may need repeating, Splurge, Open to ideas"
     }, {
       "Id": "ACC2D680-6AEA-4DA5-BBBD-5CA2C791E9D8",
-      fullName: "Danny Marshall",
+      realName: "Danny Marshall",
       penName: "Danny Marshall",
       email: "contact@dannymarshallwrites.com",
       phoneNumber: "",
@@ -714,7 +714,7 @@ export const authors =
     },
     {
       "Id": "A67E4D55-86E5-4319-B5C1-60C763BAB197",
-      fullName: "Lewis Evans",
+      realName: "Lewis Evans",
       penName: "Lewis Evans",
       email: "leme@btinternet.com",
       phoneNumber: "07484292100",
@@ -732,7 +732,7 @@ export const authors =
     },
     {
       "Id": "8EE21430-FD2A-478A-8D02-64AA9956B3A0",
-      fullName: "Thomas Kerr",
+      realName: "Thomas Kerr",
       penName: "Thomas Kerr",
       email: "tom@tomkerr.co.uk",
       phoneNumber: "0131 441 1280",
@@ -750,7 +750,7 @@ export const authors =
     },
     {
       "Id": "34CB7F0F-1F33-49E5-8680-67D0AEACCA7C",
-      fullName: "Serena Diss",
+      realName: "Serena Diss",
       penName: "Serena Diss",
       email: "deamorrissey@aol.com",
       phoneNumber: "01492 584755, 07941608087",
@@ -768,7 +768,7 @@ export const authors =
     },
     {
       "Id": "EC7FDCD7-7C64-4597-8496-686B33C4CFF8",
-      fullName: "Sian Jones & Jan Harvey",
+      realName: "Sian Jones & Jan Harvey",
       penName: "Harvey Jones",
       email: "jones.s38@sky.com, jan_harvey@hotmail.com",
       phoneNumber: "01446 745257, 07866 754924, 07790076993",
@@ -786,7 +786,7 @@ export const authors =
     },
     {
       "Id": "5EA51B3F-FDBA-47DA-BCF8-6A3A90FAC800",
-      fullName: "Lance Barnwell",
+      realName: "Lance Barnwell",
       penName: "Lance Barnwell",
       email: "barnwell910@hotmail.co.uk",
       phoneNumber: "",
@@ -804,7 +804,7 @@ export const authors =
     },
     {
       "Id": "A40184C0-6CE8-484F-9F0E-6A5D8D79F622",
-      fullName: "David Ward",
+      realName: "David Ward",
       penName: "David Ward",
       email: "d.ward01@btinternet.com",
       phoneNumber: "", location: "",
@@ -821,7 +821,7 @@ export const authors =
     },
     {
       "Id": "A323FDC7 - 181D - 4887 - A994 - 6BCAC2A47302",
-      fullName: "George Learmonth",
+      realName: "George Learmonth",
       penName: "George Learmonth",
       email: "agricola @supanet.com",
       phoneNumber: "01547 529060 ",
@@ -838,7 +838,7 @@ export const authors =
     },
     {
       "Id": "C78E9211 - DCAB - 4443 - A9E4 - 6F4488BB34CF",
-      fullName: "Jacqueline Ellery",
+      realName: "Jacqueline Ellery",
       penName: "Jacqueline Anne",
       email: "jacqueline.ellery@gmail.com",
       phoneNumber: "07786658208",
@@ -856,7 +856,7 @@ export const authors =
     },
     {
       "Id": "ACCDE42A - 3C66 - 4717 - 9ECD - 719AFFBDBB03",
-      fullName: "S.A.Burgess",
+      realName: "S.A.Burgess",
       penName: "S.A.Burgess",
       email: "songofsteel @hotmail.com",
       phoneNumber: "01226 643424",
@@ -874,7 +874,7 @@ export const authors =
     },
     {
       "Id": "D75DA827 - 6DDD - 4A40 - A81A - 725B813AD8E3",
-      fullName: "Sarah Padget",
+      realName: "Sarah Padget",
       penName: "Sarah Padget",
       email: " sarahpadget@gmail.com",
       phoneNumber: "01323848677",
@@ -892,7 +892,7 @@ export const authors =
     },
     {
       "Id": "09A885D1 - 00AB - 472C - B057 - 73E156C2DBA1",
-      fullName: "Chris Pridmore",
+      realName: "Chris Pridmore",
       penName: "Chris Pridmore",
       email: "chrispy46 @hotmail.com",
       phoneNumber: "07729972596",
@@ -910,7 +910,7 @@ export const authors =
     },
     {
       "Id": "A8965F36 - E45E - 4977 - B536 - 749B7ABF0E28",
-      fullName: "Amy Bench",
+      realName: "Amy Bench",
       penName: "Amy Bench",
       email: "a_m_y_bench @hotmail.co.uk",
       phoneNumber: "07581304058",
@@ -928,7 +928,7 @@ export const authors =
     },
     {
       "Id": "8972F332 - 6827 - 4384 - A715 - 76B8788C4604",
-      fullName: "Zaina Budaly",
+      realName: "Zaina Budaly",
       penName: "Z.R.Ghani",
       email: "zainabudaly33 @gmail.com",
       phoneNumber: "07473 700100",
@@ -946,7 +946,7 @@ export const authors =
     },
     {
       "Id": "2F314D69-FC01-4956-B31B-78DBFCFB6ED0",
-      fullName: "James Williamson",
+      realName: "James Williamson",
       penName: "James Williamson",
       email: "tony_j_delaney@yahoo.co.uk",
       phoneNumber: "",
@@ -964,7 +964,7 @@ export const authors =
     },
     {
       "Id": "B7522A65-8BA1-4653-BC15-80CC4CEF6FD3",
-      fullName: "Warren Jones",
+      realName: "Warren Jones",
       penName: "Poisoned Rats",
       email: "Wozandcarly@hotmail.co.uk",
       phoneNumber: "07415779400",
@@ -982,7 +982,7 @@ export const authors =
     },
     {
       "Id": "A66F5045-6243-44FE-AC9B-8284C18DD8E4",
-      fullName: "Scott Hamill",
+      realName: "Scott Hamill",
       penName: "Scott Hamill",
       email: "s.hamill@lancaster.ac.uk",
       phoneNumber: "07591449232",
@@ -1000,7 +1000,7 @@ export const authors =
     },
     {
       "Id": "BA9368D3-A54E-488D-A4AA-82999668007C",
-      fullName: "Ben Cole-Edwards",
+      realName: "Ben Cole-Edwards",
       penName: "Ben Cole-Edwards",
       email: "ben.coleedwards@rocketmail.com",
       phoneNumber: "07456876551",
@@ -1018,53 +1018,3 @@ export const authors =
     }
   ]
 
-export const books = [
-  {
-    id: 1,
-    authorId: 2,
-    title: 'Amber: A Fairy Tale',
-    format: 29,
-    genreId: 13,
-    publicationDate: '2014-10-31',
-    taxUK: true,
-    published: true,
-    stillSelling: true,
-    matureContent: false,
-    terminated: false,
-    speedy: false,
-    onHold: false,
-    royaltyAuthor: 65,
-    officeAbb: 'AFT',
-    pageCount: 76,
-    width: 197,
-    height: 132,
-    formats: {      
-      'paperback': {
-        isbn: '978-1-909902-87-9',
-        price: 6.99,
-        printCost: 2.76,
-        isbnCost: 2.40,
-        batch: 5
-      },
-      'pdf': {
-        isbn: '978-1-909902-90-9',
-        price: 0.99,
-        isbnCost: 2.40,
-        batch: 5
-      },
-      'ePub': {
-        isbn: '978-1-909902-88-6',
-        price: 0.99,
-        isbnCost: 2.40,
-        batch: 5
-      },
-      'mobi': {
-        isbn: '978-1-909902-89-3',
-        price: 0.99,
-        isbnCost: 2.40,
-        batch: 5
-      },
-    }
-  },
-  
-]
