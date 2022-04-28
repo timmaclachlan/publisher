@@ -17,26 +17,39 @@ const RetailOrdersPage = () => {
   const createClick = () => {};
 
   const columnDefs = [
-    { field: "id", flex: 0.5, pinned: "left" },
+    { field: "id", flex: 0.75 },
     {
-      field: "orderDate",
-      valueFormatter: (params) => getFormattedDate(params.value),
-      flex: 1,
+      headerName: "Book Details",
+      children: [
+        { field: "title", flex: 2.5 },
+        { field: "author", flex: 1.5 },
+      ],
     },
     {
-      field: "dispatchedDate",
-      valueFormatter: (params) => getFormattedDate(params.value),
-      flex: 1,
+      headerName: "Dates",
+      children: [
+        {
+          field: "orderDate",
+          headerName: "Order",
+          valueFormatter: (params) => getFormattedDate(params.value),
+        },
+        {
+          field: "dispatchedDate",
+          headerName: "Dispatched",
+          valueFormatter: (params) => getFormattedDate(params.value),
+        },
+        {
+          field: "dateAmountReceived",
+          headerName: "Received",
+          valueFormatter: (params) => getFormattedDate(params.value),
+        },
+      ],
     },
     { field: "source" },
-    { field: "quantity" },
+    { field: "quantity", headerName: "Qty", flex: 0.75 },
     {
       field: "amountReceived",
       valueFormatter: (params) => getFormattedCurrency(params.value),
-    },
-    {
-      field: "dateAmountReceived",
-      valueFormatter: (params) => getFormattedDate(params.value),
     },
   ];
 
@@ -84,6 +97,7 @@ const RetailOrdersPage = () => {
             sortable: true,
             floatingFilter: true,
             filter: "agTextColumnFilter",
+            flex: 1,
           }}
           containerStyle={{
             height: 700,

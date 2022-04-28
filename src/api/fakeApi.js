@@ -177,7 +177,11 @@ export function makeServer() {
 
       this.get("/orders", (schema, request) => {
         let data = schema.orders.all();
-        return data.models;
+        let newData = data.models.map((order) => {
+          let newOrder = { ...order.attrs, title: order.book.title, author: order.book.author.penName };
+          return newOrder;
+        });
+        return newData;
       })
     },
   });
