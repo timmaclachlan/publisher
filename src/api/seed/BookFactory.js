@@ -1,6 +1,7 @@
 import { Factory } from "miragejs";
 import faker from "@faker-js/faker";
 
+
 const NOAUTHORS = 10;
 
 export const BookFactory = Factory.extend({
@@ -21,6 +22,9 @@ export const BookFactory = Factory.extend({
       `${faker.word.adjective()} ${faker.word.adjective()} ${faker.word.noun()}`
     );
   },
+  officeAbb() {
+    return faker.word.noun();
+  },
   authorId() {
     function randomNum(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -33,18 +37,19 @@ export const BookFactory = Factory.extend({
     return faker.date.recent();
   },
   published() {
-    return faker.random.arrayElement([true, false]);
+    return faker.datatype.boolean();
   },
   stillSelling() {
-    return faker.random.arrayElement([true, false]);
+    return faker.datatype.boolean();
   },
   terminated() {
-    return faker.random.arrayElement([true, false]);
+    return faker.datatype.boolean();
   },
   matureContent() {
-    return faker.random.arrayElement([true, false]);
+    return faker.datatype.boolean();
   },
-  onHold() { return faker.random.arrayElement([true, false]);  },
+  onHold() { faker.datatype.boolean(); },
+  tax() { faker.datatype.boolean(); },
   genre() {
     return faker.random.arrayElement([
       "Sci-Fi",
@@ -53,9 +58,21 @@ export const BookFactory = Factory.extend({
       "Non-Fiction",
     ]);
   },
-  service() {  return faker.random.arrayElement(["EPPS", "PPS", "EPS"]); },
+  service() { return faker.random.arrayElement(["EPPS", "PPS", "EPS"]); },
   isbn() {
     return "909-32-2232323"
   },
-  printCost() { faker.finance.amount(1, 20)}
+  printCost() { faker.finance.amount(1, 20) },
+  royalty() {
+    return faker.datatype.number(100);
+  },
+  width() {
+    faker.datatype.number(200, 500);
+  },
+  height() {
+    faker.datatype.number(200, 500);
+  },
+  pageCount() {
+    faker.datatype.number(200, 500);
+  }
 });

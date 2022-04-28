@@ -1,11 +1,17 @@
-import { createServer, Model, belongsTo, hasMany } from "miragejs";
+import { createServer, Model, belongsTo, hasMany, Response } from "miragejs";
 
 import { authors as authorsdb, books as booksdb } from "./seed/db.js";
 import { AuthorFactory } from "./seed/AuthorFactory.js";
 import { BookFactory } from "./seed/BookFactory.js";
+import { OrdersB2BFactory } from "./seed/OrdersB2BFactory.js";
+
+import { selectProps } from "../utils.js";
 
 const NOAUTHORS = 10;
 const NOBOOKS = 10;
+const NOORDERS = 50;
+
+const NOT_FOUND = 404;
 
 export function makeServer() {
   return createServer({
@@ -15,11 +21,16 @@ export function makeServer() {
       }),
       book: Model.extend({
         author: belongsTo(),
+        orders: hasMany()
       }),
+      order: Model.extend({
+        book: belongsTo()
+      })
     },
     factories: {
       author: AuthorFactory,
       book: BookFactory,
+      order: OrdersB2BFactory
     },
     seeds(server) {
       authorsdb.forEach((item) => {
@@ -49,9 +60,11 @@ export function makeServer() {
 
       this.get("/authors/:id", (schema, request) => {
         let author = schema.authors.find(request.params.id);
-
-        let newAuthor = { ...author.attrs, books: [...author.books?.models] };
-        return newAuthor;
+        if (author) {
+          let newAuthor = { ...author.attrs, books: [...author.books?.models] };
+          return newAuthor;
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.post("/authors", (schema, request) => {
@@ -68,17 +81,42 @@ export function makeServer() {
       this.patch("/authors/:id", (schema, request) => {
         let attrs = JSON.parse(request.requestBody);
         let author = schema.authors.find(request.params.id);
-        let updateAuthor = author.update(
-          {
-            name: attrs.name,
-            address: attrs.address
-          }
-        )
-        return updateAuthor;
+        if (author) {
+          let updateAuthor = author.update(
+            {
+              realName: attrs.realName,
+              penName: attrs.penName,
+              email: attrs.email,
+              phoneNumber: attrs.phoneNumber,
+              location: attrs.location,
+
+              address1: attrs.address,
+              address2: attrs.address2,
+              address3: attrs.address3,
+              address4: attrs.address4,
+              postCode: attrs.postCode,
+
+              sortCode: attrs.sortCode,
+              accountNo: attrs.accountNo,
+              iban: attrs.iban,
+              bic: attrs.bic,
+              retainedClient: attrs.retainedClient,
+              gender: attrs.gender,
+              notes: attrs.notes,
+              active: attrs.active
+            }
+          )
+          return updateAuthor;
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.delete("/authors/:id", (schema, request) => {
-        return schema.authors.find(request.params.id).destroy();
+        let author = schema.authors.find(request.params.id);
+        if (author) {
+          author.destroy();
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.get("/books", (schema, request) => {
@@ -88,8 +126,11 @@ export function makeServer() {
 
       this.get("/books/:id", (schema, request) => {
         let book = schema.books.find(request.params.id);
-        let newBook = { ...book.attrs, author: { ...book.author?.attrs } };
-        return newBook;
+        if (book) {
+          let newBook = { ...book.attrs, author: { ...book.author?.attrs } };
+          return newBook;
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.post("/books", (schema, request) => {
@@ -107,36 +148,42 @@ export function makeServer() {
         debugger;
         let attrs = JSON.parse(request.requestBody);
         let book = schema.books.find(request.params.id);
-
-        let updateBook = book.update({
-          title: attrs.title,
-          authorId: attrs.authorId,
-          genre: attrs.genre,
-          published: attrs.published,
-          publicationDate: attrs.publicationDate,
-          service: attrs.service,
-          stillSelling: attrs.stillSelling,
-          terminated: attrs.terminated,
-          onHold: attrs.onHold,
-          matureContent: attrs.matureContent,
-        });
-        return updateBook;
+        if (book) {
+          let updateBook = book.update({
+            title: attrs.title,
+            authorId: attrs.authorId,
+            genre: attrs.genre,
+            published: attrs.published,
+            publicationDate: attrs.publicationDate,
+            service: attrs.service,
+            stillSelling: attrs.stillSelling,
+            terminated: attrs.terminated,
+            onHold: attrs.onHold,
+            matureContent: attrs.matureContent,
+          });
+          return updateBook;
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
 
       this.delete("/books/:id", (schema, request) => {
-        return schema.books.find(request.params.id).destroy();
+        let book = schema.books.find(request.params.id);
+        if (book) {
+          book.destroy();
+        }
+        return new Response(NOT_FOUND, { errors: 'Not found' });
       });
+
+      this.get("/orders", (schema, request) => {
+        let data = schema.orders.all();
+        let newData = data.models.map((order) => {
+          let newOrder = { ...order.attrs, title: order.book.title, author: order.book.author.penName };
+          return newOrder;
+        });
+        return newData;
+      })
     },
   });
 }
 
-// levelup.gitconnected.com/how-to-select-specific-properties-from-an-array-of-objects-bd9f6c15dbd0
-const selectProps = (...props) => {
-  return function (obj) {
-    const newObj = {};
-    props.forEach(name => {
-      newObj[name] = obj[name];
-    });
-    return newObj;
-  }
-}
+

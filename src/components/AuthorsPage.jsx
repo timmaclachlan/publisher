@@ -7,14 +7,15 @@ import PeopleIcon from "@mui/icons-material/People";
 
 import { readAll } from "../fetcher";
 
-
 const LinkComponent = ({ data }) => {
-	return <Button component={RouterLink} sx={{ p: 0}} to={"/authors/" + data.id}>{data.fullName}</Button>
+  return (
+    <Button component={RouterLink} sx={{ p: 0 }} to={"/authors/" + data.id}>
+      {data.realName}
+    </Button>
+  );
 };
 
-
-
-const Authors = ({onRecordChange}) => {
+const Authors = ({ onRecordChange }) => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
 
@@ -29,7 +30,7 @@ const Authors = ({onRecordChange}) => {
       }
     };
     retrieveAuthors();
-  }, []);
+  }, [onRecordChange]);
 
   const createClick = (event) => {
     navigate("/authors/new");
@@ -37,33 +38,39 @@ const Authors = ({onRecordChange}) => {
 
   const columnDefs = [
     {
-      field: "fullName",
+      field: "realName",
       cellRenderer: "LinkComponent",
     },
     { field: "address1", width: 300 },
     { field: "active" },
-	];
-	
-
+  ];
 
   return (
     <>
       <Grid container>
         <Grid item>
-          <PeopleIcon color="primary" sx={{fontSize: 60, mr: 2}} />
+          <PeopleIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
         </Grid>
         <Grid item>
-          <Typography variant="h4" sx={{pt: 1}}>Authors</Typography>
+          <Typography variant="h4" sx={{ pt: 1 }}>
+            Authors
+          </Typography>
         </Grid>
         <Grid item md={3} />
         <Grid item md={2}>
-          <Button color="primary" variant="contained" sx={{mt: 1}} aria-label="add" onClick={createClick}>Create</Button>
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{ mt: 1 }}
+            aria-label="add"
+            onClick={createClick}
+          >
+            Create
+          </Button>
         </Grid>
       </Grid>
-            
 
-			<Box className="ag-theme-material" style={{ height: 800, width: 800 }}>
-
+      <Box className="ag-theme-material" style={{ height: 800, width: 800 }}>
         <AgGridReact
           rowData={authors}
           columnDefs={columnDefs}

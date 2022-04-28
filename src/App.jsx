@@ -2,6 +2,7 @@ import * as React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import {
   List,
@@ -21,8 +22,9 @@ import Breadcrumb from "./components/Breadcrumb";
 import Dashboard from "./components/Dashboard";
 import AuthorsPage from "./components/AuthorsPage";
 import AuthorDetailPage from "./components/AuthorDetailPage";
-import BooksPage from "./components/BooksPage";
 import BookDetailPage from "./components/BookDetailPage";
+import RetailOrdersPage from "./components/RetailOrdersPage";
+import BooksPage from "./components/BooksPage";
 import NotFound from "./components/NotFound";
 
 function App() {
@@ -84,6 +86,8 @@ function App() {
                 />
               }
             />
+            <Route path="books/new" element={<BookDetailPage />} />
+            <Route path="orders/retail" element={<RetailOrdersPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>

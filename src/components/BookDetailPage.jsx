@@ -16,18 +16,18 @@ import {
   Backdrop,
 } from "@mui/material";
 
-import LayersIcon from "@mui/icons-material/Layers";
-import EditIcon from "@mui/icons-material/Edit";
-import CancelIcon from "@mui/icons-material/Cancel";
 import BookEdit from "./BookDetail/BookEdit";
+import BookView from "./BookDetail/BookView";
 
 import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
+import { isEmptyObject } from "../utils";
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [createMode, setCreateMode] = useState(false);
   const [notification, setNotification] = useState({
     show: false,
     severity: "",
@@ -41,14 +41,22 @@ const BookDetail = ({ onRecordChange }) => {
       try {
         const bookRecord = await readById("book", id);
         console.log("bookrecord:" + bookRecord);
+        if (isEmptyObject(bookRecord.data)) {
+          navigate("/notfound");
+        }
         setBook(bookRecord.data);
         onRecordChange(bookRecord.data.title);
       } catch (error) {
         console.log(error);
       }
     };
-    retrieveBook();
-  }, [id, onRecordChange]);
+    if (id > 0) {
+      retrieveBook();
+    }
+    if (id === undefined) {
+      setCreateMode(true);
+    }
+  }, [id, navigate, onRecordChange]);
 
   const getAuthors = () => {
     const retrieveAuthors = async () => {
@@ -79,6 +87,9 @@ const BookDetail = ({ onRecordChange }) => {
       autoHide: true,
       message: "Changes saved successfully",
     }));
+    if (onRecordChange) {
+      onRecordChange(book.name);
+    }
   };
 
   const updateBook = (field, value) => {
@@ -107,9 +118,10 @@ const BookDetail = ({ onRecordChange }) => {
 
   const handleCloseNotification = (event, reason) => {
     setNotification((prevState) => ({ ...prevState, show: false }));
-    navigate("/authors");
+    if (notification.severity === "warning") {
+      navigate("/authors");
+    }
   };
-
 
   return (
     <>
@@ -117,7 +129,6 @@ const BookDetail = ({ onRecordChange }) => {
         open={notification.show}
         autoHideDuration={notification.autoHide ? 5000 : null}
         onClose={handleCloseNotification}
-        
       >
         <Alert
           severity={notification.severity}
@@ -128,77 +139,23 @@ const BookDetail = ({ onRecordChange }) => {
       </Snackbar>
 
       {notification.show && notification.severity === "warning" && (
-        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true} >
-          <Alert
-          severity="warning"         
-        >Book has been deleted</Alert>
+        <Backdrop sx={{ color: "#fff", zIndex: 500 }} open={true}>
+          <Alert severity="warning">Book has been deleted</Alert>
         </Backdrop>
       )}
 
       <Box>
         <Grid container spacing={2}>
           <Grid item md={10}>
-            {!editMode && (
-              <Grid container spacing={2}>
-                <Grid item md={1}>
-                  <LayersIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
-                </Grid>
-                <Grid item md={3}>
-                  <Typography variant="h4" sx={{ pt: 1 }}>
-                    View Book
-                  </Typography>
-                </Grid>
-                <Grid item md={4} />
-                <Grid item md={2}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<CancelIcon />}
-                    onClick={() => navigate("/books")}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
-
-                <Grid item md={2}>
-                  <Button
-                    variant="contained"
-                    sx={{ width: "100px" }}
-                    color="success"
-                    startIcon={<EditIcon />}
-                    onClick={() => setEditMode(true)}
-                  >
-                    Edit
-                  </Button>
-                </Grid>
-
-                <Grid item md={8}></Grid>
-
-                <Grid item md={2}>
-                  <label>Title</label>
-                </Grid>
-                <Grid item md={10}>
-                  <label className="details">{book.title}</label>
-                </Grid>
-
-                <Grid item md={2}>
-                  <label>Author</label>
-                </Grid>
-
-                <Grid item md={10}>
-                  <label className="details">
-                    <Link to={"/authors/" + book.author?.id}>
-                      {book.author?.name}
-                    </Link>
-                  </label>
-                </Grid>
-              </Grid>
+            {!editMode && !createMode && (
+              <BookView book={book} onUpdateEditMode={setEditMode} />
             )}
 
-            {editMode && (
+            {(editMode || createMode) && (
               <BookEdit
                 book={book}
                 authors={authors}
-                id={id}
+                isNew={createMode}
                 onUpdateBook={updateBook}
                 onUpdateEditMode={setEditMode}
                 onDeleteBook={deleteBook}
