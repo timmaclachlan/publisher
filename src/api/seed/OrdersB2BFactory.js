@@ -28,7 +28,7 @@ export const OrdersB2BFactory = Factory.extend({
   royaltyPublisher() {
     return faker.finance.amount(1, 30);
   },
-  dateAmountReceived() {
+  amountReceivedDate() {
     return faker.date.past(2);
   },
   source() {

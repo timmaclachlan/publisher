@@ -17,12 +17,12 @@ const RetailOrdersPage = () => {
   const createClick = () => {};
 
   const columnDefs = [
-    { field: "id", flex: 0.75 },
+    { field: "id", flex: 0.75, filter: "agNumberColumnFilter" },
     {
       headerName: "Book Details",
       children: [
         { field: "title", flex: 2.5 },
-        { field: "author", flex: 1.5 },
+        { field: "author", columnGroupShow: "open", flex: 1.5 },
       ],
     },
     {
@@ -31,25 +31,51 @@ const RetailOrdersPage = () => {
         {
           field: "orderDate",
           headerName: "Order",
+          filter: "agDateColumnFilter",
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
           field: "dispatchedDate",
           headerName: "Dispatched",
+          columnGroupShow: "open",
+          filter: "agDateColumnFilter",
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
-          field: "dateAmountReceived",
+          field: "amountReceivedDate",
           headerName: "Received",
+          columnGroupShow: "open",
+          filter: "agDateColumnFilter",
           valueFormatter: (params) => getFormattedDate(params.value),
         },
       ],
     },
     { field: "source" },
-    { field: "quantity", headerName: "Qty", flex: 0.75 },
+    {
+      field: "quantity",
+      headerName: "Qty",
+      flex: 0.75,
+      filter: "agNumberColumnFilter",
+    },
     {
       field: "amountReceived",
+      headerName: "Received",
       valueFormatter: (params) => getFormattedCurrency(params.value),
+    },
+    {
+      headerName: "Royalties",
+      children: [
+        {
+          field: "royaltyAuthor",
+          headerName: "Author",
+          valueFormatter: (params) => getFormattedCurrency(params.value),
+        },
+        {
+          field: "royaltyPublisher",
+          headerName: "Publisher",
+          valueFormatter: (params) => getFormattedCurrency(params.value),
+        },
+      ],
     },
   ];
 
