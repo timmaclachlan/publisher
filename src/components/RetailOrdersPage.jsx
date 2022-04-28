@@ -6,6 +6,7 @@ import { Typography, Box, Grid, Button } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 import { readAll } from "../fetcher";
+import { getFormattedDate, getFormattedCurrency } from "../utils";
 
 const RetailOrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -15,20 +16,28 @@ const RetailOrdersPage = () => {
 
   const createClick = () => {};
 
-  const dateFormatter = (params) => {
-    const dateAsString = params.value.substring(0, 10);
-    const dateParts = dateAsString.split("-");
-    return `${dateParts[0]}/${dateParts[1]}/${dateParts[2]}`;
-  };
-
   const columnDefs = [
     { field: "id", flex: 0.5, pinned: "left" },
-    { field: "orderDate", valueFormatter: dateFormatter, flex: 1 },
-    { field: "dispatchedDate", valueFormatter: dateFormatter, flex: 1 },
+    {
+      field: "orderDate",
+      valueFormatter: (params) => getFormattedDate(params.value),
+      flex: 1,
+    },
+    {
+      field: "dispatchedDate",
+      valueFormatter: (params) => getFormattedDate(params.value),
+      flex: 1,
+    },
     { field: "source" },
     { field: "quantity" },
-    { field: "amountReceived" },
-    { field: "dateAmountReceived", valueFormatter: dateFormatter },
+    {
+      field: "amountReceived",
+      valueFormatter: (params) => getFormattedCurrency(params.value),
+    },
+    {
+      field: "dateAmountReceived",
+      valueFormatter: (params) => getFormattedDate(params.value),
+    },
   ];
 
   const onGridReady = () => {

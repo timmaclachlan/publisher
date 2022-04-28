@@ -1,3 +1,5 @@
+
+
 export const isEmptyObject = (value) => {
   return value && value.constructor === Object && Object.keys(value).length === 0;
 }
@@ -11,4 +13,13 @@ export const selectProps = (...props) => {
     });
     return newObj;
   }
+}
+
+export const getFormattedDate = (dateString) => {
+  let date = Date.parse(dateString);
+  return new Intl.DateTimeFormat('en-GB').format(date);
+}
+
+export const getFormattedCurrency = (amount) => {
+  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
 }
