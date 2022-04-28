@@ -11,16 +11,16 @@ export const OrdersB2BFactory = Factory.extend({
     return randomNum(1, NOBOOKS);
   },
   orderDate() {
-    return faker.date.recent();
+    return faker.date.past(2);
   },
   dispatchedDate() {
-    return faker.date.recent();
+    return faker.date.past(2);
   },
   amountReceived() {
     return faker.finance.amount(1, 100);
   },
   quantity() {
-    return faker.datatype.number(1, 20);
+    return faker.datatype.number({min: 1, max: 100});
   },
   royaltyAuthor() {
     return faker.finance.amount(1, 30);
@@ -29,7 +29,7 @@ export const OrdersB2BFactory = Factory.extend({
     return faker.finance.amount(1, 30);
   },
   dateAmountReceived() {
-    return faker.date.recent();
+    return faker.date.past(2);
   },
   source() {
     return faker.random.arrayElement(['PUB','VEA','POD','CS','ING'])

@@ -11,30 +11,37 @@ const RetailOrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => {}, []);
+
+  const createClick = () => {};
+
+  const dateFormatter = (params) => {
+    const dateAsString = params.value.substring(0, 10);
+    const dateParts = dateAsString.split("-");
+    return `${dateParts[0]}/${dateParts[1]}/${dateParts[2]}`;
+  };
+
+  const columnDefs = [
+    { field: "id", flex: 0.5, pinned: "left" },
+    { field: "orderDate", valueFormatter: dateFormatter, flex: 1 },
+    { field: "dispatchedDate", valueFormatter: dateFormatter, flex: 1 },
+    { field: "source" },
+    { field: "quantity" },
+    { field: "amountReceived" },
+    { field: "dateAmountReceived", valueFormatter: dateFormatter },
+  ];
+
+  const onGridReady = () => {
     const retrieveOrders = async () => {
       try {
         const result = await readAll("order");
-        debugger;
         setOrders(result.data);
       } catch (error) {
         console.log(error);
       }
     };
     retrieveOrders();
-  }, []);
-
-  const createClick = () => {};
-
-  const columnDefs = [
-    { field: "id" },
-    { field: "orderDate" },
-    { field: "dispatchedDate" },
-    { field: "source" },
-    { field: "quantity" },
-    { field: "amountReceived" },
-    { field: "dateAmountReceived" },
-  ];
+  };
 
   return (
     <>
@@ -61,11 +68,25 @@ const RetailOrdersPage = () => {
         </Grid>
       </Grid>
 
-      <Box className="ag-theme-material" style={{ height: 800, width: 1400 }}>
+      <Box className="ag-theme-alpine">
         <AgGridReact
+          defaultColDef={{
+            resizable: true,
+            sortable: true,
+            floatingFilter: true,
+            filter: "agTextColumnFilter",
+          }}
+          containerStyle={{
+            height: 700,
+            width: 1400,
+          }}
           rowData={orders}
           columnDefs={columnDefs}
+          columnHoverHighlight={true}
           frameworkComponents={{}}
+          pagination={true}
+          paginationPageSize={15}
+          onGridReady={onGridReady}
         ></AgGridReact>
       </Box>
     </>
