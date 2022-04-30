@@ -8,6 +8,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { readAll } from "../fetcher";
 import { getFormattedDate, getFormattedCurrency } from "../utils";
 
+import SalesQuarterFilter from "./Filters/SalesQuarterFilter";
+
 const RetailOrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const RetailOrdersPage = () => {
         {
           field: "orderDate",
           headerName: "Order",
-          filter: "agDateColumnFilter",
+          filter: SalesQuarterFilter,
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
@@ -60,6 +62,7 @@ const RetailOrdersPage = () => {
     {
       field: "amountReceived",
       headerName: "Received",
+      filter: "agNumberColumnFilter",
       valueFormatter: (params) => getFormattedCurrency(params.value),
     },
     {
@@ -68,11 +71,13 @@ const RetailOrdersPage = () => {
         {
           field: "royaltyAuthor",
           headerName: "Author",
+          filter: "agNumberColumnFilter",
           valueFormatter: (params) => getFormattedCurrency(params.value),
         },
         {
           field: "royaltyPublisher",
           headerName: "Publisher",
+          filter: "agNumberColumnFilter",
           valueFormatter: (params) => getFormattedCurrency(params.value),
         },
       ],
