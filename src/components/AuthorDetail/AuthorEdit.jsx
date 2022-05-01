@@ -191,20 +191,7 @@ const AuthorEdit = ({
                 />
               </Grid>
 
-              <Grid item md={2}>
-                <FormControl>
-                  <InputLabel id="gender-label">Gender</InputLabel>
-                  <Select
-                    labelId="gender-label"
-                    label="Gender"
-                    value={author.gender}
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="M">Male</MenuItem>
-                    <MenuItem value="F">Female</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
+              <Grid item md={2}></Grid>
 
               <Grid item md={2}>
                 <FormControlLabel
@@ -300,16 +287,26 @@ const AuthorEdit = ({
               </Grid>
 
               <Grid item md={6}>
-                <TextField
-                  label="Notes"
-                  name="notes"
-                  variant="outlined"
-                  multiline
-                  rows={8}
-                  value={author.notes}
-                  onChange={valueChange}
-                  fullWidth
-                />
+                <Stack spacing={2}>
+                  <TextField
+                    label="Website"
+                    name="Website"
+                    variant="outlined"
+                    value={author.website}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Notes"
+                    name="notes"
+                    variant="outlined"
+                    multiline
+                    rows={8}
+                    value={author.notes}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                </Stack>
               </Grid>
             </Grid>
           </Grid>

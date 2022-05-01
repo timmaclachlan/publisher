@@ -15,17 +15,33 @@ import {
 } from "@mui/material";
 
 export default forwardRef((props, ref) => {
-  const [quarter, setQuarter] = useState("All");
+  debugger;
+  const [quarterValue, setQuarterValue] = useState({
+    value: "All",
+    year: 0,
+    quarter: 0,
+  });
 
   // expose AG Grid Filter Lifecycle callbacks
   useImperativeHandle(ref, () => {
     return {
       doesFilterPass(params) {
-        return params.data.year >= 2010;
+        if (quarterValue.quarter === 0 && quarterValue.year === 0) return true;
+
+        let paramsDate = new Date(params.data[props.colDef.field]);
+
+        if (paramsDate.getFullYear() === parseInt(quarterValue.year)) {
+          const compareQuarter = paramsDate.getMonth() / 3 + 1;
+          if (compareQuarter === parseInt(quarterValue.quarter)) {
+            return true;
+          }
+        }
+        return false;
       },
 
       isFilterActive() {
-        //return year === "2010";
+        if (quarterValue.quarter === 0 && quarterValue.year === 0) return false;
+        return true;
       },
 
       // this example isn't using getModel() and setModel(),
@@ -37,23 +53,28 @@ export default forwardRef((props, ref) => {
   });
 
   const handleChange = (event: SelectChangeEvent) => {
-    debugger;
-    setQuarter(event.target.value);
+    if (event.target.value === "All") {
+      setQuarterValue({ value: "All", year: 0, quarter: 0 });
+      return;
+    }
+    let quarter = event.target.value.substring(0, 1);
+    let year = event.target.value.substring(1, 5);
+    setQuarterValue({ value: event.target.value, year, quarter });
   };
 
   useEffect(() => {
     props.filterChangedCallback();
-  }, [quarter, props]);
+  }, [quarterValue, props]);
 
   const renderQuarters = () => {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
     const quarter = currentMonth / 3 + 1;
 
-    debugger;
     let quarters = [];
     for (let y = currentYear; y > currentYear - 3; y--) {
       for (let q = 4; q >= 1; q--) {
+        if (y === currentYear && q > quarter) continue;
         quarters.push(
           <MenuItem key={`${q}${y}`} value={`${q}${y}`}>
             Quarter {q} - {y}
@@ -66,6 +87,7 @@ export default forwardRef((props, ref) => {
         labelId="select-quarter-label"
         label="Sales Quarter"
         onChange={handleChange}
+        value={quarterValue.value}
       >
         <MenuItem value={"All"} selected>
           All Quarters
