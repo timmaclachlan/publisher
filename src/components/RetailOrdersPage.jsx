@@ -2,55 +2,21 @@ import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import {
-  Typography,
-  Box,
-  Grid,
-  Button,
-  MenuList,
-  MenuItem,
-  ButtonGroup,
-  Popper,
-  Grow,
-  Paper,
-  ClickAwayListener,
-} from "@mui/material";
+import { Typography, Box, Grid, Button, Stack } from "@mui/material";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import { readAll } from "../fetcher";
 import { getFormattedDate, getFormattedCurrency } from "../utils";
 
 import SalesQuarterFilter from "./Filters/SalesQuarterFilter";
 
-const options = ["Create Retail Order", "Create KBP Order"];
-
 const RetailOrdersPage = () => {
   const [orders, setOrders] = useState([]);
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const navigate = useNavigate();
 
-  const handleClick = () => {
-    alert(`You clicked ${options[selectedIndex]}`);
-  };
-
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setOpen(false);
-  };
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
-    setOpen(false);
+  const handleCreateOrderClick = (type) => {
+    navigate("/orders/retail/new");
   };
 
   const columnDefs = [
@@ -133,51 +99,25 @@ const RetailOrdersPage = () => {
 
   return (
     <React.Fragment>
-      <Grid container>
+      <Grid container sx={{ width: 1400 }}>
         <Grid item>
           <ShoppingCartIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
         </Grid>
-        <Grid item>
+        <Grid item md={3}>
           <Typography variant="h4" sx={{ pt: 1 }}>
             Retail Orders
           </Typography>
         </Grid>
-        <Grid item md={6} />
-
+        <Grid item md={5} />
         <Grid item md={3}>
-          <ButtonGroup variant="contained" ref={anchorRef}>
-            <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-            <Button size="small" onClick={handleToggle}>
-              <ArrowDropDownIcon />
-            </Button>
-          </ButtonGroup>
-          <Popper open={open} anchorEl={anchorRef.current} transition>
-            {({ TransitionProps }) => (
-              <Grow {...TransitionProps}>
-                <Paper>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList id="split-button-menu" autoFocusItem>
-                      {options.map((option, index) => (
-                        <MenuItem
-                          key={option}
-                          disabled={index === 2}
-                          selected={index === selectedIndex}
-                          onClick={(event) => handleMenuItemClick(event, index)}
-                        >
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
+          <Button variant="contained" onClick={handleCreateOrderClick}>
+            Create Retail Order
+          </Button>
         </Grid>
       </Grid>
-
-      <Box className="ag-theme-alpine">
+      <Box>
         <AgGridReact
+          className="ag-theme-alpine"
           defaultColDef={{
             resizable: true,
             sortable: true,

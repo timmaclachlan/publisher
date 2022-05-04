@@ -22,6 +22,7 @@ import AuthorsPage from "./components/AuthorsPage";
 import AuthorDetailPage from "./components/AuthorDetailPage";
 import BookDetailPage from "./components/BookDetailPage";
 import RetailOrdersPage from "./components/RetailOrdersPage";
+import CreateRetailOrder from "./components/CreateRetailOrder";
 import BooksPage from "./components/BooksPage";
 import NotFound from "./components/NotFound";
 
@@ -80,6 +81,7 @@ function App() {
             />
             <Route path="books/new" element={<BookDetailPage />} />
             <Route path="orders/retail" element={<RetailOrdersPage />} />
+            <Route path="orders/retail/new" element={<CreateRetailOrder />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>
