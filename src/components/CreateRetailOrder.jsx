@@ -20,6 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 import NumericEditor from "./Editors/NumericEditor";
+import CheckboxEditor from "./Editors/CheckboxEditor";
 
 const CreateRetailOrder = ({ isNew }) => {
   const [data, setData] = React.useState([
@@ -50,16 +51,32 @@ const CreateRetailOrder = ({ isNew }) => {
       cellEditor: NumericEditor,
     },
     { field: "format", flex: 1 },
-    { field: "isFree", flex: 0.5, headerName: "Is Free", editable: true },
     {
-      field: "amtPreConv",
-      flex: 1,
-      headerName: "Amount Pre-Converted",
+      field: "isFree",
+      flex: 0.5,
+      headerName: "Is Free",
       editable: true,
+      cellEditor: CheckboxEditor,
     },
-    { field: "amtReceived", flex: 1, headerName: "Amount Received" },
-    { field: "royaltyAuthor", flex: 1, headerName: "Author Royalty" },
-    { field: "royaltyPublisher", flex: 1, headerName: "Author Publisher" },
+    {
+      headerName: "Amounts",
+      children: [
+        {
+          field: "amtPreConv",
+          flex: 1,
+          headerName: "Pre-Converted",
+          editable: true,
+        },
+        { field: "amtReceived", flex: 1, headerName: "Received" },
+      ],
+    },
+    {
+      headerName: "Royalties",
+      children: [
+        { field: "royaltyAuthor", flex: 1, headerName: "Author" },
+        { field: "royaltyPublisher", flex: 1, headerName: "Publisher" },
+      ],
+    },
   ];
 
   return (
