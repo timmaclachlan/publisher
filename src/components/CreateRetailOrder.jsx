@@ -19,6 +19,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 
+import NumericEditor from "./Editors/NumericEditor";
+
 const CreateRetailOrder = ({ isNew }) => {
   const [data, setData] = React.useState([
     {
@@ -41,7 +43,12 @@ const CreateRetailOrder = ({ isNew }) => {
       flex: 1,
       editable: true,
     },
-    { field: "quantity", flex: 1, editable: true },
+    {
+      field: "quantity",
+      flex: 0.75,
+      editable: true,
+      cellEditor: NumericEditor,
+    },
     { field: "format", flex: 1 },
     { field: "isFree", flex: 0.5, headerName: "Is Free", editable: true },
     {
