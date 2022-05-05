@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { AgGridReact } from "ag-grid-react";
 
@@ -19,30 +19,56 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 
+import AutoSuggestEditor from "./Editors/AutoSuggestEditor";
 import NumericEditor from "./Editors/NumericEditor";
 import CheckboxEditor from "./Editors/CheckboxEditor";
 
+import { readLookupAll } from "../fetcher";
+
+const generateBlankItem = () => {
+  return {
+    id: 0,
+    bookId: 0,
+    book: { id: 0, title: "" },
+    quantity: 0,
+    format: 0,
+    isFree: false,
+    amtPreConv: 0,
+    amtReceived: 0,
+  };
+};
+
 const CreateRetailOrder = ({ isNew }) => {
-  const [data, setData] = React.useState([
-    {
-      id: 0,
-      bookId: 0,
-      quantity: 0,
-      format: 0,
-      isFree: false,
-      amtPreConv: 0,
-      amtReceived: 0,
-      royaltyAuthor: 0,
-      royaltyPublisher: 0,
-    },
-  ]);
+  const [books, setBooks] = React.useState([]);
+  const [data, setData] = React.useState([generateBlankItem()]);
+  const [distributor, setDistributor] = React.useState("");
+  const [currency, setCurrency] = React.useState("");
+
+  useEffect(() => {
+    const retrieveBooks = async () => {
+      try {
+        const bookRecords = await readLookupAll("book");
+        setBooks(bookRecords.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    retrieveBooks();
+  }, []);
 
   const columnDefs = [
     {
-      field: "bookTitle",
-      cellRenderer: "LinkComponent",
-      flex: 1,
+      field: "book",
+      flex: 3,
       editable: true,
+      cellEditor: AutoSuggestEditor,
+      cellEditorParams: {
+        labelField: "title",
+        idField: "id",
+        placeHolder: "Book title",
+        options: books,
+        value: { id: 2, title: "Enchanted Forest" },
+      },
     },
     {
       field: "quantity",
@@ -78,6 +104,37 @@ const CreateRetailOrder = ({ isNew }) => {
       ],
     },
   ];
+
+  const onCellValueChanged = (event) => {
+    let newStateRows = [...data];
+    debugger;
+
+    if (event.rowIndex > data.length) {
+      let emptyItem = generateBlankItem();
+      let newItem = {
+        ...emptyItem,
+        [event.colDef.field]: event.newValue,
+      };
+      newStateRows.push(newItem);
+    } else {
+      let existingItem = data[event.rowIndex];
+      let newItem = {
+        ...existingItem,
+        [event.colDef.field]: event.newValue,
+      };
+      newStateRows[event.rowIndex] = newItem;
+    }
+    setData(newStateRows);
+    console.log(data);
+  };
+
+  const handleDistributorChange = (ev) => {
+    setDistributor(ev.target.value);
+  };
+
+  const handleCurrencyChange = (ev) => {
+    setCurrency(ev.target.value);
+  };
 
   return (
     <>
@@ -121,12 +178,16 @@ const CreateRetailOrder = ({ isNew }) => {
         <Grid item md={3}>
           <FormControl fullWidth>
             <InputLabel id="select-distributor">Distributor</InputLabel>
-            <Select labelId="select-distributor" label="Distributor">
-              <MenuItem value="IngramSpark">Ingram Spark</MenuItem>
-              <MenuItem value="Ingram">Ingram</MenuItem>
-              <MenuItem value="IngramLightning">
-                Ingram Lightning Source
-              </MenuItem>
+            <Select
+              labelId="select-distributor"
+              label="Distributor"
+              value={distributor}
+              onChange={handleDistributorChange}
+            >
+              <MenuItem value="PODWW">Print on Demand Worldwide</MenuItem>
+              <MenuItem value="KDP">Kindle Direct Publishing</MenuItem>
+              <MenuItem value="LS">Lightning Source</MenuItem>
+              <MenuItem value="IS">Ingram Spark</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -134,7 +195,12 @@ const CreateRetailOrder = ({ isNew }) => {
         <Grid item md={2}>
           <FormControl fullWidth>
             <InputLabel id="select-currency">Currency</InputLabel>
-            <Select labelId="select-currency" label="Currency">
+            <Select
+              labelId="select-currency"
+              label="Currency"
+              value={currency}
+              onChange={handleCurrencyChange}
+            >
               <MenuItem value="USD">USD</MenuItem>
               <MenuItem value="GBP">GBP</MenuItem>
               <MenuItem value="EUR">EUR</MenuItem>
@@ -154,6 +220,7 @@ const CreateRetailOrder = ({ isNew }) => {
           }}
           rowData={data}
           columnDefs={columnDefs}
+          onCellValueChanged={onCellValueChanged}
         ></AgGridReact>
       </Box>
     </>

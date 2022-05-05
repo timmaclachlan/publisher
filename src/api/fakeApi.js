@@ -125,6 +125,12 @@ export function makeServer() {
         return data.models;
       });
 
+      this.get("/lookup/books", (schema, request) => {
+        let data = schema.books.all();
+        let subData = data.models.map(selectProps("id", "title"));        
+        return subData;
+      });
+
       this.get("/books/:id", (schema, request) => {
         let book = schema.books.find(request.params.id);
         if (book) {
