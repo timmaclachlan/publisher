@@ -32,7 +32,7 @@ const generateBlankItem = () => {
     book: { id: 0, title: "" },
     quantity: 0,
     format: 0,
-    isFree: false,
+    isFree: null,
     amtPreConv: 0,
     amtReceived: 0,
   };
@@ -69,6 +69,10 @@ const CreateRetailOrder = ({ isNew }) => {
         options: books,
         value: { id: 2, title: "Enchanted Forest" },
       },
+      valueGetter: (params) => {
+        debugger;
+        return params.data.book.title;
+      },
     },
     {
       field: "quantity",
@@ -79,10 +83,21 @@ const CreateRetailOrder = ({ isNew }) => {
     { field: "format", flex: 1 },
     {
       field: "isFree",
-      flex: 0.5,
+      flex: 0.75,
       headerName: "Is Free",
       editable: true,
       cellEditor: CheckboxEditor,
+      valueGetter: (params) => {
+        if (params.data.isFree) {
+          return "Yes";
+        }
+        if (params.data.isFree === null) {
+          return "Not set";
+        }
+        if (!params.data.isFree) {
+          return "No";
+        }
+      },
     },
     {
       headerName: "Amounts",

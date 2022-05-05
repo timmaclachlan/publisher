@@ -3,7 +3,6 @@ import React, {
   useImperativeHandle,
   useRef,
   useState,
-  useEffect,
 } from "react";
 
 import { Checkbox } from "@mui/material";
