@@ -8,7 +8,7 @@ import React, {
 import { Checkbox } from "@mui/material";
 
 export default forwardRef((props, ref) => {
-  const [checked, setChecked] = useState(null);
+  const [checked, setChecked] = useState(props.value ?? null);
   const inputElement = useRef(null);
 
   useImperativeHandle(ref, () => {

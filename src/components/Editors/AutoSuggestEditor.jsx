@@ -19,7 +19,6 @@ export default forwardRef((props, ref) => {
   useImperativeHandle(ref, () => {
     return {
       getValue() {
-        debugger;
         return value;
       },
     };
@@ -32,21 +31,19 @@ export default forwardRef((props, ref) => {
     if (!isEmptyObject(value)) {
       return value;
     }
-    return undefined;
+    return {};
   };
 
   return (
     <Autocomplete
-      style={{ padding: "0 10px" }}
       options={props.options}
       getOptionLabel={(option) => {
+        if (isEmptyObject(option)) {
+          return "";
+        }
         return option[props.labelField];
       }}
       autoSelect
-      isOptionEqualToValue={(option, value) => {
-        return option[props.idField] === value[props.idField];
-      }}
-      value={getValue()}
       onChange={handleChange}
       inputValue={getInputValue()}
       onInputChange={handleInputChange}
@@ -54,7 +51,7 @@ export default forwardRef((props, ref) => {
       renderInput={(params) => (
         <TextField
           {...params}
-          style={{ padding: "5px 0" }}
+          sx={{ mt: "-8px" }}
           placeholder={"Select a " + props.placeHolder}
         />
       )}

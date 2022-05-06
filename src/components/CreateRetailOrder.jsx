@@ -67,11 +67,9 @@ const CreateRetailOrder = ({ isNew }) => {
         idField: "id",
         placeHolder: "Book title",
         options: books,
-        value: { id: 2, title: "Enchanted Forest" },
       },
       valueGetter: (params) => {
-        debugger;
-        return params.data.book.title;
+        return params.data.book?.title;
       },
     },
     {
@@ -80,7 +78,7 @@ const CreateRetailOrder = ({ isNew }) => {
       editable: true,
       cellEditor: NumericEditor,
     },
-    { field: "format", flex: 1 },
+    { field: "format", flex: 1, editable: true },
     {
       field: "isFree",
       flex: 0.75,
@@ -122,20 +120,19 @@ const CreateRetailOrder = ({ isNew }) => {
 
   const onCellValueChanged = (event) => {
     let newStateRows = [...data];
-    debugger;
 
     if (event.rowIndex > data.length) {
       let emptyItem = generateBlankItem();
       let newItem = {
         ...emptyItem,
-        [event.colDef.field]: event.newValue,
+        [event.colDef.field]: event.data[event.colDef.field],
       };
       newStateRows.push(newItem);
     } else {
       let existingItem = data[event.rowIndex];
       let newItem = {
         ...existingItem,
-        [event.colDef.field]: event.newValue,
+        [event.colDef.field]: event.data[event.colDef.field],
       };
       newStateRows[event.rowIndex] = newItem;
     }

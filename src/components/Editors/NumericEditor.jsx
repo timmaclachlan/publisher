@@ -18,7 +18,7 @@ const KEY_ARROWLEFT = "ArrowLeft";
 const KEY_ARROWRIGHT = "ArrowRight";
 
 export default forwardRef((props, ref) => {
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(props.value ?? 1);
   const inputElement = useRef(null);
 
   // useEffect(() => {
