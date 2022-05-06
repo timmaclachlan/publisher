@@ -268,6 +268,7 @@ const CreateRetailOrder = ({ isNew }) => {
                     onCompleteEdit={(value) =>
                       handleOrderDetailChange("quantity", value)
                     }
+                    disallowDecimal
                   />
                 </Grid>
 
@@ -315,16 +316,13 @@ const CreateRetailOrder = ({ isNew }) => {
                 </Grid>
 
                 <Grid item md={12}>
-                  <TextField
-                    name="amtReceived"
-                    variant="outlined"
+                  <NumericEditor
                     label="Received"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">£</InputAdornment>
-                      ),
-                    }}
-                  ></TextField>
+                    onCompleteEdit={(value) =>
+                      handleOrderDetailChange("amtReceived", value)
+                    }
+                    adornment="£"
+                  />
                 </Grid>
               </Grid>
             </CardContent>
@@ -337,29 +335,23 @@ const CreateRetailOrder = ({ isNew }) => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item md={12}>
-                  <TextField
-                    name="royaltyAuthor"
-                    variant="outlined"
+                  <NumericEditor
                     label="Author"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">£</InputAdornment>
-                      ),
-                    }}
-                  ></TextField>
+                    onCompleteEdit={(value) =>
+                      handleOrderDetailChange("royaltyAuthor", value)
+                    }
+                    adornment="£"
+                  />
                 </Grid>
 
                 <Grid item md={12}>
-                  <TextField
-                    name="royaltyPublisher"
-                    variant="outlined"
+                  <NumericEditor
                     label="Publisher"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">£</InputAdornment>
-                      ),
-                    }}
-                  ></TextField>
+                    onCompleteEdit={(value) =>
+                      handleOrderDetailChange("royaltyPublisher", value)
+                    }
+                    adornment="£"
+                  />
                 </Grid>
               </Grid>
             </CardContent>

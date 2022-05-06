@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Stack,
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 
@@ -41,8 +40,6 @@ const AutoSuggest = ({
     }
   };
 
-  console.log("value:" + value);
-
   return (
     <>
       <Autocomplete
@@ -58,7 +55,10 @@ const AutoSuggest = ({
         onClose={() => setOpen(false)}
         loading={loading}
         autoSelect
-        isOptionEqualToValue={(option, value) => option[field] === value[field]}
+        isOptionEqualToValue={(option, value) => {
+          if (value.id === 0) return true;
+          return option.id === value.id;
+        }}
         value={value}
         onChange={handleChange}
         filterOptions={(options, params) => {
