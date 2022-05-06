@@ -33,6 +33,18 @@ import NumericEditor from "./Editors/NumericEditor";
 
 import { readLookupAll } from "../fetcher";
 
+const BLANK_ORDER_DETAILS = {
+  id: 0,
+  quantity: 1,
+  book: { id: 0, title: "" },
+  format: 0,
+  isFree: "",
+  amtPreConv: 0,
+  amtReceived: 0,
+  royaltyAuthor: 0,
+  royaltyPublisher: 0,
+};
+
 const CreateRetailOrder = ({ isNew }) => {
   const [books, setBooks] = React.useState([]);
   const [orderHeader, setOrderHeader] = React.useState({
@@ -41,17 +53,7 @@ const CreateRetailOrder = ({ isNew }) => {
     datePaymentReceived: null,
   });
   const [orderLines, setOrderLines] = React.useState([]);
-  const [orderDetails, setOrderDetails] = React.useState({
-    id: 0,
-    quantity: 1,
-    book: { id: 0, title: "" },
-    format: 0,
-    isFree: "",
-    amtPreConv: 0,
-    amtReceived: 0,
-    royaltyAuthor: 0,
-    royaltyPublisher: 0,
-  });
+  const [orderDetails, setOrderDetails] = React.useState(BLANK_ORDER_DETAILS);
 
   useEffect(() => {
     const retrieveBooks = async () => {
@@ -120,7 +122,6 @@ const CreateRetailOrder = ({ isNew }) => {
   };
 
   const handleOrderDetailChange = (field, value) => {
-    debugger;
     setOrderDetails((prevState) => {
       return {
         ...prevState,
@@ -132,6 +133,10 @@ const CreateRetailOrder = ({ isNew }) => {
   const handleOrderDetailSelectChange = (event) => {
     const { name, value } = event.target;
     handleOrderDetailChange(name, value);
+  };
+
+  const handleClearClick = (event) => {
+    setOrderDetails(BLANK_ORDER_DETAILS);
   };
 
   // const onCellValueChanged = (event) => {
@@ -268,6 +273,8 @@ const CreateRetailOrder = ({ isNew }) => {
                     onCompleteEdit={(value) =>
                       handleOrderDetailChange("quantity", value)
                     }
+                    field="quantity"
+                    valueObject={orderDetails}
                     disallowDecimal
                   />
                 </Grid>
@@ -277,6 +284,7 @@ const CreateRetailOrder = ({ isNew }) => {
                     name="format"
                     variant="outlined"
                     label="Format"
+                    value={orderDetails.format}
                   ></TextField>
                 </Grid>
 
@@ -311,6 +319,8 @@ const CreateRetailOrder = ({ isNew }) => {
                     onCompleteEdit={(value) =>
                       handleOrderDetailChange("amtPreConv", value)
                     }
+                    field="amtPreConv"
+                    valueObject={orderDetails}
                     adornment="£"
                   />
                 </Grid>
@@ -322,6 +332,8 @@ const CreateRetailOrder = ({ isNew }) => {
                       handleOrderDetailChange("amtReceived", value)
                     }
                     adornment="£"
+                    field="amtReceived"
+                    valueObject={orderDetails}
                   />
                 </Grid>
               </Grid>
@@ -341,6 +353,8 @@ const CreateRetailOrder = ({ isNew }) => {
                       handleOrderDetailChange("royaltyAuthor", value)
                     }
                     adornment="£"
+                    field="royaltyAuthor"
+                    valueObject={orderDetails}
                   />
                 </Grid>
 
@@ -351,6 +365,8 @@ const CreateRetailOrder = ({ isNew }) => {
                       handleOrderDetailChange("royaltyPublisher", value)
                     }
                     adornment="£"
+                    field="royaltyPublisher"
+                    valueObject={orderDetails}
                   />
                 </Grid>
               </Grid>
@@ -374,6 +390,7 @@ const CreateRetailOrder = ({ isNew }) => {
               startIcon={<ClearIcon />}
               color="success"
               sx={{ width: "100px" }}
+              onClick={handleClearClick}
             >
               Clear
             </Button>
