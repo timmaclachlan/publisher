@@ -1,12 +1,6 @@
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
-  useEffect,
-} from "react";
+import React from "react";
 
-import { TextField } from "@mui/material";
+import { TextField, InputAdornment } from "@mui/material";
 
 const KEY_BACKSPACE = "Backspace";
 const KEY_DELETE = "Delete";
@@ -17,15 +11,8 @@ const KEY_ARROWDOWN = "ArrowDown";
 const KEY_ARROWLEFT = "ArrowLeft";
 const KEY_ARROWRIGHT = "ArrowRight";
 
-export default forwardRef((props, ref) => {
-  const [value, setValue] = useState(props.value ?? 1);
-  const inputElement = useRef(null);
-
-  // useEffect(() => {
-  //   if (inputElement) {
-  //     inputElement.current.focus();
-  //   }
-  // }, []);
+const NumericEditor = (props) => {
+  const [value, setValue] = React.useState(props.value);
 
   const isLeftOrRight = (event) => {
     return [KEY_ARROWLEFT, KEY_ARROWRIGHT].indexOf(event.key) > -1;
@@ -64,21 +51,23 @@ export default forwardRef((props, ref) => {
     }
   };
 
-  useImperativeHandle(ref, () => {
-    return {
-      getValue() {
-        return value;
-      },
-    };
-  });
-
   return (
     <TextField
-      ref={inputElement}
       value={value}
-      size="small"
+      label={props.label}
+      variant="outlined"
       onChange={(event) => setValue(event.target.value)}
       onKeyDown={(event) => onKeyDown(event)}
+      onBlur={() => props.onCompleteEdit(value)}
+      InputProps={
+        props.adornment && {
+          startAdornment: (
+            <InputAdornment position="start">{props.adornment}</InputAdornment>
+          ),
+        }
+      }
     />
   );
-});
+};
+
+export default NumericEditor;

@@ -12,37 +12,46 @@ import {
   MenuItem,
   InputLabel,
   Stack,
+  TextField,
+  Card,
+  CardHeader,
+  CardContent,
+  InputAdornment,
 } from "@mui/material";
+
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ClearIcon from "@mui/icons-material/Clear";
 
-import AutoSuggestEditor from "./Editors/AutoSuggestEditor";
+import AutoSuggest from "./AutoSuggest";
 import NumericEditor from "./Editors/NumericEditor";
-import CheckboxEditor from "./Editors/CheckboxEditor";
 
 import { readLookupAll } from "../fetcher";
 
-const generateBlankItem = () => {
-  return {
-    id: 0,
-    bookId: 0,
-    book: { id: 0, title: "" },
-    quantity: 0,
-    format: 0,
-    isFree: null,
-    amtPreConv: 0,
-    amtReceived: 0,
-  };
-};
-
 const CreateRetailOrder = ({ isNew }) => {
   const [books, setBooks] = React.useState([]);
-  const [data, setData] = React.useState([generateBlankItem()]);
-  const [distributor, setDistributor] = React.useState("");
-  const [currency, setCurrency] = React.useState("");
+  const [orderHeader, setOrderHeader] = React.useState({
+    distributor: "",
+    currency: "",
+    datePaymentReceived: null,
+  });
+  const [orderLines, setOrderLines] = React.useState([]);
+  const [orderDetails, setOrderDetails] = React.useState({
+    id: 0,
+    quantity: 1,
+    book: { id: 0, title: "" },
+    format: 0,
+    isFree: "",
+    amtPreConv: 0,
+    amtReceived: 0,
+    royaltyAuthor: 0,
+    royaltyPublisher: 0,
+  });
 
   useEffect(() => {
     const retrieveBooks = async () => {
@@ -58,43 +67,22 @@ const CreateRetailOrder = ({ isNew }) => {
 
   const columnDefs = [
     {
-      field: "book",
       flex: 3,
-      editable: true,
-      cellEditor: AutoSuggestEditor,
-      cellEditorParams: {
-        labelField: "title",
-        idField: "id",
-        placeHolder: "Book title",
-        options: books,
-      },
       valueGetter: (params) => {
-        return params.data.book?.title;
+        return "hello";
       },
     },
     {
       field: "quantity",
       flex: 0.75,
-      editable: true,
-      cellEditor: NumericEditor,
     },
-    { field: "format", flex: 1, editable: true },
+    { field: "format", flex: 1 },
     {
       field: "isFree",
       flex: 0.75,
       headerName: "Is Free",
-      editable: true,
-      cellEditor: CheckboxEditor,
       valueGetter: (params) => {
-        if (params.data.isFree) {
-          return "Yes";
-        }
-        if (params.data.isFree === null) {
-          return "Not set";
-        }
-        if (!params.data.isFree) {
-          return "No";
-        }
+        return params.data.isFree ? "Yes" : "No";
       },
     },
     {
@@ -104,7 +92,6 @@ const CreateRetailOrder = ({ isNew }) => {
           field: "amtPreConv",
           flex: 1,
           headerName: "Pre-Converted",
-          editable: true,
         },
         { field: "amtReceived", flex: 1, headerName: "Received" },
       ],
@@ -118,35 +105,56 @@ const CreateRetailOrder = ({ isNew }) => {
     },
   ];
 
-  const onCellValueChanged = (event) => {
-    let newStateRows = [...data];
-
-    if (event.rowIndex > data.length) {
-      let emptyItem = generateBlankItem();
-      let newItem = {
-        ...emptyItem,
-        [event.colDef.field]: event.data[event.colDef.field],
+  const handleOrderHeaderChange = (field, value) => {
+    setOrderHeader((prevState) => {
+      return {
+        ...prevState,
+        [field]: value,
       };
-      newStateRows.push(newItem);
-    } else {
-      let existingItem = data[event.rowIndex];
-      let newItem = {
-        ...existingItem,
-        [event.colDef.field]: event.data[event.colDef.field],
+    });
+  };
+
+  const handleOrderSelectChange = (event) => {
+    const { name, value } = event.target;
+    handleOrderHeaderChange(name, value);
+  };
+
+  const handleOrderDetailChange = (field, value) => {
+    debugger;
+    setOrderDetails((prevState) => {
+      return {
+        ...prevState,
+        [field]: value,
       };
-      newStateRows[event.rowIndex] = newItem;
-    }
-    setData(newStateRows);
-    console.log(data);
+    });
   };
 
-  const handleDistributorChange = (ev) => {
-    setDistributor(ev.target.value);
+  const handleOrderDetailSelectChange = (event) => {
+    const { name, value } = event.target;
+    handleOrderDetailChange(name, value);
   };
 
-  const handleCurrencyChange = (ev) => {
-    setCurrency(ev.target.value);
-  };
+  // const onCellValueChanged = (event) => {
+  //   let newStateRows = [...data];
+
+  //   if (event.rowIndex > data.length) {
+  //     let emptyItem = generateBlankItem();
+  //     let newItem = {
+  //       ...emptyItem,
+  //       [event.colDef.field]: event.data[event.colDef.field],
+  //     };
+  //     newStateRows.push(newItem);
+  //   } else {
+  //     let existingItem = data[event.rowIndex];
+  //     let newItem = {
+  //       ...existingItem,
+  //       [event.colDef.field]: event.data[event.colDef.field],
+  //     };
+  //     newStateRows[event.rowIndex] = newItem;
+  //   }
+  //   setData(newStateRows);
+  //   console.log(data);
+  // };
 
   return (
     <>
@@ -187,14 +195,15 @@ const CreateRetailOrder = ({ isNew }) => {
           </Stack>
         </Grid>
 
-        <Grid item md={3}>
+        <Grid item md={4}>
           <FormControl fullWidth>
             <InputLabel id="select-distributor">Distributor</InputLabel>
             <Select
               labelId="select-distributor"
               label="Distributor"
-              value={distributor}
-              onChange={handleDistributorChange}
+              name="distributor"
+              value={orderHeader.distributor}
+              onChange={handleOrderSelectChange}
             >
               <MenuItem value="PODWW">Print on Demand Worldwide</MenuItem>
               <MenuItem value="KDP">Kindle Direct Publishing</MenuItem>
@@ -204,14 +213,15 @@ const CreateRetailOrder = ({ isNew }) => {
           </FormControl>
         </Grid>
 
-        <Grid item md={2}>
+        <Grid item md={3}>
           <FormControl fullWidth>
             <InputLabel id="select-currency">Currency</InputLabel>
             <Select
               labelId="select-currency"
               label="Currency"
-              value={currency}
-              onChange={handleCurrencyChange}
+              name="currency"
+              value={orderHeader.currency}
+              onChange={handleOrderSelectChange}
             >
               <MenuItem value="USD">USD</MenuItem>
               <MenuItem value="GBP">GBP</MenuItem>
@@ -220,6 +230,162 @@ const CreateRetailOrder = ({ isNew }) => {
               <MenuItem value="AUD">AUD</MenuItem>
             </Select>
           </FormControl>
+        </Grid>
+
+        <Grid item md={3}>
+          <DesktopDatePicker
+            label="Payment Received"
+            value={orderHeader.datePaymentReceived}
+            name="datePaymentReceived"
+            inputFormat="dd/MM/yyyy"
+            renderInput={(params) => <TextField {...params} />}
+            onChange={(value) =>
+              handleOrderHeaderChange("datePaymentReceived", value)
+            }
+          />
+        </Grid>
+
+        <Grid item md={2} />
+
+        <Grid item md={4}>
+          <Card>
+            <CardHeader subheader="Details" />
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item md={12}>
+                  <AutoSuggest
+                    data={books}
+                    value={orderDetails.book}
+                    field="title"
+                    onChange={(value) => handleOrderDetailChange("book", value)}
+                    allowCreation={false}
+                  />
+                </Grid>
+
+                <Grid item md={4}>
+                  <NumericEditor
+                    label="Quantity"
+                    onCompleteEdit={(value) =>
+                      handleOrderDetailChange("quantity", value)
+                    }
+                  />
+                </Grid>
+
+                <Grid item md={4}>
+                  <TextField
+                    name="format"
+                    variant="outlined"
+                    label="Format"
+                  ></TextField>
+                </Grid>
+
+                <Grid item md={4}>
+                  <FormControl fullWidth>
+                    <InputLabel id="isFreeLabel">Is Free</InputLabel>
+                    <Select
+                      labelId="isFreeLabel"
+                      value={orderDetails.isFree}
+                      label="Is Free"
+                      name="isFree"
+                      onChange={handleOrderDetailSelectChange}
+                    >
+                      <MenuItem value={true}>Yes</MenuItem>
+                      <MenuItem value={false}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={3}>
+          <Card>
+            <CardHeader subheader="Amounts" />
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item md={12}>
+                  <NumericEditor
+                    label="Pre-Conversion"
+                    onCompleteEdit={(value) =>
+                      handleOrderDetailChange("amtPreConv", value)
+                    }
+                    adornment="£"
+                  />
+                </Grid>
+
+                <Grid item md={12}>
+                  <TextField
+                    name="amtReceived"
+                    variant="outlined"
+                    label="Received"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">£</InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={3}>
+          <Card>
+            <CardHeader subheader="Royalties" />
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item md={12}>
+                  <TextField
+                    name="royaltyAuthor"
+                    variant="outlined"
+                    label="Author"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">£</InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
+                </Grid>
+
+                <Grid item md={12}>
+                  <TextField
+                    name="royaltyPublisher"
+                    variant="outlined"
+                    label="Publisher"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">£</InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={2}>
+          <Stack spacing={2}>
+            <Button
+              variant="contained"
+              startIcon={<AddCircleIcon />}
+              color="success"
+              sx={{ width: "100px" }}
+            >
+              Add
+            </Button>
+
+            <Button
+              variant="outlined"
+              startIcon={<ClearIcon />}
+              color="success"
+              sx={{ width: "100px" }}
+            >
+              Clear
+            </Button>
+          </Stack>
         </Grid>
       </Grid>
 
@@ -230,9 +396,8 @@ const CreateRetailOrder = ({ isNew }) => {
             height: 200,
             width: 1200,
           }}
-          rowData={data}
+          rowData={orderLines}
           columnDefs={columnDefs}
-          onCellValueChanged={onCellValueChanged}
         ></AgGridReact>
       </Box>
     </>

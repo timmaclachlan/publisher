@@ -9,7 +9,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Stack
+  Stack,
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 
@@ -18,7 +18,15 @@ import SaveIcon from "@mui/icons-material/Save";
 
 const filter = createFilterOptions();
 
-const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange }) => {
+const AutoSuggest = ({
+  data,
+  label,
+  field,
+  value,
+  allowCreation,
+  onOpenAutoSuggest,
+  onChange,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const loading = open && data.length === 0;
@@ -29,18 +37,23 @@ const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange })
       setOpenDialog(true);
     }
     if (onChange) {
-      onChange("authorId", parseInt(value.id));
+      onChange(value);
     }
   };
+
+  console.log("value:" + value);
 
   return (
     <>
       <Autocomplete
         options={data}
-        getOptionLabel={(option) => option[field]}
+        getOptionLabel={(option) => {
+          if (option.id === 0) return "";
+          return option[field];
+        }}
         onOpen={() => {
           setOpen(true);
-          onOpenAutoSuggest();
+          if (onOpenAutoSuggest) onOpenAutoSuggest();
         }}
         onClose={() => setOpen(false)}
         loading={loading}
@@ -51,16 +64,18 @@ const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange })
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
 
-          const { inputValue } = params;
-          // Suggest the creation of a new value
-          const isExisting = options.some(
-            (option) => inputValue === option[field]
-          );
-          if (inputValue !== "" && !isExisting) {
-            filtered.push({
-              inputValue,
-              name: `Quick Add "${inputValue}"`,
-            });
+          if (allowCreation) {
+            const { inputValue } = params;
+            // Suggest the creation of a new value
+            const isExisting = options.some(
+              (option) => inputValue === option[field]
+            );
+            if (inputValue !== "" && !isExisting) {
+              filtered.push({
+                inputValue,
+                name: `Quick Add "${inputValue}"`,
+              });
+            }
           }
 
           return filtered;
@@ -69,6 +84,7 @@ const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange })
           <TextField
             {...params}
             label={label}
+            placeholder={"Make selection"}
             InputProps={{
               ...params.InputProps,
               endAdornment: (
@@ -88,7 +104,7 @@ const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange })
         <DialogTitle>Quick Add Author</DialogTitle>
         <DialogContent>
           <DialogContentText>Quickly add an new author</DialogContentText>
-          
+
           <TextField
             type="text"
             label="Full Name"
@@ -96,14 +112,16 @@ const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange })
           ></TextField>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined"
-            onClick={() => setOpenDialog(false) }
-            startIcon={<CancelIcon />}>
+          <Button
+            variant="outlined"
+            onClick={() => setOpenDialog(false)}
+            startIcon={<CancelIcon />}
+          >
             Cancel
           </Button>
           <Button
             variant="contained"
-            onClick={() => setOpenDialog(false) }
+            onClick={() => setOpenDialog(false)}
             startIcon={<SaveIcon />}
             color="success"
             sx={{ width: "100px" }}
