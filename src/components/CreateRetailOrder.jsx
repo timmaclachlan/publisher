@@ -30,6 +30,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 import AutoSuggest from "./AutoSuggest";
 import NumericEditor from "./Editors/NumericEditor";
+import ActionsEditor from "./Editors/ActionsEditor";
 
 import { readLookupAll } from "../fetcher";
 
@@ -69,13 +70,12 @@ const CreateRetailOrder = ({ isNew }) => {
 
   const columnDefs = [
     {
-      flex: 3,
-      valueGetter: (params) => {
-        return "hello";
-      },
+      flex: 2.5,
+      field: "book.title",
     },
     {
       field: "quantity",
+      headerName: "Qty",
       flex: 0.75,
     },
     { field: "format", flex: 1 },
@@ -104,6 +104,22 @@ const CreateRetailOrder = ({ isNew }) => {
         { field: "royaltyAuthor", flex: 1, headerName: "Author" },
         { field: "royaltyPublisher", flex: 1, headerName: "Publisher" },
       ],
+    },
+    {
+      headerName: "",
+      cellRenderer: ActionsEditor,
+      cellRendererParams: {
+        onRemoveRow: (rowIndex) => {
+          let newOrderLines = [...orderLines];
+          newOrderLines = orderLines.filter((x, index) => index !== rowIndex);
+          setOrderLines(newOrderLines);
+        },
+
+        onEditRow: (rowIndex) => {
+          let orderDetail = orderLines[rowIndex];
+          setOrderDetails(orderDetail);
+        },
+      },
     },
   ];
 
@@ -136,6 +152,14 @@ const CreateRetailOrder = ({ isNew }) => {
   };
 
   const handleClearClick = (event) => {
+    setOrderDetails(BLANK_ORDER_DETAILS);
+  };
+
+  const handleAddClick = (event) => {
+    let newOrderLines = [...orderLines];
+
+    newOrderLines.push({ ...orderDetails });
+    setOrderLines(newOrderLines);
     setOrderDetails(BLANK_ORDER_DETAILS);
   };
 
@@ -381,6 +405,7 @@ const CreateRetailOrder = ({ isNew }) => {
               startIcon={<AddCircleIcon />}
               color="success"
               sx={{ width: "100px" }}
+              onClick={handleAddClick}
             >
               Add
             </Button>
@@ -402,7 +427,7 @@ const CreateRetailOrder = ({ isNew }) => {
         <AgGridReact
           className="ag-theme-alpine"
           containerStyle={{
-            height: 200,
+            height: 400,
             width: 1200,
           }}
           rowData={orderLines}
