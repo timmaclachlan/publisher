@@ -27,13 +27,8 @@ const NumericEditor = (props) => {
   const inputRef = React.useRef(null);
 
   React.useEffect(() => {
-    const setValue = (newValue) => {
-      let input = getInputElement();
-      input.value = newValue;
-    };
-    debugger;
     if (inputRef.current) {
-      setValue(props.valueObject[props.field]);
+      inputRef.current.value = props.valueObject[props.field];
     }
   }, [props.valueObject, props.field]);
 
@@ -57,25 +52,19 @@ const NumericEditor = (props) => {
     }
   };
 
-  const getInputElement = () => {
-    let input = inputRef.current.children[1].children[0];
-    return input;
-  };
-
   const getValue = () => {
     if (inputRef.current) {
-      let input = getInputElement();
-      return input.value;
+      return inputRef.current.value;
     }
   };
 
   return (
     <TextField
-      ref={inputRef}
       label={props.label}
       variant="outlined"
       onKeyDown={(event) => onKeyDown(event)}
       onBlur={() => props.onCompleteEdit(getValue())}
+      inputRef={inputRef}
       InputProps={
         props.adornment && {
           startAdornment: (
