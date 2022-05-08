@@ -2,27 +2,30 @@ import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import { Typography, Box, Grid, Button } from "@mui/material";
+import { Typography, Box, Grid, Button, Stack } from "@mui/material";
+
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 import { readAll } from "../fetcher";
 import { getFormattedDate, getFormattedCurrency } from "../utils";
 
+import SalesQuarterFilter from "./Filters/SalesQuarterFilter";
+
 const RetailOrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
-
-  const createClick = () => {};
+  const handleCreateOrderClick = (type) => {
+    navigate("/orders/retail/new");
+  };
 
   const columnDefs = [
-    { field: "id", flex: 0.75 },
+    { field: "id", flex: 0.75, filter: "agNumberColumnFilter" },
     {
       headerName: "Book Details",
       children: [
         { field: "title", flex: 2.5 },
-        { field: "author", flex: 1.5 },
+        { field: "author", columnGroupShow: "open", flex: 1.5 },
       ],
     },
     {
@@ -31,25 +34,54 @@ const RetailOrdersPage = () => {
         {
           field: "orderDate",
           headerName: "Order",
+          filter: SalesQuarterFilter,
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
           field: "dispatchedDate",
           headerName: "Dispatched",
+          columnGroupShow: "open",
+          filter: SalesQuarterFilter,
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
-          field: "dateAmountReceived",
+          field: "amountReceivedDate",
           headerName: "Received",
+          columnGroupShow: "open",
+          filter: SalesQuarterFilter,
           valueFormatter: (params) => getFormattedDate(params.value),
         },
       ],
     },
     { field: "source" },
-    { field: "quantity", headerName: "Qty", flex: 0.75 },
+    {
+      field: "quantity",
+      headerName: "Qty",
+      flex: 0.75,
+      filter: "agNumberColumnFilter",
+    },
     {
       field: "amountReceived",
+      headerName: "Received",
+      filter: "agNumberColumnFilter",
       valueFormatter: (params) => getFormattedCurrency(params.value),
+    },
+    {
+      headerName: "Royalties",
+      children: [
+        {
+          field: "royaltyAuthor",
+          headerName: "Author",
+          filter: "agNumberColumnFilter",
+          valueFormatter: (params) => getFormattedCurrency(params.value),
+        },
+        {
+          field: "royaltyPublisher",
+          headerName: "Publisher",
+          filter: "agNumberColumnFilter",
+          valueFormatter: (params) => getFormattedCurrency(params.value),
+        },
+      ],
     },
   ];
 
@@ -66,32 +98,26 @@ const RetailOrdersPage = () => {
   };
 
   return (
-    <>
-      <Grid container>
+    <React.Fragment>
+      <Grid container sx={{ width: 1400 }}>
         <Grid item>
           <ShoppingCartIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
         </Grid>
-        <Grid item>
+        <Grid item md={3}>
           <Typography variant="h4" sx={{ pt: 1 }}>
             Retail Orders
           </Typography>
         </Grid>
-        <Grid item md={3} />
-        <Grid item md={2}>
-          <Button
-            color="primary"
-            variant="contained"
-            sx={{ mt: 1 }}
-            aria-label="add"
-            onClick={createClick}
-          >
-            Create
+        <Grid item md={5} />
+        <Grid item md={3}>
+          <Button variant="contained" onClick={handleCreateOrderClick}>
+            Create Retail Order
           </Button>
         </Grid>
       </Grid>
-
-      <Box className="ag-theme-alpine">
+      <Box>
         <AgGridReact
+          className="ag-theme-alpine"
           defaultColDef={{
             resizable: true,
             sortable: true,
@@ -112,7 +138,7 @@ const RetailOrdersPage = () => {
           onGridReady={onGridReady}
         ></AgGridReact>
       </Box>
-    </>
+    </React.Fragment>
   );
 };
 

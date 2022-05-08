@@ -17,6 +17,9 @@ export const AuthorFactory = Factory.extend({
   location() {
     return faker.address.country();
   },
+  website() {
+    return faker.internet.url();
+  },
   address1() {
     return faker.address.streetAddress();
   },
@@ -46,9 +49,6 @@ export const AuthorFactory = Factory.extend({
   },
   retainedClient() {
     return faker.random.arrayElement([true, false]);
-  },
-  gender() {
-    return faker.random.arrayElement(['M', 'F']);
   },
   notes() {
     return faker.word.noun(10);

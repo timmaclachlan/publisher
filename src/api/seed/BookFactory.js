@@ -58,7 +58,7 @@ export const BookFactory = Factory.extend({
       "Non-Fiction",
     ]);
   },
-  service() { return faker.random.arrayElement(["EPPS", "PPS", "EPS"]); },
+  projectType() { return faker.random.arrayElement(["EPPS", "PPS", "EPS", "CPS", "HPS", "EPHPS"]); },
   isbn() {
     return "909-32-2232323"
   },

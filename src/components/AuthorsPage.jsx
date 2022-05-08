@@ -40,9 +40,13 @@ const Authors = ({ onRecordChange }) => {
     {
       field: "realName",
       cellRenderer: "LinkComponent",
+      flex: 1,
     },
-    { field: "address1", width: 300 },
-    { field: "active" },
+    { field: "penName", flex: 1 },
+    { field: "retained", flex: 0.5 },
+    { field: "email", flex: 1 },
+    { field: "address", width: 300, flex: 1.5 },
+    { field: "location", flex: 1 },
   ];
 
   return (
@@ -70,8 +74,12 @@ const Authors = ({ onRecordChange }) => {
         </Grid>
       </Grid>
 
-      <Box className="ag-theme-material" style={{ height: 800, width: 800 }}>
+      <Box className="ag-theme-material">
         <AgGridReact
+          containerStyle={{
+            height: 700,
+            width: 1500,
+          }}
           rowData={authors}
           columnDefs={columnDefs}
           frameworkComponents={{

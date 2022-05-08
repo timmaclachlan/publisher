@@ -9,7 +9,7 @@ import {
   Card,
   CardHeader,
   CardContent,
-  Stack
+  Stack,
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
@@ -76,7 +76,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
           <CardHeader subheader="Personal Details"></CardHeader>
           <CardContent>
             <Grid container>
-              <Grid item md={6}>
+              <Grid item md={7}>
                 <Stack spacing={2}>
                   <Stack direction="row" spacing={1}>
                     <EmailIcon color="primary" />
@@ -85,29 +85,24 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                   <Stack direction="row" spacing={1}>
                     <PhoneIcon color="primary" />
                     <Typography variant="subtitle1">
-                      {author.phoneNumber}
+                      {author.website}
                     </Typography>
                   </Stack>
 
-                  <ViewChip label="Active" value={author.active} color="primary" />
+                  <ViewChip
+                    label="Active"
+                    value={author.active}
+                    color="primary"
+                  />
                 </Stack>
               </Grid>
 
-              <Grid item md={6}>
+              <Grid item md={5}>
                 <Stack spacing={2}>
                   <Stack direction="row" spacing={1}>
-                    {author.gender === "M" && (
-                      <>
-                        <MaleIcon color="primary" />
-                        <Typography variant="subtitle1">Male</Typography>
-                      </>
-                    )}
-                    {author.gender === "F" && (
-                      <>
-                        <FemaleIcon color="primary" />
-                        <Typography variant="subtitle1">Female</Typography>
-                      </>
-                    )}
+                    <Typography variant="subtitle1">
+                      {author.phoneNumber}
+                    </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
                     <LocationCityIcon color="primary" />
@@ -116,7 +111,11 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                     </Typography>
                   </Stack>
 
-                  <ViewChip label="Retained" value={author.retainedClient} color="primary" />
+                  <ViewChip
+                    label="Retained"
+                    value={author.retainedClient}
+                    color="primary"
+                  />
                 </Stack>
               </Grid>
             </Grid>

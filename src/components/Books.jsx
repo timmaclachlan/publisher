@@ -4,6 +4,8 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import { Box, Button } from "@mui/material";
 
+import { getFormattedDate } from "../utils";
+
 const LinkComponent = ({ data }) => {
   return (
     <Button component={RouterLink} sx={{ p: 0 }} to={"/books/" + data.id}>
@@ -25,8 +27,11 @@ const Books = ({ books }) => {
       width: 350,
       cellRenderer: "LinkComponent",
     },
-    { field: "format" },
-    { field: "price" },
+    {
+      field: "publicationDate",
+      valueFormatter: (params) => getFormattedDate(params.value),
+    },
+    { field: "projectType", headerName: "Project Type" },
   ];
 
   return (
