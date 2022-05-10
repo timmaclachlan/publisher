@@ -1,14 +1,14 @@
-const express = require('express');
+import { Router } from "express";
+import { getAll, getAllLookup, getById, create, updateById, deleteById } from "../controllers/authors";
 
-const router = express.Router();
-const authorController = require('../controllers/authors');
+const router = Router();
 
-router.get('/authors', authorController.getAll);
-router.get('/authors/lookup/', authorController.getAllLookup);
-router.get('/authors/:id', authorController.getById);
-router.post('/authors', authorController.create);
-router.patch('/authors/:id', authorController.updateById);
-router.delete('/authors/:id', authorController.deleteById);
+router.get('/', getAll);
+router.get('/lookup/', getAllLookup);
+router.get('/:id', getById);
+router.post('/', create);
+router.patch('/:id', updateById);
+router.delete('/:id', deleteById);
 
 module.exports = router;
  
