@@ -1,5 +1,14 @@
+import { Pool } from "pg";
+
 const getAll = (req, res, next) => {
-  res.json({ message: "getAll authors" });
+  let sql = `SELECT * FROM "${"timm2006/athena"}"."authors"`;
+  const pool = new Pool();
+
+  console.log(sql);
+
+  pool.query(sql, (error, results) => {
+    res.json({ "message": "success", "data": results.rows });
+  });
 };
 
 const getAllLookup = (req, res, next) => {
