@@ -12,11 +12,25 @@ const getAll = (req, res, next) => {
 };
 
 const getAllLookup = (req, res, next) => {
-  res.json({ message: "getAllLookup authors" });
+  let sql = `SELECT id, realName FROM "${"timm2006/athena"}"."authors"`;
+  const pool = new Pool();
+
+  console.log(sql);
+
+  pool.query(sql, (error, results) => {
+    res.json({ "message": "success", "data": results.rows });
+  });
 };
 
 const getById = (req, res, next) => {
-  res.json({ message: "getById authors" });
+  let sql = `SELECT * FROM "${"timm2006/athena"}"."authors" WHERE id=${1}`;
+  const pool = new Pool();
+
+  console.log(sql);
+
+  pool.query(sql, (error, results) => {
+    res.json({ "message": "success", "data": results.rows });
+  });
 };
 
 const create = (req, res, next) => {
