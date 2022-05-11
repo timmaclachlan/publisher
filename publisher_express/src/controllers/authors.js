@@ -51,7 +51,7 @@ export const create = (req, res, next) => {
     if (error) {
       console.error(error);
       res.statusCode = 500;
-      return res.json({ error: "Failed to create record" });
+      return res.json({ errors: ["Failed to create record"] });
     }
     res.statusCode = 201;
     res.json({ message: "success", id: results.rows[0].id });
@@ -59,6 +59,8 @@ export const create = (req, res, next) => {
 };
 
 //https://medium.com/@jeffandersen/building-a-node-js-rest-api-with-express-46b0901f29b6
+
+// TODO: handle errors Errors array, standarise code like getting pool etc
 export const updateById = (req, res, next) => {
   let sql = `UPDATE ${TABLEQUAL} SET realname = $1, penName=$2 WHERE id='${req.params.id}'`;
 
