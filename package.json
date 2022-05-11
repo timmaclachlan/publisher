@@ -28,7 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-server": "nodemon server-local.js"
+    "start-server": "nodemon server-local.js",
+    "build-server": "netlify-lambda build express"
   },
   "eslintConfig": {
     "extends": [
