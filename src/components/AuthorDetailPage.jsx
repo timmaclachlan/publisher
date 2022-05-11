@@ -5,14 +5,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   Grid,
   Box,
-  Button,
   Snackbar,
   Backdrop,
   Alert as MuiAlert,
-  Typography
 } from "@mui/material";
-
-
 
 import Books from "./Books";
 import AuthorEdit from "./AuthorDetail/AuthorEdit";
@@ -129,7 +125,6 @@ const AuthorDetail = ({ onRecordChange }) => {
         </Backdrop>
       )}
 
-     
       <Box>
         <Grid container spacing={2}>
           <Grid item md={10}>

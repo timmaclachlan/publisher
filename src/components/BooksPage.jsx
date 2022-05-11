@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import { Typography, Grid, Button } from "@mui/material";
+import { Typography, Grid } from "@mui/material";
 import LayersIcon from "@mui/icons-material/Layers";
 
 import Books from "./Books";
 
 import { readAll } from "../fetcher";
 
-const BooksPage = ({onRecordChange}) => {
+const BooksPage = ({ onRecordChange }) => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const BooksPage = ({onRecordChange}) => {
       }
     };
     retrieveBooks();
-  }, []);
+  }, [onRecordChange]);
 
   return (
     <>

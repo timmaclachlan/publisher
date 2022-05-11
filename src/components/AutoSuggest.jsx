@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Stack
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 
@@ -18,7 +17,14 @@ import SaveIcon from "@mui/icons-material/Save";
 
 const filter = createFilterOptions();
 
-const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange }) => {
+const AutoSuggest = ({
+  data,
+  label,
+  field,
+  value,
+  onOpenAutoSuggest,
+  onChange,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const loading = open && data.length === 0;
@@ -88,7 +94,7 @@ const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange })
         <DialogTitle>Quick Add Author</DialogTitle>
         <DialogContent>
           <DialogContentText>Quickly add an new author</DialogContentText>
-          
+
           <TextField
             type="text"
             label="Full Name"
@@ -96,14 +102,16 @@ const AutoSuggest = ({ data, label, field, value, onOpenAutoSuggest, onChange })
           ></TextField>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined"
-            onClick={() => setOpenDialog(false) }
-            startIcon={<CancelIcon />}>
+          <Button
+            variant="outlined"
+            onClick={() => setOpenDialog(false)}
+            startIcon={<CancelIcon />}
+          >
             Cancel
           </Button>
           <Button
             variant="contained"
-            onClick={() => setOpenDialog(false) }
+            onClick={() => setOpenDialog(false)}
             startIcon={<SaveIcon />}
             color="success"
             sx={{ width: "100px" }}

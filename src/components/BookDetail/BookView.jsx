@@ -9,7 +9,6 @@ import {
   Link,
   Card,
   CardContent,
-  Stack
 } from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
@@ -73,20 +72,15 @@ const BookView = ({ book, onUpdateEditMode }) => {
                 </LinkWithRouter>
                 <Typography variant="subtitle1">{book.genre}</Typography>
               </Grid>
-              <Grid item md={2}>
-                
-              </Grid>
+              <Grid item md={2}></Grid>
             </Grid>
           </CardContent>
         </Card>
       </Grid>
 
-
-
       <Grid item md={12}>
         <BookViewOptions book={book} />
       </Grid>
-      
     </Grid>
   );
 };
