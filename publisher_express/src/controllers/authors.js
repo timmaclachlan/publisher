@@ -1,63 +1,84 @@
+/* eslint-disable no-template-curly-in-string */
 import { Pool } from "pg";
+import { v4 as uuid4 } from "uuid";
 
-const getAll = (req, res, next) => {
-  let sql = `SELECT * FROM "${"timm2006/athena"}"."authors"`;
+const DBPATH = "timm2006/athena";
+const TABLE = "authors";
+const TABLEQUAL = `"${DBPATH}"."${TABLE}"`;
+
+export const getAll = (req, res, next) => {
+  let sql = `SELECT * FROM ${TABLEQUAL}`;
   const pool = new Pool();
 
   console.log(sql);
 
   pool.query(sql, (error, results) => {
-    res.json({ "message": "success", "data": results.rows });
+    res.json({ message: "success", data: results.rows });
   });
 };
 
-const getAllLookup = (req, res, next) => {
-  let sql = `SELECT id, realName FROM "${"timm2006/athena"}"."authors"`;
+export const getAllLookup = (req, res, next) => {
+  let sql = `SELECT id, realName FROM ${TABLEQUAL}`;
   const pool = new Pool();
 
   console.log(sql);
 
   pool.query(sql, (error, results) => {
-    res.json({ "message": "success", "data": results.rows });
+    res.json({ message: "success", data: results.rows });
   });
 };
 
-const getById = (req, res, next) => {
-  let sql = `SELECT * FROM "${"timm2006/athena"}"."authors" WHERE id=${1}`;
+export const getById = (req, res, next) => {
+  let sql = `SELECT * FROM ${TABLEQUAL} WHERE id='${req.params.id}'`;
   const pool = new Pool();
 
   console.log(sql);
 
   pool.query(sql, (error, results) => {
-    res.json({ "message": "success", "data": results.rows });
+    res.json({ message: "success", data: results.rows });
   });
 };
 
-const create = (req, res, next) => {
-  res.json({ message: "create authors" });
-};
+export const create = (req, res, next) => {
+  let sql =
+    `INSERT INTO ${TABLEQUAL} (id, realName,penName) VALUES($1,$2,$3) RETURNING id`;
 
-const updateById = (req, res, next) => {
-  let sql = `UPDATE "${"timm2006/athena"}"."authors" SET " _
-  "realname = '${req.params.realName}', penName='${req.params.penName}' WHERE id=${req.params.id}`;
+  let data = [uuid4(), req.body.realName, req.body.penName];
+
   const pool = new Pool();
 
-  console.log(sql);
-
-  pool.query(sql, (error, results) => {
-    res.json({ "message": "success", "data": results.rows });
+  pool.query(sql, data, (error, results) => {
+    if (error) {
+      console.error(error);
+      res.statusCode = 500;
+      return res.json({ error: "Failed to create record" });
+    }
+    res.statusCode = 201;
+    res.json({ message: "success", id: results.rows[0].id });
   });
 };
 
-const deleteById = (req, res, next) => {
-  res.json({ message: "deleteById authors" });
+//https://medium.com/@jeffandersen/building-a-node-js-rest-api-with-express-46b0901f29b6
+export const updateById = (req, res, next) => {
+  let sql = `UPDATE ${TABLEQUAL} SET realname = $1, penName=$2 WHERE id='${req.params.id}'`;
+
+  console.log(sql);
+  
+  let data = [req.body.realName, req.body.penName];
+
+  const pool = new Pool();
+
+  pool.query(sql, data, (error, results) => {
+    res.json({ message: "success", id: req.params.id });
+  });
 };
 
-module.exports = {
-  getAll,
-  getAllLookup,
-  getById,
-  create,
-  updateById,
-  deleteById,
+export const deleteById = (req, res, next) => {
+  let sql = `DELETE FROM ${TABLEQUAL} WHERE id='${req.params.id}'`;
+  
+  const pool = new Pool();
+
+  pool.query(sql, (error, results) => {
+    res.json({ message: "success", id: req.params.id });
+  });
 };

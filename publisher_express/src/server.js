@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import 'dotenv/config';
+var bodyParser = require('body-parser');
 
 const authorRoutes = require('./routes/authors');
 const bookRoutes = require('./routes/books');
@@ -11,6 +12,7 @@ const port = process.env.PORT || DEFAULT_PORT;
 
 const app = express();
 app.use(express.json()); // parses incoming requests with JSON payloads
+app.use(bodyParser.json({ type: 'application/json' }));
 app.use("/authors", authorRoutes);
 app.use("/books", bookRoutes);
 //app.use(cors);
