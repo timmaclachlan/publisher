@@ -18,8 +18,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import MaleIcon from "@mui/icons-material/Male";
-import FemaleIcon from "@mui/icons-material/Female";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 

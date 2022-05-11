@@ -16,7 +16,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  InputAdornment,
 } from "@mui/material";
 
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";

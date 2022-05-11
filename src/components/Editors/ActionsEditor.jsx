@@ -6,8 +6,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 
 const ActionsEditor = ({ rowIndex, onRemoveRow, onEditRow }) => {
-  let [editing, setEditing] = React.useState(false);
-  let [disabled, setDisabled] = React.useState(false);
+  let [editing] = React.useState(false);
+  let [disabled] = React.useState(false);
 
   const onRemoveClick = (event) => {
     if (onRemoveRow) {

@@ -8,8 +8,8 @@ import { OrdersB2BFactory } from "./seed/OrdersB2BFactory.js";
 
 import { selectProps } from "../utils.js";
 
-const NOAUTHORS = 10;
-const NOBOOKS = 10;
+//const NOAUTHORS = 10;
+//const NOBOOKS = 10;
 const NOORDERS = 50;
 
 const NOT_FOUND = 404;

@@ -2,7 +2,6 @@ import React from "react";
 
 import {
   Grid,
-  Box,
   Button,
   TextField,
   Typography,
@@ -23,10 +22,6 @@ import {
   FormControlLabel,
   Checkbox,
   Switch,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -73,13 +68,13 @@ const AuthorEdit = ({
     }
   };
 
-  const handleDeleteClick = () => {
-    if (author.books.length > 0) {
-      setBooksWarning(true);
-      return;
-    }
-    setShowDeleteConfirmation(true);
-  };
+  // const handleDeleteClick = () => {
+  //   if (author.books.length > 0) {
+  //     setBooksWarning(true);
+  //     return;
+  //   }
+  //   setShowDeleteConfirmation(true);
+  // };
 
   return (
     <>
