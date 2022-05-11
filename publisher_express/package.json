@@ -2,12 +2,13 @@
   "name": "publisher-express",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "functions/server.js",
   "scripts": {
     "babel-node": "babel-node --presets=@babel/preset-env",
     "clean": "rm -Rf ./dist",
     "start": "nodemon --exec npm run babel-node -- src/server.js",
     "build": "babel src -d dist",
+    "netlify": "netlify-lambda build express",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -16,16 +17,17 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.18.1",
-    "nodemon": "^2.0.16",
     "pg": "^8.7.3",
-    "serverless-http": "^3.0.1",
-    "sqlite3": "^5.0.8",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.17.10",
     "@babel/node": "^7.17.10",
-    "@babel/preset-env": "^7.17.10"
+    "@babel/preset-env": "^7.17.10",
+    "body-parser": "^1.20.0",
+    "netlify-lambda": "^2.0.15",
+    "nodemon": "^2.0.16",
+    "serverless-http": "^3.0.1"
   }
 }
