@@ -1,7 +1,7 @@
 import { createServer, Model, belongsTo, hasMany, Response } from "miragejs";
 
-import { authors as authorsdb } from "./seed/authorDb.js";
-import { books as booksdb } from "./seed/bookDb.js";
+//import { authors as authorsdb } from "./seed/authorDb.js";
+//import { books as booksdb } from "./seed/bookDb.js";
 import { AuthorFactory } from "./seed/AuthorFactory.js";
 import { BookFactory } from "./seed/BookFactory.js";
 import { OrdersB2BFactory } from "./seed/OrdersB2BFactory.js";

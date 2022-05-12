@@ -8,7 +8,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { ThemeProvider } from "@mui/material";
 
-import { makeServer } from "./api/fakeApi";
+//import { makeServer } from "./api/fakeApi";
 import { theme } from "./theme/theme";
 
 //makeServer();
