@@ -11,7 +11,7 @@ const makeRequest = async (
   method = "GET",
   body = undefined
 ) => {
-  
+
   const requestInit = { method: method, body: JSON.stringify(body) };
   let url = `${BASE_URL}/`;
   if (isLookup) {
@@ -20,7 +20,7 @@ const makeRequest = async (
 
   url = `${url}${getSchemaUrl(schema)}`;
 
-  if (id > 0) {
+  if (id.length === 36) {
     url = `${url}/${id}`;
   }
 

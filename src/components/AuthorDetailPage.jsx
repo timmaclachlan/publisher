@@ -32,18 +32,23 @@ const AuthorDetail = ({ onRecordChange }) => {
 
   useEffect(() => {
     const retrieveAuthor = async () => {
+      let authorRecord = {};
       try {
-        const authorRecord = await readById("author", id);
-        if (isEmptyObject(authorRecord.data)) {
+        const response = await readById("author", id);
+        if (Array.isArray(response.result) && response.result.length > 0) {
+          authorRecord = response.result[0];
+        }
+        if (isEmptyObject(authorRecord)) {
           navigate("/notfound");
         }
-        setAuthor(authorRecord.data);
-        onRecordChange(authorRecord.data.realName);
+
+        setAuthor(authorRecord);
+        onRecordChange(authorRecord.realname);
       } catch (error) {
         console.log(error);
       }
     };
-    if (id > 0) {
+    if (id.length === 36) {
       retrieveAuthor();
     }
     if (id === undefined) {
@@ -69,7 +74,7 @@ const AuthorDetail = ({ onRecordChange }) => {
       message: "Changes saved successfully",
     }));
     if (onRecordChange) {
-      onRecordChange(author.realName);
+      onRecordChange(author.realname);
     }
   };
 

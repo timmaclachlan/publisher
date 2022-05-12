@@ -33,13 +33,25 @@ router.post("/authors", cors(), (req, res) => {
   });
 });
 
+router.get("/authors/:id", cors(), (req, res) => {
+  let sql = `SELECT * FROM ${TABLEQUAL} WHERE id='${req.params.id}'`;
+  console.log(sql);
+  const pool = new Pool();
+  pool.query(sql, (error, results) => {
+    if (error) {
+      res.statusCode = 500;
+      return res.json({errors: ['Failed to retrieve: ' + error.message]})
+    }
+    res.statusCode = 200;
+    res.json({ message: "success", result: results.rows });
+  });  
+});
+
 router.get("/authors", cors(), (req, res) => {
-  let sql = `SELECT * FROM ${TABLEQUAL}`;
+  let sql = `SELECT * FROM ${TABLEQUAL} ORDER BY realname`;
 
   console.log(sql);
   console.log("ENV: (user)" + process.env.PGUSER + " pghost:" + process.env.PGHOST);
-
-  //res.json({ pguserenv: process.env.PGUSER, pguser: postgresConfig.user });
 
   const pool = new Pool();
   pool.query(sql, (error, results) => {

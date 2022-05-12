@@ -18,6 +18,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
+import LanguageIcon from "@mui/icons-material/Language";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 
@@ -60,12 +61,12 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
       </Grid>
 
       <Grid item md={8}>
-        <Typography variant="h5">{author.realName}</Typography>
+        <Typography variant="h5">{author.realname}</Typography>
       </Grid>
       <Grid item md={4}>
         <Stack direction="row" spacing={1}>
           <BorderColorIcon color="primary" />
-          <Typography variant="subtitle1">{author.penName}</Typography>
+          <Typography variant="subtitle1">{author.penname}</Typography>
         </Stack>
       </Grid>
 
@@ -81,7 +82,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                     <Typography variant="subtitle1">{author.email}</Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
-                    <PhoneIcon color="primary" />
+                    <LanguageIcon color="primary" />
                     <Typography variant="subtitle1">
                       {author.website}
                     </Typography>
@@ -98,8 +99,9 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
               <Grid item md={5}>
                 <Stack spacing={2}>
                   <Stack direction="row" spacing={1}>
+                    <PhoneIcon color="primary" />
                     <Typography variant="subtitle1">
-                      {author.phoneNumber}
+                      {author.phonenumber}
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
@@ -111,7 +113,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
 
                   <ViewChip
                     label="Retained"
-                    value={author.retainedClient}
+                    value={author.retained}
                     color="primary"
                   />
                 </Stack>
@@ -128,9 +130,9 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
             <Stack spacing={2}>
               <Stack direction="row" spacing={1}>
                 <AccountBalanceIcon color="primary" />
-                <Typography variant="subtitle1">{author.sortCode}</Typography>
+                <Typography variant="subtitle1">{author.sortcode}</Typography>
                 &nbsp;&nbsp;/
-                <Typography variant="subtitle1">{author.accountNo}</Typography>
+                <Typography variant="subtitle1">{author.accountno}</Typography>
               </Stack>
               <Stack direction="row" spacing={1}>
                 <AccountBalanceIcon color="primary" />
@@ -154,7 +156,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
               <Typography variant="subtitle1">{author.address2}</Typography>
               <Typography variant="subtitle1">{author.address3}</Typography>
               <Typography variant="subtitle1">{author.address4}</Typography>
-              <Typography variant="subtitle1">{author.postCode}</Typography>
+              <Typography variant="subtitle1">{author.postcode}</Typography>
             </Stack>
           </CardContent>
         </Card>

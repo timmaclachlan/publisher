@@ -19,7 +19,45 @@ const Authors = ({ onRecordChange }) => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const createClick = (event) => {
+    navigate("/authors/new");
+  };
+
+  const columnDefs = [
+    {
+      field: "realname",
+      cellRenderer: LinkComponent,
+      flex: 1,
+    },
+    { field: "penname", flex: 1 },
+    {
+      field: "retained",
+      flex: 0.5,
+      valueGetter: (params) => {
+        return params.data.retained ? "Yes" : "No";
+      },
+    },
+    { field: "email", flex: 1 },
+    {
+      field: "address",
+      width: 300,
+      flex: 1.5,
+      valueGetter: (params) => {
+        let value = [
+          params.data.address1,
+          params.data.address2,
+          params.data.address3,
+          params.data.address4,
+        ].join(",");
+        value = value.replace(",,", "");
+        if (value.length === 1) value = "";
+        return value;
+      },
+    },
+    { field: "location", flex: 1 },
+  ];
+
+  const onGridReady = () => {
     const retrieveAuthors = async () => {
       try {
         const response = await readAll("author");
@@ -30,24 +68,7 @@ const Authors = ({ onRecordChange }) => {
       }
     };
     retrieveAuthors();
-  }, [onRecordChange]);
-
-  const createClick = (event) => {
-    navigate("/authors/new");
   };
-
-  const columnDefs = [
-    {
-      field: "realname",
-      cellRenderer: "LinkComponent",
-      flex: 1,
-    },
-    { field: "penname", flex: 1 },
-    { field: "retained", flex: 0.5 },
-    { field: "email", flex: 1 },
-    { field: "address", width: 300, flex: 1.5 },
-    { field: "location", flex: 1 },
-  ];
 
   return (
     <>
@@ -74,17 +95,25 @@ const Authors = ({ onRecordChange }) => {
         </Grid>
       </Grid>
 
-      <Box className="ag-theme-material">
+      <Box className="ag-theme-alpine">
         <AgGridReact
+          defaultColDef={{
+            resizable: true,
+            sortable: true,
+            floatingFilter: true,
+            filter: "agTextColumnFilter",
+            flex: 1,
+          }}
           containerStyle={{
             height: 700,
             width: 1500,
           }}
           rowData={authors}
           columnDefs={columnDefs}
-          frameworkComponents={{
-            LinkComponent,
-          }}
+          columnHoverHighlight={true}
+          pagination={true}
+          paginationPageSize={15}
+          onGridReady={onGridReady}
         ></AgGridReact>
       </Box>
     </>
