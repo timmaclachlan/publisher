@@ -1,17 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { ThemeProvider } from '@mui/material';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { ThemeProvider } from "@mui/material";
 
-import { makeServer } from './api/fakeApi';
-import { theme } from './theme/theme';
+import { makeServer } from "./api/fakeApi";
+import { theme } from "./theme/theme";
 
-makeServer();
+//makeServer();
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,11 +19,11 @@ ReactDOM.render(
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <App />
-        </ThemeProvider>          
+        </ThemeProvider>
       </LocalizationProvider>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

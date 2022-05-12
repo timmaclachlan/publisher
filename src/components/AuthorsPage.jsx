@@ -10,7 +10,7 @@ import { readAll } from "../fetcher";
 const LinkComponent = ({ data }) => {
   return (
     <Button component={RouterLink} sx={{ p: 0 }} to={"/authors/" + data.id}>
-      {data.realName}
+      {data.realname}
     </Button>
   );
 };
@@ -22,8 +22,8 @@ const Authors = ({ onRecordChange }) => {
   useEffect(() => {
     const retrieveAuthors = async () => {
       try {
-        const result = await readAll("author");
-        setAuthors(result.data);
+        const response = await readAll("author");
+        setAuthors(response.result);
         onRecordChange("");
       } catch (error) {
         console.log(error);
@@ -38,11 +38,11 @@ const Authors = ({ onRecordChange }) => {
 
   const columnDefs = [
     {
-      field: "realName",
+      field: "realname",
       cellRenderer: "LinkComponent",
       flex: 1,
     },
-    { field: "penName", flex: 1 },
+    { field: "penname", flex: 1 },
     { field: "retained", flex: 0.5 },
     { field: "email", flex: 1 },
     { field: "address", width: 300, flex: 1.5 },

@@ -10,7 +10,7 @@ import { selectProps } from "../utils.js";
 
 //const NOAUTHORS = 10;
 //const NOBOOKS = 10;
-const NOORDERS = 50;
+//const NOORDERS = 50;
 
 const NOT_FOUND = 404;
 
@@ -34,16 +34,16 @@ export function makeServer() {
       order: OrdersB2BFactory
     },
     seeds(server) {
-      authorsdb.forEach((item) => {
-        server.create("author", item);
-      });
-      booksdb.forEach((item) => {
-        server.create("book", item);
-      });
+      // authorsdb.forEach((item) => {
+      //   server.create("author", item);
+      // });
+      // booksdb.forEach((item) => {
+      //   server.create("book", item);
+      // });
 
       //server.createList("author", NOAUTHORS);
       //server.createList("book", NOBOOKS);
-      server.createList("order", NOORDERS);
+      //server.createList("order", NOORDERS);
     },
 
     routes() {

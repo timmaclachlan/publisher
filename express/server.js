@@ -4,23 +4,17 @@ const app = express();
 const bodyParser = require("body-parser");
 const Pool = require("pg").Pool;
 const v4 = require("uuid").v4;
-const config = require("dotenv").config();
+require("dotenv").config();
+const cors = require('cors');
+
 
 const DBPATH = "timm2006/athena";
 const TABLE = "authors";
 const TABLEQUAL = `"${DBPATH}"."${TABLE}"`;
 
-const postgresConfig = {
-  user: "timm2006_demo_db_connection",
-  host: "db.bit.io",
-  database: "bitdotio",
-  password: "3nEd6_jhhm4h3xLRwbUbcQJQQSYX4",
-  port: 5432,
-};
-
 const router = express.Router();
 
-router.post("/authors", (req, res) => {
+router.post("/authors", cors(), (req, res) => {
   let sql =
     `INSERT INTO ${TABLEQUAL} (id, realName,penName) VALUES($1,$2,$3) RETURNING id`;
   
@@ -35,15 +29,15 @@ router.post("/authors", (req, res) => {
       return res.json({ errors: ["Failed to create record:" + error] });
     }
     res.statusCode = 201;
-    res.json({ message: "success", id: results.rows[0].id });
+    res.json({ message: "success", result: results.rows[0].id });
   });
 });
 
-router.get("/authors", (req, res) => {
+router.get("/authors", cors(), (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL}`;
 
   console.log(sql);
-  console.log(process.env.PGUSER);
+  console.log("ENV: (user)" + process.env.PGUSER + " pghost:" + process.env.PGHOST);
 
   //res.json({ pguserenv: process.env.PGUSER, pguser: postgresConfig.user });
 
@@ -54,7 +48,7 @@ router.get("/authors", (req, res) => {
       return res.json({errors: ['Failed to retrieve: ' + error.message]})
     }
     res.statusCode = 200;
-    res.json({ message: "success", data: results.rows });
+    res.json({ message: "success", result: results.rows });
   });
 });
 

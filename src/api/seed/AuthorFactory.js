@@ -2,16 +2,16 @@ import { Factory } from "miragejs";
 import faker from "@faker-js/faker";
 
 export const AuthorFactory = Factory.extend({
-  realName() {
+  realname() {
     return faker.name.findName();
   },
-  penName() {
+  penname() {
     return faker.name.findName();
   },
   email() {
     return faker.internet.email();
   },
-  phoneNumber() {
+  phonenumber() {
     return faker.phone.phoneNumber();
   },
   location() {
@@ -32,13 +32,13 @@ export const AuthorFactory = Factory.extend({
   address4() {
     return faker.address.state();
   },
-  postCode() {
+  postcode() {
     return faker.address.zipCode();
   },
-  sortCode() {
+  sortcode() {
     return faker.finance.account(6);
   },
-  accountNo() {
+  accountno() {
     return faker.finance.account(8);
   },
   iban() {
@@ -47,7 +47,7 @@ export const AuthorFactory = Factory.extend({
   bic() {
     return faker.finance.bic();
   },
-  retainedClient() {
+  retained() {
     return faker.random.arrayElement([true, false]);
   },
   notes() {
