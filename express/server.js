@@ -10,6 +10,14 @@ const DBPATH = "timm2006/athena";
 const TABLE = "authors";
 const TABLEQUAL = `"${DBPATH}"."${TABLE}"`;
 
+const postgresConfig = {
+  user: 'timm2006_demo_db_connection',
+  host: 'db.bit.io',
+  database: 'bitdotio',
+  password: '3nEd6_jhhm4h3xLRwbUbcQJQQSYX4',
+  port: 5432
+}
+
 const router = express.Router();
 router.get('/', (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -23,10 +31,12 @@ router.get('/authors', (req, res) => {
   console.log(sql);
   console.log(process.env.PGUSER);
 
-  const pool = new Pool();
-  pool.query(sql, (error, results) => {
-    res.json({ message: "success", data: results.rows });
-  });
+  res.json({ pguserenv: process.env.PGUSER, pguser: postgresConfig.user });
+
+  // const pool = new Pool();
+  // pool.query(sql, (error, results) => {
+  //   res.json({ message: "success", data: results.rows });
+  // });
 })
 
 app.use(bodyParser.json());
