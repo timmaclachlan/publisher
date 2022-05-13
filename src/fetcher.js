@@ -1,6 +1,7 @@
 //const BASE_URL = "/api";
-//const BASE_URL = "https://rowanvale-athena.netlify.app/.netlify/functions/server"
-const BASE_URL = "http://localhost:8000/.netlify/functions/server";
+
+
+const BASE_URL = ".netlify/functions/server";
 
 const getSchemaUrl = (schema) => `${schema}s`;
 
@@ -12,8 +13,10 @@ const makeRequest = async (
   body = undefined
 ) => {
 
+  const SERVER_URL = process.env.REACT_APP_SERVERHOST;
+
   const requestInit = { method: method, body: JSON.stringify(body) };
-  let url = `${BASE_URL}/`;
+  let url = `${SERVER_URL}/${BASE_URL}/`;
   if (isLookup) {
     url = `${url}lookup/`;
   }

@@ -13,8 +13,9 @@ const BooksPage = ({ onRecordChange }) => {
   useEffect(() => {
     const retrieveBooks = async () => {
       try {
-        const result = await readAll("book");
-        setBooks(result.data);
+        const response = await readAll("book");
+        setBooks(response.result);
+        debugger;
         onRecordChange("");
       } catch (error) {
         console.log(error);

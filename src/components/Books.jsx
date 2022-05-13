@@ -24,14 +24,21 @@ const Books = ({ books }) => {
   const columnDefs = [
     {
       field: "title",
-      width: 350,
-      cellRenderer: "LinkComponent",
+      flex: 2,
+      cellRenderer: LinkComponent,
     },
     {
-      field: "publicationDate",
-      valueFormatter: (params) => getFormattedDate(params.value),
+      field: "publicationdate",
+      headerName: "Publication Date",
+      valueFormatter: (params) => {
+        const dateString = getFormattedDate(params.value);
+        return dateString ? dateString : "No date";
+      },
     },
-    { field: "projectType", headerName: "Project Type" },
+    {
+      field: "authorname",
+      headerName: "Author",
+    },
   ];
 
   return (
@@ -47,13 +54,13 @@ const Books = ({ books }) => {
         </Button>
       </Box>
 
-      <Box className="ag-theme-material" style={{ height: 800, width: 800 }}>
+      <Box className="ag-theme-alpine" style={{ height: 600, width: 800 }}>
         <AgGridReact
           rowData={books}
           columnDefs={columnDefs}
-          frameworkComponents={{
-            LinkComponent,
-          }}
+          columnHoverHighlight={true}
+          pagination={true}
+          paginationPageSize={15}
         ></AgGridReact>
       </Box>
     </>

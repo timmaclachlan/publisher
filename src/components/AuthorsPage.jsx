@@ -26,12 +26,14 @@ const Authors = ({ onRecordChange }) => {
   const columnDefs = [
     {
       field: "realname",
+      headerName: "Author Name",
       cellRenderer: LinkComponent,
       flex: 1,
     },
-    { field: "penname", flex: 1 },
+    { field: "penname", headerName: "Pen Name", flex: 1 },
     {
       field: "retained",
+      headerName: "Retained Client",
       flex: 0.5,
       valueGetter: (params) => {
         return params.data.retained ? "Yes" : "No";

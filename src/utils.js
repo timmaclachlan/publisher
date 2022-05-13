@@ -16,8 +16,11 @@ export const selectProps = (...props) => {
 }
 
 export const getFormattedDate = (dateString) => {
-  let date = Date.parse(dateString);
-  return new Intl.DateTimeFormat('en-GB').format(date);
+  if (dateString !== null) {
+    let date = Date.parse(dateString);
+    return new Intl.DateTimeFormat('en-GB').format(date);
+  }
+  return "";
 }
 
 export const getFormattedCurrency = (amount) => {
