@@ -19,7 +19,11 @@ const makeRequest = async (
   console.log("Environment:" + process.env.NODE_ENV);
 
   const requestInit = { method: method, body: JSON.stringify(body) };
-  let url = `${SERVERURL}/${BASE_URL}/`;
+  let url = `${SERVER_URL}/${BASE_URL}/`;
+  console.log("url:" + url);
+  let url2 = `${SERVERURL}/${BASE_URL}/`;
+  console.log("url2:" + url2);
+  
   if (isLookup) {
     url = `${url}lookup/`;
   }
@@ -29,6 +33,7 @@ const makeRequest = async (
   if (id.length === 36) {
     url = `${url}/${id}`;
   }
+  console.log("urlagain:" + url);
 
   const response = await fetch(url, requestInit);
   if (!response.ok) {
