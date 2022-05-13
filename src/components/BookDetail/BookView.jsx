@@ -13,6 +13,7 @@ import {
   Stack,
   Divider,
   Tooltip,
+  Avatar,
 } from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
@@ -141,7 +142,7 @@ const BookView = ({ book, onUpdateEditMode }) => {
 
                   <ViewChip
                     label="EPPS"
-                    color="success"
+                    color="primary"
                     tooltip="Product type"
                   />
                 </Stack>
@@ -151,7 +152,7 @@ const BookView = ({ book, onUpdateEditMode }) => {
         </Card>
       </Grid>
 
-      <Grid item md={4}>
+      <Grid item md={2}>
         <Card>
           <CardHeader subheader="Royalties"></CardHeader>
           <CardContent>
@@ -162,7 +163,7 @@ const BookView = ({ book, onUpdateEditMode }) => {
                     Author
                   </Typography>
                   <Tooltip title="Royalty percentage for author">
-                    <Typography variant="h4">{book.royalty}%</Typography>
+                    <Typography variant="h5">{book.royalty}%</Typography>
                   </Tooltip>
                 </Stack>
 
@@ -172,7 +173,7 @@ const BookView = ({ book, onUpdateEditMode }) => {
                     Publisher
                   </Typography>
                   <Tooltip title="Royalty percentage for publisher">
-                    <Typography variant="h4">
+                    <Typography variant="h5">
                       {getRemainingPercentage(book.royalty)}%
                     </Typography>
                   </Tooltip>
@@ -183,11 +184,41 @@ const BookView = ({ book, onUpdateEditMode }) => {
         </Card>
       </Grid>
 
-      <Grid item md={8}>
-        <BookViewOptions book={book} />
-      </Grid>
+      <Grid item md={2}>
+        <Stack direction="row">
+          <Stack>
+            <Typography variant="caption">Acc. Man.</Typography>
+            <Tooltip title="Some lady">
+              <Avatar
+                alt="some lady"
+                src="/assets/user_3.jpg"
+                sx={{ width: 48, height: 48 }}
+              />
+            </Tooltip>
+          </Stack>
+          <Stack>
+            <Typography variant="caption">Last Edit.</Typography>
+            <Tooltip title="Some dude">
+              <Avatar
+                alt="some dude"
+                src="/assets/user_2.jpg"
+                sx={{ width: 48, height: 48 }}
+              />
+            </Tooltip>
+          </Stack>
+        </Stack>
 
-      <Grid item md={4}></Grid>
+        <Stack>
+          <Typography variant="caption">Pub Adv.</Typography>
+          <Tooltip title="Some dude">
+            <Avatar
+              alt="some dude"
+              src="/assets/user_1.jpg"
+              sx={{ width: 48, height: 48 }}
+            />
+          </Tooltip>
+        </Stack>
+      </Grid>
 
       <Grid item md={8}>
         <Card>
@@ -243,6 +274,12 @@ const BookView = ({ book, onUpdateEditMode }) => {
           </CardContent>
         </Card>
       </Grid>
+
+      <Grid item md={8}>
+        <BookViewOptions book={book} />
+      </Grid>
+
+      <Grid item md={4}></Grid>
     </Grid>
   );
 };

@@ -14,7 +14,7 @@ const makeRequest = async (
 ) => {
 
   const SERVER_URL = process.env.REACT_APP_SERVERHOST;
-
+  debugger;
   const requestInit = { method: method, body: JSON.stringify(body) };
   let url = `${SERVER_URL}/${BASE_URL}/`;
   if (isLookup) {

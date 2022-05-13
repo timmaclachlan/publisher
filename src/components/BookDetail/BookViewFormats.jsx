@@ -5,8 +5,8 @@ import { Typography, Stack, Divider, Tooltip } from "@mui/material";
 const PAPERBACK = 1;
 const HARDBACK = 2;
 const EBOOK = 28;
-const EBOOKNA = 32;
-const KUPAGESREAD = 64;
+//const EBOOKNA = 32;
+//const KUPAGESREAD = 64;
 
 const BookViewFormats = ({ book }) => {
   const renderFormatDetail = (format, text) => {
