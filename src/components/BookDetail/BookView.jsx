@@ -26,6 +26,7 @@ import ClassIcon from "@mui/icons-material/Class";
 import BookViewOptions from "./BookViewOptions";
 
 import ViewChip from "../ViewChip";
+import BookViewFormats from "./BookViewFormats";
 
 import { getFormattedDate, getRemainingPercentage } from "../../utils";
 
@@ -182,8 +183,65 @@ const BookView = ({ book, onUpdateEditMode }) => {
         </Card>
       </Grid>
 
-      <Grid item md={12}>
+      <Grid item md={8}>
         <BookViewOptions book={book} />
+      </Grid>
+
+      <Grid item md={4}></Grid>
+
+      <Grid item md={8}>
+        <Card>
+          <CardHeader subheader="Formats"></CardHeader>
+          <CardContent>
+            <BookViewFormats book={book} />
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item md={4}>
+        <Card>
+          <CardHeader subheader="Specifications"></CardHeader>
+          <CardContent>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={1}>
+                <Stack>
+                  <Typography variant="subtitle2" align="center">
+                    Width (mm)
+                  </Typography>
+                  <Tooltip title="Width of book">
+                    <Typography variant="subtitle1" align="center">
+                      {book.width}
+                    </Typography>
+                  </Tooltip>
+                </Stack>
+
+                <Divider orientation="vertical" flexItem />
+                <Stack>
+                  <Typography variant="subtitle2" align="center">
+                    Height (mm)
+                  </Typography>
+                  <Tooltip title="Height of book">
+                    <Typography variant="subtitle1" align="center">
+                      {book.height}
+                    </Typography>
+                  </Tooltip>
+                </Stack>
+
+                <Divider orientation="vertical" flexItem />
+                <Stack>
+                  <Typography variant="subtitle2" align="center">
+                    Page Count
+                  </Typography>
+                  <Tooltip title="Pages">
+                    <Typography variant="subtitle1" align="center">
+                      {book.pagecount}
+                    </Typography>
+                  </Tooltip>
+                </Stack>
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
       </Grid>
     </Grid>
   );
