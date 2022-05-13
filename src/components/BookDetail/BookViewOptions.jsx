@@ -11,12 +11,22 @@ const BookViewOptions = ({ book }) => {
       spacing={2}
       divider={<Divider orientation="vertical" flexItem />}
     >
-      <ViewChip value={book.published} label="Published" />
-      <ViewChip label={book.service} color="success" />
-      <ViewChip value={book.stillSelling} label="Selling" />
-      <ViewChip value={book.terminated} label="Terminated" />
-      <ViewChip value={book.onHold} label="On Hold" />
-      <ViewChip value={book.matureContent} label="Mature" />
+      <ViewChip
+        value={book.stillselling}
+        label="Selling"
+        tooltip="Book is still selling"
+      />
+      <ViewChip
+        value={book.terminated}
+        label="Terminated"
+        tooltip="Book is terminated"
+      />
+      <ViewChip value={book.onhold} label="On Hold" tooltip="Book is on hold" />
+      <ViewChip
+        value={book.maturecontent}
+        label="Mature"
+        tooltip="Book contains mature content"
+      />
     </Stack>
   );
 };

@@ -37,19 +37,24 @@ const BookDetail = ({ onRecordChange }) => {
 
   useEffect(() => {
     const retrieveBook = async () => {
+      let bookRecord = {};
+
       try {
-        const bookRecord = await readById("book", id);
-        console.log("bookrecord:" + bookRecord);
-        if (isEmptyObject(bookRecord.data)) {
+        const response = await readById("book", id);
+        if (Array.isArray(response.result) && response.result.length > 0) {
+          bookRecord = response.result[0];
+        }
+        if (isEmptyObject(bookRecord)) {
           navigate("/notfound");
         }
-        setBook(bookRecord.data);
-        onRecordChange(bookRecord.data.title);
+
+        setBook(bookRecord);
+        onRecordChange(bookRecord.title);
       } catch (error) {
         console.log(error);
       }
     };
-    if (id > 0) {
+    if (id.length === 36) {
       retrieveBook();
     }
     if (id === undefined) {

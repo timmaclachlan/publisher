@@ -8,14 +8,26 @@ import {
   Typography,
   Link,
   Card,
+  CardHeader,
   CardContent,
+  Stack,
+  Divider,
+  Tooltip,
 } from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import PersonIcon from "@mui/icons-material/Person";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import ClassIcon from "@mui/icons-material/Class";
 
 import BookViewOptions from "./BookViewOptions";
+
+import ViewChip from "../ViewChip";
+
+import { getFormattedDate, getRemainingPercentage } from "../../utils";
 
 const LinkWithRouter = (props) => <Link {...props} component={RouterLink} />;
 
@@ -55,25 +67,117 @@ const BookView = ({ book, onUpdateEditMode }) => {
         </Button>
       </Grid>
 
-      <Grid item md={12}>
+      <Grid item md={8}>
+        <Tooltip title="Title of book">
+          <Typography variant="h5">{book.title}</Typography>
+        </Tooltip>
+      </Grid>
+      <Grid item md={4}>
+        <Stack direction="row" spacing={1}>
+          <Tooltip title="Office abbreviation">
+            <Typography variant="h5"> {book.officeabb}</Typography>
+          </Tooltip>
+        </Stack>
+      </Grid>
+
+      <Grid item md={8}>
         <Card>
+          <CardHeader subheader="Book Details"></CardHeader>
           <CardContent>
             <Grid container>
-              <Grid item md={10}>
-                <Typography variant="h5">{book.title}</Typography>
-                <LinkWithRouter
-                  to={"/authors/" + book.author?.id}
-                  underline="hover"
-                  color="secondary"
-                >
-                  <Typography color="primary" variant="h6">
-                    {book.author?.name}
-                  </Typography>
-                </LinkWithRouter>
-                <Typography variant="subtitle1">{book.genre}</Typography>
+              <Grid item md={7}>
+                <Stack spacing={2}>
+                  <Stack direction="row" spacing={1}>
+                    <Tooltip title="Author of the book">
+                      <PersonIcon color="primary" />
+                    </Tooltip>
+                    <LinkWithRouter
+                      to={"/authors/" + book.authorid}
+                      underline="hover"
+                      color="primary"
+                    >
+                      <Typography variant="subtitle1">
+                        {book.author_name}
+                      </Typography>
+                    </LinkWithRouter>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    <Tooltip title="Pen name of the book author">
+                      <BorderColorIcon color="primary" />
+                    </Tooltip>
+                    <Typography variant="subtitle1">
+                      {book.author_penname}
+                    </Typography>
+                  </Stack>
+
+                  <ViewChip
+                    label="Published"
+                    value={book.published}
+                    color="primary"
+                    tooltip="Book has been published"
+                  />
+                </Stack>
               </Grid>
-              <Grid item md={2}></Grid>
+
+              <Grid item md={5}>
+                <Stack spacing={2}>
+                  <Stack direction="row" spacing={1}>
+                    <Tooltip title="Genre of book">
+                      <ClassIcon color="primary" />
+                    </Tooltip>
+                    <Typography variant="subtitle1">Comedy</Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    <Tooltip title="Book publication date">
+                      <CalendarMonthIcon color="primary" />
+                    </Tooltip>
+                    <Typography variant="subtitle1">
+                      {book.publicationdate
+                        ? getFormattedDate(book.publicationdate)
+                        : "No date"}
+                    </Typography>
+                  </Stack>
+
+                  <ViewChip
+                    label="EPPS"
+                    color="success"
+                    tooltip="Product type"
+                  />
+                </Stack>
+              </Grid>
             </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item md={4}>
+        <Card>
+          <CardHeader subheader="Royalties"></CardHeader>
+          <CardContent>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={1}>
+                <Stack>
+                  <Typography variant="caption" align="center">
+                    Author
+                  </Typography>
+                  <Tooltip title="Royalty percentage for author">
+                    <Typography variant="h4">{book.royalty}%</Typography>
+                  </Tooltip>
+                </Stack>
+
+                <Divider orientation="vertical" flexItem />
+                <Stack>
+                  <Typography variant="caption" align="center">
+                    Publisher
+                  </Typography>
+                  <Tooltip title="Royalty percentage for publisher">
+                    <Typography variant="h4">
+                      {getRemainingPercentage(book.royalty)}%
+                    </Typography>
+                  </Tooltip>
+                </Stack>
+              </Stack>
+            </Stack>
           </CardContent>
         </Card>
       </Grid>

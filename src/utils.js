@@ -26,3 +26,7 @@ export const getFormattedDate = (dateString) => {
 export const getFormattedCurrency = (amount) => {
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
 }
+
+export const getRemainingPercentage = (amount) => {
+  return 100 - amount;
+}

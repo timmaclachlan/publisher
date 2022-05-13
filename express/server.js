@@ -54,7 +54,9 @@ router.get("/books", cors(), (req, res) => {
 });
 
 router.get("/books/:id", cors(), (req, res) => {
-  let sql = `SELECT * FROM ${TABLEQUAL_BOOKS} WHERE id='${req.params.id}'`;
+  let sql = `SELECT books.*, authors.realname AS "author_name", authors.penname AS "author_penname" 
+  FROM ${TABLEQUAL_BOOKS} books JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid 
+  WHERE books.id='${req.params.id}'`;
   return getQuery(sql, res);
 });
 
