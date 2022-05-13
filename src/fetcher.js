@@ -2,6 +2,7 @@
 
 
 const BASE_URL = ".netlify/functions/server";
+const SERVERURL = "https://rowanvale-athena.netlify.app"
 
 const getSchemaUrl = (schema) => `${schema}s`;
 
@@ -14,9 +15,11 @@ const makeRequest = async (
 ) => {
 
   const SERVER_URL = process.env.REACT_APP_SERVERHOST;
-  debugger;
+  console.log("Server URL:" + SERVER_URL);
+  console.log("Environment:" + process.env.NODE_ENV);
+
   const requestInit = { method: method, body: JSON.stringify(body) };
-  let url = `${SERVER_URL}/${BASE_URL}/`;
+  let url = `${SERVERURL}/${BASE_URL}/`;
   if (isLookup) {
     url = `${url}lookup/`;
   }
