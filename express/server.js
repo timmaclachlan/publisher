@@ -10,8 +10,11 @@ const cors = require("cors");
 const TABLE_AUTHORS = "authors";
 const TABLE_BOOKS = "books";
 
-const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
-const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
+//const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
+//const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
+
+const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
+const TABLEQUAL_BOOKS = `"timm2006/athena"."${TABLE_BOOKS}"`;
 
 const router = express.Router();
 
@@ -45,6 +48,8 @@ router.patch("/author/:id", cors(), (req, res) => {
 
 router.get("/books", cors(), (req, res) => {
   console.log("calling books");
+  console.log("DBPATH:" + process.env.DBPATH);
+
   let sql = `SELECT books.*, authors.realname AS "authorname" FROM ${TABLEQUAL_BOOKS} books 
   JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
   ORDER BY publicationdate DESC`;
