@@ -21,6 +21,13 @@ import BookView from "./BookDetail/BookView";
 import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
 import { isEmptyObject } from "../utils";
 
+const getSingleResult = (result) => {
+  if (Array.isArray(result) && result.length > 0) {
+    return result[0];
+  }
+  return result;
+};
+
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
@@ -40,16 +47,17 @@ const BookDetail = ({ onRecordChange }) => {
       let bookRecord = {};
 
       try {
-        const response = await readById("book", id);
-        if (Array.isArray(response.result) && response.result.length > 0) {
-          bookRecord = response.result[0];
-        }
+        let response = await readById("book", id);
+        bookRecord = getSingleResult(response.result);
         if (isEmptyObject(bookRecord)) {
           navigate("/notfound");
         }
 
-        setBook(bookRecord);
         onRecordChange(bookRecord.title);
+
+        response = await readById("genre", bookRecord.genreid);
+        bookRecord.genre = getSingleResult(response.result);
+        setBook(bookRecord);
       } catch (error) {
         console.log(error);
       }

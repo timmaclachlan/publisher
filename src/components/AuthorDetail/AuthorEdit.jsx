@@ -168,9 +168,9 @@ const AuthorEdit = ({
               <Grid item md={4}>
                 <TextField
                   label="Real Name"
-                  name="realName"
+                  name="realname"
                   variant="outlined"
-                  value={author.realName}
+                  value={author.realname}
                   onChange={valueChange}
                   fullWidth
                 />
@@ -201,9 +201,9 @@ const AuthorEdit = ({
               <Grid item md={4}>
                 <TextField
                   label="Pen Name"
-                  name="penName"
+                  name="penname"
                   variant="outlined"
-                  value={author.penName}
+                  value={author.penname}
                   onChange={valueChange}
                   fullWidth
                 />
@@ -212,9 +212,9 @@ const AuthorEdit = ({
               <Grid item md={4}>
                 <TextField
                   label="Phone"
-                  name="phoneNumber"
+                  name="phonenumber"
                   variant="outlined"
-                  value={author.phoneNumber}
+                  value={author.phonenumber}
                   onChange={valueChange}
                   fullWidth
                 />
@@ -270,9 +270,9 @@ const AuthorEdit = ({
                       />
                       <TextField
                         label="Post/Zip Code"
-                        name="postCode"
+                        name="postcode"
                         variant="outlined"
-                        value={author.postCode}
+                        value={author.postcode}
                         onChange={valueChange}
                         fullWidth
                       />
@@ -317,17 +317,17 @@ const AuthorEdit = ({
                     <Stack spacing={2}>
                       <TextField
                         label="Sort Code"
-                        name="sortCode"
+                        name="sortcode"
                         variant="outlined"
-                        value={author.sortCode}
+                        value={author.sortcode}
                         onChange={valueChange}
                         fullWidth
                       />
                       <TextField
                         label="Account"
-                        name="accountNo"
+                        name="accountno"
                         variant="outlined"
-                        value={author.accountNo}
+                        value={author.accountno}
                         onChange={valueChange}
                         fullWidth
                       />

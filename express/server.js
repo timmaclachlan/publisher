@@ -9,12 +9,14 @@ const cors = require("cors");
 
 const TABLE_AUTHORS = "authors";
 const TABLE_BOOKS = "books";
+const TABLE_GENRES = "genres";
 
 //const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
 //const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
 
 const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
 const TABLEQUAL_BOOKS = `"timm2006/athena"."${TABLE_BOOKS}"`;
+const TABLEQUAL_GENRES = `"timm2006/athena"."${TABLE_GENRES}"`;
 
 const router = express.Router();
 
@@ -30,6 +32,12 @@ router.get("/authors/:id", cors(), (req, res) => {
   return getQuery(sql, res);
 });
 
+router.get("/authors/:id/books", cors(), (req, res) => {
+  console.log("get books for authors");
+  let sql = `SELECT id, title, publicationdate FROM ${TABLEQUAL_BOOKS} WHERE authorid='${req.params.id}'`;
+  return getQuery(sql, res);
+});
+
 router.get("/authors", cors(), (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
   return getQuery(sql, res);
@@ -40,15 +48,33 @@ router.get("/authors/lookup", cors(), (req, res) => {
   return getQuery(sql, res);
 });
 
+router.get("/genres", cors(), (req, res) => {
+  let sql = `SELECT * FROM ${TABLEQUAL_GENRES} ORDER BY genre`;
+  return getQuery(sql, res);
+});
+
+router.get("/genres/:id", cors(), (req, res) => {  
+  let sql = `SELECT * FROM ${TABLEQUAL_GENRES} WHERE id='${req.params.id}'`;
+  return getQuery(sql, res);
+});
+
 router.patch("/author/:id", cors(), (req, res) => {
-  let sql = `UPDATE ${TABLEQUAL_AUTHORS} SET realname = $1, penName=$2 WHERE id='${req.params.id}'`;
+  let sql = `UPDATE ${TABLEQUAL_AUTHORS} SET 
+    realname = $1, penname=$2,
+    email = $3, phonenumber = $4,
+    address1 = $5, address2 = $6,
+    address3 = $7, address4 = $7,
+    postcode = $8, location = $9,
+    sortcode = $10, accountno = $11,
+    retained = $12
+    WHERE id='${req.params.id}'`;
   let data = [req.body.realName, req.body.penName];
   return updateQuery(sql, data, res);
 });
 
 router.get("/books", cors(), (req, res) => {
   console.log("calling books");
-  console.log("DBPATH:" + process.env.DBPATH);
+  console.log("DBPATH from env:" + process.env.DBPATH);
 
   let sql = `SELECT books.*, authors.realname AS "authorname" FROM ${TABLEQUAL_BOOKS} books 
   JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid

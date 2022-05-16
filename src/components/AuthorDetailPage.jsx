@@ -14,13 +14,14 @@ import Books from "./Books";
 import AuthorEdit from "./AuthorDetail/AuthorEdit";
 import AuthorView from "./AuthorDetail/AuthorView";
 
-import { readById, updateById, deleteById } from "../fetcher";
+import { readById, updateById, deleteById, readByIdAll } from "../fetcher";
 import { isEmptyObject } from "../utils";
 
 const AuthorDetail = ({ onRecordChange }) => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [author, setAuthor] = useState({ id: 0, realName: "", address: "" });
+  const [author, setAuthor] = useState({});
+  const [books, setBooks] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [createMode, setCreateMode] = useState(false);
   const [notification, setNotification] = useState({
@@ -34,7 +35,7 @@ const AuthorDetail = ({ onRecordChange }) => {
     const retrieveAuthor = async () => {
       let authorRecord = {};
       try {
-        const response = await readById("author", id);
+        let response = await readById("author", id);
         if (Array.isArray(response.result) && response.result.length > 0) {
           authorRecord = response.result[0];
         }
@@ -44,6 +45,9 @@ const AuthorDetail = ({ onRecordChange }) => {
 
         setAuthor(authorRecord);
         onRecordChange(authorRecord.realname);
+
+        response = await readByIdAll("author", "book", id);
+        setBooks(response.result);
       } catch (error) {
         console.log(error);
       }
@@ -150,7 +154,7 @@ const AuthorDetail = ({ onRecordChange }) => {
           </Grid>
 
           <Grid item md={2}>
-            <Books books={author.books} />
+            <Books books={books} hideAuthorColumn={true} />
           </Grid>
         </Grid>
       </Box>

@@ -14,9 +14,10 @@ const LinkComponent = ({ data }) => {
   );
 };
 
-const Books = ({ books }) => {
+const Books = ({ books, hideAuthorColumn }) => {
   const navigate = useNavigate();
 
+  debugger;
   const createClick = (event) => {
     navigate("/books/new");
   };
@@ -38,6 +39,7 @@ const Books = ({ books }) => {
     {
       field: "authorname",
       headerName: "Author",
+      hide: hideAuthorColumn ? hideAuthorColumn : false,
     },
   ];
 

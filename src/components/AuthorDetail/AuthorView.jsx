@@ -84,7 +84,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                   <Stack direction="row" spacing={1}>
                     <LanguageIcon color="primary" />
                     <Typography variant="subtitle1">
-                      {author.website}
+                      {author.website ? author.website : "Not set"}
                     </Typography>
                   </Stack>
 

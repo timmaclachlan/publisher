@@ -2,7 +2,6 @@
 
 
 const BASE_URL = ".netlify/functions/server";
-const SERVERURL = "https://rowanvale-athena.netlify.app"
 
 const getSchemaUrl = (schema) => `${schema}s`;
 
@@ -10,6 +9,7 @@ const makeRequest = async (
   schema,
   isLookup = false,
   id = 0,
+  subschema = null,
   method = "GET",
   body = undefined
 ) => {
@@ -21,8 +21,7 @@ const makeRequest = async (
   const requestInit = { method: method, body: JSON.stringify(body) };
   let url = `${SERVER_URL}/${BASE_URL}/`;
   console.log("url:" + url);
-  let url2 = `${SERVERURL}/${BASE_URL}/`;
-  console.log("url2:" + url2);
+
   
   if (isLookup) {
     url = `${url}lookup/`;
@@ -30,8 +29,12 @@ const makeRequest = async (
 
   url = `${url}${getSchemaUrl(schema)}`;
 
-  if (id.length === 36) {
+  if (id !== '') {
     url = `${url}/${id}`;
+  }
+
+  if (subschema) {
+    url = `${url}/${getSchemaUrl(subschema)}`;
   }
   console.log("urlagain:" + url);
 
@@ -56,14 +59,19 @@ export const readById = (schema, id) => {
   return makeRequest(schema, false, id);
 };
 
+export const readByIdAll = (schema, subschema, id) => {
+  return makeRequest(schema, false, id, subschema);
+};
+
+
 export const updateById = (model, id, schema) => {
-  return makeRequest(schema, false, id, "PATCH", model);
+  return makeRequest(schema, false, id, null, "PATCH", model);
 };
 
 export const deleteById = (id, schema) => {
-  return makeRequest(schema, false, id, "DELETE");
+  return makeRequest(schema, false, id, null, "DELETE");
 };
 
 export const create = (model, schema) => {
-  return makeRequest(schema, false, 0, "POST", model);
+  return makeRequest(schema, false, 0, null, "POST", model);
 };

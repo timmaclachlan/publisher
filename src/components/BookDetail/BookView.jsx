@@ -127,7 +127,9 @@ const BookView = ({ book, onUpdateEditMode }) => {
                     <Tooltip title="Genre of book">
                       <ClassIcon color="primary" />
                     </Tooltip>
-                    <Typography variant="subtitle1">Comedy</Typography>
+                    <Typography variant="subtitle1">
+                      {book.genre ? book.genre.genre : "Not set"}
+                    </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
                     <Tooltip title="Book publication date">
