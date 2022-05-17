@@ -13,10 +13,18 @@ import {
   Snackbar,
   Alert as MuiAlert,
   Backdrop,
+  Tabs,
+  Tab,
+  Typography,
 } from "@mui/material";
+
+import LayersIcon from "@mui/icons-material/Layers";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
+import TabPanel from "./TabPanel";
 
 import {
   readLookupAll,
@@ -47,7 +55,13 @@ const BookDetail = ({ onRecordChange }) => {
     message: "",
     autoHide: false,
   });
+  const [currentTab, setCurrentTab] = useState(0);
+
   const navigate = useNavigate();
+
+  const handleTabChange = (event, newValue) => {
+    setCurrentTab(newValue);
+  };
 
   useEffect(() => {
     const retrieveBook = async () => {
@@ -172,50 +186,84 @@ const BookDetail = ({ onRecordChange }) => {
 
       <Box>
         <Grid container spacing={2}>
-          <Grid item md={10}>
-            {!editMode && !createMode && (
-              <BookView book={book} onUpdateEditMode={setEditMode} />
-            )}
-
-            {(editMode || createMode) && (
-              <BookEdit
-                book={book}
-                authors={authors}
-                isNew={createMode}
-                onUpdateBook={updateBook}
-                onUpdateEditMode={setEditMode}
-                onDeleteBook={deleteBook}
-                onSaveBook={saveBook}
-                getAuthors={getAuthors}
-                genres={genres}
-              />
-            )}
+          <Grid item md={1}>
+            <LayersIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
+          </Grid>
+          <Grid item md={3}>
+            <Typography variant="h4" sx={{ pt: 1 }}>
+              View Book
+            </Typography>
+          </Grid>
+          <Grid item md={4} />
+          <Grid item md={2}>
+            <Button
+              variant="outlined"
+              startIcon={<CancelIcon />}
+              onClick={() => navigate("/books")}
+            >
+              Cancel
+            </Button>
           </Grid>
 
           <Grid item md={2}>
-            <Card>
-              <CardMedia
-                component="img"
-                image="/assets/amber_a_fairy_tale.jpg"
-              ></CardMedia>
-              <CardContent>
-                <label htmlFor="contained-button-file">
-                  <Input
-                    accept="image/*"
-                    id="contained-button-file"
-                    multiple
-                    type="file"
-                    sx={{ display: "none" }}
-                  />
-                  <Button variant="contained" component="span">
-                    Upload
-                  </Button>
-                </label>
-              </CardContent>
-            </Card>
+            <Button
+              variant="contained"
+              sx={{ width: "100px" }}
+              color="success"
+              startIcon={<EditIcon />}
+              onClick={() => setEditMode(true)}
+            >
+              Edit
+            </Button>
           </Grid>
         </Grid>
+
+        <Grid item md={12}>
+          <Tabs value={currentTab} onChange={handleTabChange}>
+            <Tab label="Book Details"></Tab>
+            <Tab label="Editorial"></Tab>
+            <Tab label="Design"></Tab>
+            <Tab label="Marketing"></Tab>
+            <Tab label="Formats"></Tab>
+          </Tabs>
+        </Grid>
       </Box>
+
+      <TabPanel value={currentTab} index={0}>
+        {!editMode && !createMode && (
+          <BookView book={book} onUpdateEditMode={setEditMode} />
+        )}
+
+        {(editMode || createMode) && (
+          <BookEdit
+            book={book}
+            authors={authors}
+            isNew={createMode}
+            onUpdateBook={updateBook}
+            onUpdateEditMode={setEditMode}
+            onDeleteBook={deleteBook}
+            onSaveBook={saveBook}
+            getAuthors={getAuthors}
+            genres={genres}
+          />
+        )}
+      </TabPanel>
+
+      <TabPanel value={currentTab} index={1}>
+        <Typography variant="h5">Editorial</Typography>
+      </TabPanel>
+
+      <TabPanel value={currentTab} index={2}>
+        <Typography variant="h5">Design</Typography>
+      </TabPanel>
+
+      <TabPanel value={currentTab} index={3}>
+        <Typography variant="h5">Marketing</Typography>
+      </TabPanel>
+
+      <TabPanel value={currentTab} index={4}>
+        <Typography variant="h5">Formats</Typography>
+      </TabPanel>
     </>
   );
 };
