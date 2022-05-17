@@ -1,6 +1,5 @@
 //const BASE_URL = "/api";
 
-
 const BASE_URL = ".netlify/functions/server";
 
 const getSchemaUrl = (schema) => `${schema}s`;
@@ -8,28 +7,32 @@ const getSchemaUrl = (schema) => `${schema}s`;
 const makeRequest = async (
   schema,
   isLookup = false,
-  id = 0,
+  id = null,
   subschema = null,
   method = "GET",
   body = undefined
 ) => {
-
   const SERVER_URL = process.env.REACT_APP_SERVERHOST;
   console.log("Server URL:" + SERVER_URL);
   console.log("Environment:" + process.env.NODE_ENV);
 
-  const requestInit = { method: method, body: JSON.stringify(body) };
+  const requestInit = {
+    method: method,
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  };
+  console.log(JSON.stringify(body));
+
   let url = `${SERVER_URL}/${BASE_URL}/`;
   console.log("url:" + url);
 
-  
   if (isLookup) {
     url = `${url}lookup/`;
   }
 
   url = `${url}${getSchemaUrl(schema)}`;
 
-  if (id !== '') {
+  if (id && id.length > 0) {
     url = `${url}/${id}`;
   }
 
@@ -63,8 +66,8 @@ export const readByIdAll = (schema, subschema, id) => {
   return makeRequest(schema, false, id, subschema);
 };
 
-
 export const updateById = (model, id, schema) => {
+  debugger;
   return makeRequest(schema, false, id, null, "PATCH", model);
 };
 

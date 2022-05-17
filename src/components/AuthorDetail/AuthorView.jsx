@@ -24,6 +24,10 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 
 import ViewChip from "../ViewChip";
 
+const DisplayField = (field) => {
+  return field ? field : "Not set";
+};
+
 const AuthorView = ({ author, onUpdateEditMode }) => {
   const navigate = useNavigate();
 
@@ -84,7 +88,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                   <Stack direction="row" spacing={1}>
                     <LanguageIcon color="primary" />
                     <Typography variant="subtitle1">
-                      {author.website ? author.website : "Not set"}
+                      {DisplayField(author.website)}
                     </Typography>
                   </Stack>
 
@@ -101,13 +105,13 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                   <Stack direction="row" spacing={1}>
                     <PhoneIcon color="primary" />
                     <Typography variant="subtitle1">
-                      {author.phonenumber}
+                      {DisplayField(author.phonenumber)}
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
                     <LocationCityIcon color="primary" />
                     <Typography variant="subtitle1">
-                      {author.location}
+                      {DisplayField(author.location)}
                     </Typography>
                   </Stack>
 
@@ -130,17 +134,19 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
             <Stack spacing={2}>
               <Stack direction="row" spacing={1}>
                 <AccountBalanceIcon color="primary" />
-                <Typography variant="subtitle1">{author.sortcode}</Typography>
+                <Typography variant="subtitle1">
+                  {DisplayField(author.sortcode)}
+                </Typography>
                 &nbsp;&nbsp;/
-                <Typography variant="subtitle1">{author.accountno}</Typography>
+                <Typography variant="subtitle1">
+                  {DisplayField(author.accountno)}
+                </Typography>
               </Stack>
               <Stack direction="row" spacing={1}>
                 <AccountBalanceIcon color="primary" />
-                <Typography variant="subtitle1">{author.iban}</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1}>
-                <AccountBalanceIcon color="primary" />
-                <Typography variant="subtitle1">{author.bic}</Typography>
+                <Typography variant="subtitle1">
+                  {DisplayField(author.paypal)}
+                </Typography>
               </Stack>
             </Stack>
           </CardContent>

@@ -1,11 +1,22 @@
 const express = require("express");
-const serverless = require("serverless-http");
 const app = express();
+const cors = require("cors");
+const serverless = require("serverless-http");
+
 const bodyParser = require("body-parser");
 const Pool = require("pg").Pool;
 const v4 = require("uuid").v4;
 require("dotenv").config();
-const cors = require("cors");
+
+
+app.use(cors({
+  origin: '*',
+  methods: ["GET","POST", "PATCH"]
+}));
+//app.use(express.json());
+app.use(bodyParser.json());
+
+
 
 const TABLE_AUTHORS = "authors";
 const TABLE_BOOKS = "books";
@@ -43,7 +54,7 @@ router.get("/authors", cors(), (req, res) => {
   return getQuery(sql, res);
 });
 
-router.get("/authors/lookup", cors(), (req, res) => {
+router.get("/lookup/authors", cors(), (req, res) => {
   let sql = `SELECT id,realname FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
   return getQuery(sql, res);
 });
@@ -58,17 +69,31 @@ router.get("/genres/:id", cors(), (req, res) => {
   return getQuery(sql, res);
 });
 
-router.patch("/author/:id", cors(), (req, res) => {
+router.patch("/authors/:id", (req, res) => {
+  console.log('in Patch');
+  console.log(req.body);
+
+
   let sql = `UPDATE ${TABLEQUAL_AUTHORS} SET 
-    realname = $1, penname=$2,
+    realname = $1, penname = $2,
     email = $3, phonenumber = $4,
-    address1 = $5, address2 = $6,
-    address3 = $7, address4 = $7,
-    postcode = $8, location = $9,
-    sortcode = $10, accountno = $11,
-    retained = $12
+    location = $5, address1 = $6,
+    address2 = $7, address3 = $8,
+    address4 = $9, postcode = $10,
+    website = $11, notes = $12,
+    retained = $13, sortcode = $14,
+    accountno = $15, paypal = $16
     WHERE id='${req.params.id}'`;
-  let data = [req.body.realName, req.body.penName];
+  let data = [
+    req.body.realname, req.body.penname,
+    req.body.email, req.body.phonenumber,
+    req.body.location, req.body.address1,
+    req.body.address2, req.body.address3,
+    req.body.address4, req.body.postcode,
+    req.body.website, req.body.notes,
+    req.body.retained, req.body.sortcode,
+    req.body.accountno, req.body.paypal];
+
   return updateQuery(sql, data, res);
 });
 
@@ -95,15 +120,17 @@ router.get("/books/:id", cors(), (req, res) => {
 
 function updateQuery(sql, data, res) {
   const pool = new Pool();
+  console.log('UPDATE QUERY:' + sql);
+  console.log(data);
   pool.query(sql, data, (error, results) => {
     if (error) {
       console.error(error);
       res.statusCode = 500;
       return res.json({ errors: ["Failed to create/update record:" + error] });
     }
-    res.statusCode = 201;
-    res.json({ message: "success", result: results.rows[0].id });
-  });
+     res.statusCode = 200;
+     res.json({ message: "success" });
+   });
 }
 
 function getQuery(sql, res) {
@@ -123,8 +150,6 @@ function getQuery(sql, res) {
   });
 }
 
-app.use(bodyParser.json());
 app.use("/.netlify/functions/server", router); // path must route to lambda
-
 module.exports = app;
 module.exports.handler = serverless(app);

@@ -16,8 +16,6 @@ const LinkComponent = ({ data }) => {
 
 const Books = ({ books, hideAuthorColumn }) => {
   const navigate = useNavigate();
-
-  debugger;
   const createClick = (event) => {
     navigate("/books/new");
   };

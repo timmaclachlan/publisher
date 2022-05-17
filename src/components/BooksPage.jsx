@@ -15,7 +15,6 @@ const BooksPage = ({ onRecordChange }) => {
       try {
         const response = await readAll("book");
         setBooks(response.result);
-        debugger;
         onRecordChange("");
       } catch (error) {
         console.log(error);

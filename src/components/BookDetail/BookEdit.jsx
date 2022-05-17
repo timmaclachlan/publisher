@@ -46,6 +46,7 @@ const BookEdit = ({
   onDeleteBook,
   onSaveBook,
   getAuthors,
+  genres,
 }) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
     React.useState(false);
@@ -76,6 +77,14 @@ const BookEdit = ({
     setShowDeleteConfirmation(false);
     if (onDeleteBook) {
       onDeleteBook();
+    }
+  };
+
+  const renderGenres = () => {
+    if (genres) {
+      return genres.map((genre) => {
+        return <MenuItem value={genre.id}>{genre.genre}</MenuItem>;
+      });
     }
   };
 
@@ -182,20 +191,22 @@ const BookEdit = ({
                 <AutoSuggest
                   data={authors}
                   value={book.author}
-                  field="realName"
+                  field="realname"
                   onOpenAutoSuggest={getAuthors}
                   onChange={handleChange}
                 />
               </Grid>
 
               <Grid item md={3}>
-                <TextField
+                <InputLabel id="genre-label">Genre</InputLabel>
+                <Select
+                  labelId="genre-label"
                   label="Genre"
-                  name="genre"
-                  variant="outlined"
-                  value={book.genre}
-                  onChange={valueChange}
-                />
+                  value={book.genre.id}
+                  fullWidth
+                >
+                  {renderGenres()}
+                </Select>
               </Grid>
 
               <Grid item md={2}>

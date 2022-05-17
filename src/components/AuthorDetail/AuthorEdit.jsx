@@ -173,6 +173,7 @@ const AuthorEdit = ({
                   value={author.realname}
                   onChange={valueChange}
                   fullWidth
+                  required
                 />
               </Grid>
               <Grid item md={4}>
@@ -183,6 +184,7 @@ const AuthorEdit = ({
                   value={author.email}
                   onChange={valueChange}
                   fullWidth
+                  required
                 />
               </Grid>
 
@@ -285,7 +287,7 @@ const AuthorEdit = ({
                 <Stack spacing={2}>
                   <TextField
                     label="Website"
-                    name="Website"
+                    name="website"
                     variant="outlined"
                     value={author.website}
                     onChange={valueChange}
@@ -311,7 +313,7 @@ const AuthorEdit = ({
               <Grid item md={12}>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Banking Details
+                    Payment Details
                   </AccordionSummary>
                   <AccordionDetails>
                     <Stack spacing={2}>
@@ -332,18 +334,10 @@ const AuthorEdit = ({
                         fullWidth
                       />
                       <TextField
-                        label="IBAN"
-                        name="iban"
+                        label="Paypal"
+                        name="paypal"
                         variant="outlined"
-                        value={author.iban}
-                        onChange={valueChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="SwiftBic"
-                        name="bic"
-                        variant="outlined"
-                        value={author.bic}
+                        value={author.paypal}
                         onChange={valueChange}
                         fullWidth
                       />

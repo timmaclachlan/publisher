@@ -18,7 +18,13 @@ import {
 import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
 
-import { readLookupAll, readById, updateById, deleteById } from "../fetcher";
+import {
+  readLookupAll,
+  readById,
+  updateById,
+  deleteById,
+  readAll,
+} from "../fetcher";
 import { isEmptyObject } from "../utils";
 
 const getSingleResult = (result) => {
@@ -31,6 +37,7 @@ const getSingleResult = (result) => {
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
+  const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [createMode, setCreateMode] = useState(false);
@@ -57,7 +64,14 @@ const BookDetail = ({ onRecordChange }) => {
 
         response = await readById("genre", bookRecord.genreid);
         bookRecord.genre = getSingleResult(response.result);
+        bookRecord.author = {
+          realname: bookRecord.author_name,
+          id: bookRecord.authorid,
+        };
         setBook(bookRecord);
+
+        response = await readAll("genre");
+        setGenres(response.result);
       } catch (error) {
         console.log(error);
       }
@@ -74,7 +88,7 @@ const BookDetail = ({ onRecordChange }) => {
     const retrieveAuthors = async () => {
       try {
         const authorRecords = await readLookupAll("author");
-        setAuthors(authorRecords.data);
+        setAuthors(authorRecords.result);
       } catch (error) {
         console.log(error);
       }
@@ -173,6 +187,7 @@ const BookDetail = ({ onRecordChange }) => {
                 onDeleteBook={deleteBook}
                 onSaveBook={saveBook}
                 getAuthors={getAuthors}
+                genres={genres}
               />
             )}
           </Grid>

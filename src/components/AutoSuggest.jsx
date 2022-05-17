@@ -45,7 +45,7 @@ const AutoSuggest = ({
       <Autocomplete
         options={data}
         getOptionLabel={(option) => {
-          if (option.id === 0) return "";
+          //if (option.id === 0) return "";
           return option[field];
         }}
         onOpen={() => {
@@ -56,7 +56,7 @@ const AutoSuggest = ({
         loading={loading}
         autoSelect
         isOptionEqualToValue={(option, value) => {
-          if (value.id === 0) return true;
+          //if (value.id === '') return true;
           return option.id === value.id;
         }}
         value={value}
