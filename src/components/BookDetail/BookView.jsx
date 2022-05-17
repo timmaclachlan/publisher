@@ -24,7 +24,6 @@ import ClassIcon from "@mui/icons-material/Class";
 import BookViewOptions from "./BookViewOptions";
 
 import ViewChip from "../ViewChip";
-import BookViewFormats from "./BookViewFormats";
 
 import { getFormattedDate, getRemainingPercentage } from "../../utils";
 
@@ -186,15 +185,6 @@ const BookView = ({ book, onUpdateEditMode }) => {
             />
           </Tooltip>
         </Stack>
-      </Grid>
-
-      <Grid item md={8}>
-        <Card>
-          <CardHeader subheader="Formats"></CardHeader>
-          <CardContent>
-            <BookViewFormats book={book} />
-          </CardContent>
-        </Card>
       </Grid>
 
       <Grid item md={4}>

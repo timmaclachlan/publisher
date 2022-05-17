@@ -26,6 +26,8 @@ import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
 import TabPanel from "./TabPanel";
 
+import BookTabViewFormats from "./BookDetail/BookTabViewFormats";
+
 import {
   readLookupAll,
   readById,
@@ -262,7 +264,7 @@ const BookDetail = ({ onRecordChange }) => {
       </TabPanel>
 
       <TabPanel value={currentTab} index={4}>
-        <Typography variant="h5">Formats</Typography>
+        <BookTabViewFormats book={book} />
       </TabPanel>
     </>
   );
