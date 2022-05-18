@@ -14,7 +14,13 @@ import Books from "./Books";
 import AuthorEdit from "./AuthorDetail/AuthorEdit";
 import AuthorView from "./AuthorDetail/AuthorView";
 
-import { readById, updateById, deleteById, readByIdAll } from "../fetcher";
+import {
+  create,
+  readById,
+  updateById,
+  deleteById,
+  readByIdAll,
+} from "../fetcher";
 import { isEmptyObject } from "../utils";
 
 const AuthorDetail = ({ onRecordChange }) => {
@@ -32,6 +38,7 @@ const AuthorDetail = ({ onRecordChange }) => {
   });
 
   useEffect(() => {
+    debugger;
     const retrieveAuthor = async () => {
       let authorRecord = {};
       try {
@@ -52,11 +59,12 @@ const AuthorDetail = ({ onRecordChange }) => {
         console.log(error);
       }
     };
-    if (id.length === 36) {
-      retrieveAuthor();
-    }
     if (id === undefined) {
       setCreateMode(true);
+      return;
+    }
+    if (id.length === 36) {
+      retrieveAuthor();
     }
   }, [id, navigate, onRecordChange]);
 
@@ -69,7 +77,11 @@ const AuthorDetail = ({ onRecordChange }) => {
 
   const saveAuthor = (ev) => {
     ev.preventDefault();
-    makeChange(updateById.bind(null, author, id));
+    if (createMode) {
+      makeChange(create.bind(null, author));
+    } else {
+      makeChange(updateById.bind(null, author, id));
+    }
     setNotification((prevState) => ({
       ...prevState,
       show: true,

@@ -10,8 +10,8 @@ require("dotenv").config();
 
 
 app.use(cors({
-  origin: '*',
-  methods: ["GET","POST", "PATCH"]
+  origin: '*', // TODO: lock down
+  methods: ["GET","POST", "PATCH", "DELETE"]
 }));
 //app.use(express.json());
 app.use(bodyParser.json());
@@ -21,6 +21,7 @@ app.use(bodyParser.json());
 const TABLE_AUTHORS = "authors";
 const TABLE_BOOKS = "books";
 const TABLE_GENRES = "genres";
+const TABLE_ORDERS = "retailorders";
 
 //const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
 //const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
@@ -28,12 +29,13 @@ const TABLE_GENRES = "genres";
 const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
 const TABLEQUAL_BOOKS = `"timm2006/athena"."${TABLE_BOOKS}"`;
 const TABLEQUAL_GENRES = `"timm2006/athena"."${TABLE_GENRES}"`;
+const TABLEQUAL_ORDERS = `"timm2006/athena"."${TABLE_ORDERS}"`;
 
 const router = express.Router();
 
-router.post("/authors", cors(), (req, res) => {
+router.post("/authors", (req, res) => {
   let sql = `INSERT INTO ${TABLEQUAL_AUTHORS} (id, realName,penName) VALUES($1,$2,$3) RETURNING id`;
-  let data = [v4(), req.body.realName, req.body.penName];
+  let data = [v4(), req.body.realname, req.body.penname];
   return updateQuery(sql, data, res);
 });
 
@@ -116,7 +118,23 @@ router.get("/books/:id", cors(), (req, res) => {
   return getQuery(sql, res);
 });
 
+router.get("/orders", cors(), (req, res) => {
+  console.log("GET ORDERS");
+  let sql = `SELECT *, authors.realname as "author" FROM ${TABLEQUAL_ORDERS} orders 
+    JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
+    JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
+    ORDER BY orderdate DESC`;
+  return getQuery(sql, res);
+});
 
+router.get("/reports/book", (req, res) => {
+  let sql = `SELECT authors.realname, books.title, books.id FROM ${TABLEQUAL_BOOKS} books
+  JOIN ${TABLEQUAL_AUTHORS} authors
+  ON authors.id = books.authorid
+  ORDER BY authors.realname`;
+  return getQuery(sql, res);
+
+})
 
 function updateQuery(sql, data, res) {
   const pool = new Pool();

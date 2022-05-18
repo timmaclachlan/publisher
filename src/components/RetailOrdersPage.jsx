@@ -20,7 +20,6 @@ const RetailOrdersPage = () => {
   };
 
   const columnDefs = [
-    { field: "id", flex: 0.75, filter: "agNumberColumnFilter" },
     {
       headerName: "Book Details",
       children: [
@@ -32,20 +31,20 @@ const RetailOrdersPage = () => {
       headerName: "Dates",
       children: [
         {
-          field: "orderDate",
+          field: "orderdate",
           headerName: "Order",
           filter: SalesQuarterFilter,
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
-          field: "dispatchedDate",
+          field: "dispatcheddate",
           headerName: "Dispatched",
-          columnGroupShow: "open",
+          //columnGroupShow: "open",
           filter: SalesQuarterFilter,
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
-          field: "amountReceivedDate",
+          field: "amountreceiveddate",
           headerName: "Received",
           columnGroupShow: "open",
           filter: SalesQuarterFilter,
@@ -53,7 +52,7 @@ const RetailOrdersPage = () => {
         },
       ],
     },
-    { field: "source" },
+    { field: "salessource", headerName: "Source" },
     {
       field: "quantity",
       headerName: "Qty",
@@ -61,7 +60,7 @@ const RetailOrdersPage = () => {
       filter: "agNumberColumnFilter",
     },
     {
-      field: "amountReceived",
+      field: "amountreceived",
       headerName: "Received",
       filter: "agNumberColumnFilter",
       valueFormatter: (params) => getFormattedCurrency(params.value),
@@ -70,13 +69,13 @@ const RetailOrdersPage = () => {
       headerName: "Royalties",
       children: [
         {
-          field: "royaltyAuthor",
+          field: "royaltyauthor",
           headerName: "Author",
           filter: "agNumberColumnFilter",
           valueFormatter: (params) => getFormattedCurrency(params.value),
         },
         {
-          field: "royaltyPublisher",
+          field: "royaltypublisher",
           headerName: "Publisher",
           filter: "agNumberColumnFilter",
           valueFormatter: (params) => getFormattedCurrency(params.value),
@@ -89,7 +88,7 @@ const RetailOrdersPage = () => {
     const retrieveOrders = async () => {
       try {
         const result = await readAll("order");
-        setOrders(result.data);
+        setOrders(result.result);
       } catch (error) {
         console.log(error);
       }
