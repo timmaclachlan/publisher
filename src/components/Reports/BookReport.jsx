@@ -9,6 +9,7 @@ import { readById } from "../../fetcher";
 
 const BookReport = () => {
   const [report, setReport] = React.useState([]);
+  const gridRef = React.useRef();
 
   const columnDefs = [
     {
@@ -31,6 +32,10 @@ const BookReport = () => {
     retrieveReport();
   };
 
+  const onExportClick = (ev) => {
+    gridRef.current.api.exportDataAsCsv({ suppressQuotes: true });
+  };
+
   return (
     <React.Fragment>
       <Grid container sx={{ width: 1400 }}>
@@ -42,11 +47,16 @@ const BookReport = () => {
             Book Report
           </Typography>
         </Grid>
-        <Grid item md={5} />
-        <Grid item md={3}></Grid>
+        <Grid item md={7} />
+        <Grid item md={1}>
+          <Button variant="outlined" color="success" onClick={onExportClick}>
+            Export
+          </Button>
+        </Grid>
       </Grid>
       <Box>
         <AgGridReact
+          ref={gridRef}
           className="ag-theme-alpine"
           defaultColDef={{
             resizable: true,

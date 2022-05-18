@@ -31,8 +31,8 @@ const AutoSuggest = ({
   const loading = open && data.length === 0;
 
   const handleChange = (ev, value) => {
+    debugger;
     if (value && value.inputValue) {
-      debugger;
       setOpenDialog(true);
     }
     if (onChange) {

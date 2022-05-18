@@ -193,7 +193,7 @@ const BookEdit = ({
                   value={book.author}
                   field="realname"
                   onOpenAutoSuggest={getAuthors}
-                  onChange={handleChange}
+                  onChange={(value) => handleChange("author", value)}
                 />
               </Grid>
 

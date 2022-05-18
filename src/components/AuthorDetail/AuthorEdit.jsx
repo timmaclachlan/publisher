@@ -192,11 +192,14 @@ const AuthorEdit = ({
 
               <Grid item md={2}>
                 <FormControlLabel
-                  control={<Switch />}
+                  control={
+                    <Switch
+                      name="active"
+                      checked={author.active}
+                      onChange={checkedChange}
+                    />
+                  }
                   label="Active"
-                  name="active"
-                  checked={author.active}
-                  onChange={checkedChange}
                 />
               </Grid>
 
