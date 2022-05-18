@@ -56,6 +56,13 @@ const Books = ({ books, hideAuthorColumn }) => {
 
       <Box className="ag-theme-alpine" style={{ height: 600, width: 800 }}>
         <AgGridReact
+          defaultColDef={{
+            resizable: true,
+            sortable: true,
+            floatingFilter: true,
+            filter: "agTextColumnFilter",
+            flex: 1,
+          }}
           rowData={books}
           columnDefs={columnDefs}
           columnHoverHighlight={true}

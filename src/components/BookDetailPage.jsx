@@ -5,11 +5,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   Grid,
   Box,
-  Button,
-  Card,
-  CardMedia,
-  CardContent,
-  Input,
   Snackbar,
   Alert as MuiAlert,
   Backdrop,
@@ -18,15 +13,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import LayersIcon from "@mui/icons-material/Layers";
-import EditIcon from "@mui/icons-material/Edit";
-import CancelIcon from "@mui/icons-material/Cancel";
-
 import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
 import TabPanel from "./TabPanel";
 
 import BookTabViewFormats from "./BookDetail/BookTabViewFormats";
+import BookDetailHeader from "./BookDetail/BookDetailHeader";
 
 import {
   readLookupAll,
@@ -186,40 +178,14 @@ const BookDetail = ({ onRecordChange }) => {
         </Backdrop>
       )}
 
+      <BookDetailHeader
+        createMode={createMode}
+        editMode={editMode}
+        onUpdateEditMode={setEditMode}
+        onSaveBook={saveBook}
+      />
+
       <Box>
-        <Grid container spacing={2}>
-          <Grid item md={1}>
-            <LayersIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
-          </Grid>
-          <Grid item md={3}>
-            <Typography variant="h4" sx={{ pt: 1 }}>
-              View Book
-            </Typography>
-          </Grid>
-          <Grid item md={4} />
-          <Grid item md={2}>
-            <Button
-              variant="outlined"
-              startIcon={<CancelIcon />}
-              onClick={() => navigate("/books")}
-            >
-              Cancel
-            </Button>
-          </Grid>
-
-          <Grid item md={2}>
-            <Button
-              variant="contained"
-              sx={{ width: "100px" }}
-              color="success"
-              startIcon={<EditIcon />}
-              onClick={() => setEditMode(true)}
-            >
-              Edit
-            </Button>
-          </Grid>
-        </Grid>
-
         <Grid item md={12}>
           <Tabs value={currentTab} onChange={handleTabChange}>
             <Tab label="Book Details"></Tab>

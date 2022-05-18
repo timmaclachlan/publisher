@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
   Grid,
-  Button,
   Typography,
   Link,
   Card,
@@ -30,8 +29,6 @@ import { getFormattedDate, getRemainingPercentage } from "../../utils";
 const LinkWithRouter = (props) => <Link {...props} component={RouterLink} />;
 
 const BookView = ({ book, onUpdateEditMode }) => {
-  const navigate = useNavigate();
-
   return (
     <Grid container spacing={2}>
       <Grid item md={8}>

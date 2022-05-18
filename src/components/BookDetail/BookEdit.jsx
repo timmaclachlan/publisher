@@ -27,10 +27,7 @@ import {
 } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LayersIcon from "@mui/icons-material/Layers";
 import CancelIcon from "@mui/icons-material/Cancel";
-import SaveIcon from "@mui/icons-material/Save";
-import DeleteIcon from "@mui/icons-material/Delete";
 import WarningIcon from "@mui/icons-material/Warning";
 
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -124,49 +121,6 @@ const BookEdit = ({
       </Dialog>
       <form>
         <Grid container spacing={2}>
-          <Grid item md={1}>
-            <LayersIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
-          </Grid>
-          <Grid item md={3}>
-            <Typography variant="h4" sx={{ pt: 1 }}>
-              {isNew ? "Create Book" : "Edit Book"}
-            </Typography>
-          </Grid>
-          <Grid item md={2} />
-
-          <Grid item md={6}>
-            <Stack direction="row-reverse" spacing={2}>
-              <Button
-                variant="contained"
-                startIcon={<SaveIcon />}
-                color="success"
-                sx={{ width: "100px" }}
-                onClick={onSaveBook}
-              >
-                Save
-              </Button>
-
-              {!isNew && (
-                <Button
-                  variant="contained"
-                  color="error"
-                  startIcon={<DeleteIcon />}
-                  onClick={() => setShowDeleteConfirmation(true)}
-                >
-                  Delete
-                </Button>
-              )}
-
-              <Button
-                variant="outlined"
-                startIcon={<CancelIcon />}
-                onClick={() => onUpdateEditMode(false)}
-              >
-                Cancel
-              </Button>
-            </Stack>
-          </Grid>
-
           <Grid item md={9}>
             <Grid container spacing={2}>
               <Grid item md={9}>
