@@ -37,6 +37,8 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 import AutoSuggest from "../AutoSuggest";
 
+import { getRemainingPercentage } from "../../utils";
+
 const BookEdit = ({
   book,
   authors,
@@ -59,6 +61,7 @@ const BookEdit = ({
 
   const valueChange = (event) => {
     const { name, value } = event.target;
+    debugger;
     handleChange(name, value);
   };
 
@@ -202,8 +205,10 @@ const BookEdit = ({
                 <Select
                   labelId="genre-label"
                   label="Genre"
-                  value={book.genre.id}
+                  name="genreid"
+                  value={book.genreid}
                   fullWidth
+                  onChange={valueChange}
                 >
                   {renderGenres()}
                 </Select>
@@ -229,8 +234,8 @@ const BookEdit = ({
               <Grid item md={3}>
                 <DesktopDatePicker
                   label="Publication Date"
-                  value={book.publicationDate}
-                  onChange={(value) => dateChange("publicationDate", value)}
+                  value={book.publicationdate}
+                  onChange={(value) => dateChange("publicationdate", value)}
                   inputFormat="dd/MM/yyyy"
                   renderInput={(params) => <TextField {...params} />}
                 />
@@ -346,23 +351,25 @@ const BookEdit = ({
                     <Stack spacing={2} direction="row">
                       <TextField
                         label="Author"
-                        name="royaltyAuthor"
+                        name="royalty"
                         variant="outlined"
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">%</InputAdornment>
                           ),
                         }}
+                        value={book.royalty}
+                        onChange={valueChange}
                       />
                       <TextField
                         label="Publisher"
-                        name="royaltyPublisher"
                         variant="outlined"
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">%</InputAdornment>
                           ),
                         }}
+                        defaultValue={getRemainingPercentage(book.royalty)}
                       />
                     </Stack>
                   </AccordionDetails>
@@ -380,8 +387,8 @@ const BookEdit = ({
                         label="Still Selling"
                         labelPlacement="start"
                         control={<Checkbox />}
-                        name="stillSelling"
-                        checked={book.stillSelling}
+                        name="stillselling"
+                        checked={book.stillselling}
                         onChange={checkedChange}
                       />
                       <FormControlLabel
@@ -396,16 +403,16 @@ const BookEdit = ({
                         label="On Hold"
                         labelPlacement="start"
                         control={<Checkbox />}
-                        name="onHold"
-                        checked={book.onHold}
+                        name="onhold"
+                        checked={book.onhold}
                         onChange={checkedChange}
                       />
                       <FormControlLabel
                         label="Mature Content"
                         labelPlacement="start"
                         control={<Checkbox />}
-                        name="matureContent"
-                        checked={book.matureContent}
+                        name="maturecontent"
+                        checked={book.maturecontent}
                         onChange={checkedChange}
                       />
                     </FormGroup>

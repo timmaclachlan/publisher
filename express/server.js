@@ -161,12 +161,23 @@ router.patch("/books/:id", (req, res) => {
   console.log(req.body);
 
   let sql = `UPDATE ${TABLEQUAL_BOOKS} SET 
-    title = $1, publicationdate = $2, authorid = $3
+    title = $1, publicationdate = $2, authorid = $3,
+    genreid = $4,
+    stillselling = $5, terminated = $6,
+    maturecontent = $7, onhold = $8,
+    published = $9, royalty=$10
     WHERE id='${req.params.id}'`;
   let data = [
     req.body.title,
     req.body.publicationdate,
-    req.body.author.id
+    req.body.author.id,
+    req.body.genreid,
+    req.body.stillselling,
+    req.body.terminated,
+    req.body.maturecontent,
+    req.body.onhold,
+    req.body.published,
+    req.body.royalty
   ];
 
   return updateQuery(sql, data, res);
