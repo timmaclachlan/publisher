@@ -28,7 +28,20 @@ import { getFormattedDate, getRemainingPercentage } from "../../utils";
 
 const LinkWithRouter = (props) => <Link {...props} component={RouterLink} />;
 
-const BookView = ({ book, onUpdateEditMode }) => {
+const renderServices = (services) => {
+  return services.map((service, index) => {
+    return (
+      <ViewChip
+        key={`service${index}`}
+        label={service.service}
+        color="primary"
+        tooltip="Product type"
+      />
+    );
+  });
+};
+
+const BookView = ({ book, bookServices, onUpdateEditMode }) => {
   return (
     <Grid container spacing={2}>
       <Grid item md={8}>
@@ -104,11 +117,7 @@ const BookView = ({ book, onUpdateEditMode }) => {
                     </Typography>
                   </Stack>
 
-                  <ViewChip
-                    label="EPPS"
-                    color="primary"
-                    tooltip="Product type"
-                  />
+                  {renderServices(bookServices)}
                 </Stack>
               </Grid>
             </Grid>

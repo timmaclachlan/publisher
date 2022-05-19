@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const app = express();
 const cors = require("cors");
 const serverless = require("serverless-http");
@@ -7,6 +8,9 @@ const bodyParser = require("body-parser");
 const Pool = require("pg").Pool;
 const v4 = require("uuid").v4;
 require("dotenv").config();
+
+var authorRoutes = require('./authors');
+router.use(authorRoutes('/authors'));  
 
 app.use(
   cors({
@@ -21,6 +25,8 @@ const TABLE_AUTHORS = "authors";
 const TABLE_BOOKS = "books";
 const TABLE_GENRES = "genres";
 const TABLE_ORDERS = "retailorders";
+const TABLE_SERVICES = "services";
+const TABLE_SERVICESASSIGNED = "servicesassigned";
 
 //const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
 //const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
@@ -29,8 +35,11 @@ const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
 const TABLEQUAL_BOOKS = `"timm2006/athena"."${TABLE_BOOKS}"`;
 const TABLEQUAL_GENRES = `"timm2006/athena"."${TABLE_GENRES}"`;
 const TABLEQUAL_ORDERS = `"timm2006/athena"."${TABLE_ORDERS}"`;
+const TABLEQUAL_SERVICES = `"timm2006/athena"."${TABLE_SERVICES}"`;
+const TABLEQUAL_SERVICESASSIGNED = `"timm2006/athena"."${TABLE_SERVICESASSIGNED}"`;
 
-const router = express.Router();
+
+
 
 router.post("/authors", (req, res) => {
   let sql = `INSERT INTO ${TABLEQUAL_AUTHORS} 
@@ -111,14 +120,16 @@ router.get("/authors/:id", (req, res) => {
 
 router.get("/authors/:id/books", (req, res) => {
   console.log("get books for authors");
-  let sql = `SELECT id, title, publicationdate FROM ${TABLEQUAL_BOOKS} WHERE authorid='${req.params.id}'`;
+  let sql = `SELECT id, title, publicationdate,
+  (SELECT array_to_string(array_agg(services.service), ',') 
+  FROM ${TABLEQUAL_SERVICESASSIGNED} assigned
+  JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid
+  WHERE bookid = books.id) AS "service"
+  FROM ${TABLEQUAL_BOOKS} WHERE authorid='${req.params.id}'`;
+  
   return getQuery(sql, res);
 });
 
-router.get("/authors", (req, res) => {
-  let sql = `SELECT * FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
-  return getQuery(sql, res);
-});
 
 router.get("/lookup/authors", (req, res) => {
   let sql = `SELECT id,realname FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
@@ -141,9 +152,15 @@ router.get("/books", (req, res) => {
   console.log("calling books");
   console.log("DBPATH from env:" + process.env.DBPATH);
 
-  let sql = `SELECT books.*, authors.realname AS "authorname" FROM ${TABLEQUAL_BOOKS} books 
+  let sql = `SELECT books.*, authors.realname AS "authorname",
+  (SELECT array_to_string(array_agg(services.service), ',') 
+  FROM ${TABLEQUAL_SERVICESASSIGNED} assigned
+  JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid
+  WHERE bookid = books.id) AS "service"
+  FROM ${TABLEQUAL_BOOKS} books 
   JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
   ORDER BY publicationdate DESC, title`;
+
 
   console.log(sql);
   return getQuery(sql, res);
@@ -153,6 +170,11 @@ router.get("/books/:id", (req, res) => {
   let sql = `SELECT books.*, authors.realname AS "author_name", authors.penname AS "author_penname" 
   FROM ${TABLEQUAL_BOOKS} books JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid 
   WHERE books.id='${req.params.id}'`;
+  return getQuery(sql, res);
+});
+
+router.get("/books/:id/services", (req, res) => {
+  let sql = `SELECT id, service FROM ${TABLEQUAL_SERVICESASSIGNED} WHERE bookid='${req.params.id}'`;
   return getQuery(sql, res);
 });
 

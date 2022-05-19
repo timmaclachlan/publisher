@@ -33,7 +33,7 @@ const BookReport = () => {
   };
 
   const onExportClick = (ev) => {
-    gridRef.current.api.exportDataAsCsv({ suppressQuotes: true });
+    gridRef.current.api.exportDataAsCsv();
   };
 
   return (

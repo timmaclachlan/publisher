@@ -36,7 +36,7 @@ const BooksPage = ({ onRecordChange }) => {
         </Grid>
         <Grid item md={3} />
       </Grid>
-      <Books books={books} />
+      <Books books={books} gridWidth={1600} />
     </>
   );
 };

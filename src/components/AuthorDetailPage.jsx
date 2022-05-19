@@ -166,7 +166,7 @@ const AuthorDetail = ({ onRecordChange }) => {
           </Grid>
 
           <Grid item md={2}>
-            <Books books={books} hideAuthorColumn={true} />
+            <Books books={books} hideAuthorColumn={true} gridWidth={1000} />
           </Grid>
         </Grid>
       </Box>

@@ -26,6 +26,7 @@ import {
   updateById,
   deleteById,
   readAll,
+  readByIdAll,
 } from "../fetcher";
 import { isEmptyObject } from "../utils";
 
@@ -40,6 +41,7 @@ const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [genres, setGenres] = useState([]);
+  const [bookServices, setBookServices] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [createMode, setCreateMode] = useState(false);
@@ -80,6 +82,9 @@ const BookDetail = ({ onRecordChange }) => {
 
         response = await readAll("genre");
         setGenres(response.result);
+
+        response = await readByIdAll("book", "service", id);
+        setBookServices(response.result);
       } catch (error) {
         console.log(error);
       }
@@ -199,7 +204,11 @@ const BookDetail = ({ onRecordChange }) => {
 
       <TabPanel value={currentTab} index={0}>
         {!editMode && !createMode && (
-          <BookView book={book} onUpdateEditMode={setEditMode} />
+          <BookView
+            book={book}
+            bookServices={bookServices}
+            onUpdateEditMode={setEditMode}
+          />
         )}
 
         {(editMode || createMode) && (

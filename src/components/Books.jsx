@@ -6,7 +6,9 @@ import { Box, Button } from "@mui/material";
 
 import { getFormattedDate } from "../utils";
 
-const LinkComponent = ({ data }) => {
+import ViewChip from "./ViewChip";
+
+const LinkComponentBook = ({ data }) => {
   return (
     <Button component={RouterLink} sx={{ p: 0 }} to={"/books/" + data.id}>
       {data.title}
@@ -14,7 +16,19 @@ const LinkComponent = ({ data }) => {
   );
 };
 
-const Books = ({ books, hideAuthorColumn }) => {
+const LinkComponentAuthor = ({ data }) => {
+  return (
+    <Button
+      component={RouterLink}
+      sx={{ p: 0 }}
+      to={"/authors/" + data.authorid}
+    >
+      {data.authorname}
+    </Button>
+  );
+};
+
+const Books = ({ books, hideAuthorColumn, gridWidth }) => {
   const navigate = useNavigate();
   const createClick = (event) => {
     navigate("/books/new");
@@ -23,8 +37,8 @@ const Books = ({ books, hideAuthorColumn }) => {
   const columnDefs = [
     {
       field: "title",
-      flex: 2,
-      cellRenderer: LinkComponent,
+      flex: 1.5,
+      cellRenderer: LinkComponentBook,
     },
     {
       field: "publicationdate",
@@ -33,11 +47,31 @@ const Books = ({ books, hideAuthorColumn }) => {
         const dateString = getFormattedDate(params.value);
         return dateString ? dateString : "No date";
       },
+      flex: 0.5,
     },
     {
       field: "authorname",
       headerName: "Author",
       hide: hideAuthorColumn ? hideAuthorColumn : false,
+      flex: 0.5,
+      cellRenderer: LinkComponentAuthor,
+    },
+    {
+      field: "service",
+      headerName: "Services",
+      flex: 0.75,
+      cellRenderer: (params) => {
+        return (
+          <ViewChip
+            label={params.value}
+            color="primary"
+            tooltip="Product type"
+            variant="outlined"
+            size="small"
+            width={80}
+          />
+        );
+      },
     },
   ];
 
@@ -54,7 +88,10 @@ const Books = ({ books, hideAuthorColumn }) => {
         </Button>
       </Box>
 
-      <Box className="ag-theme-alpine" style={{ height: 600, width: 800 }}>
+      <Box
+        className="ag-theme-alpine"
+        style={{ height: 600, width: gridWidth }}
+      >
         <AgGridReact
           defaultColDef={{
             resizable: true,
