@@ -14,7 +14,20 @@ import {
   CssBaseline,
   Card,
   CardMedia,
+  IconButton,
+  Typography,
+  Badge,
+  InputBase,
+  Tooltip,
+  Avatar,
 } from "@mui/material";
+
+import { styled, alpha } from "@mui/material/styles";
+
+import MailIcon from "@mui/icons-material/Mail";
+import SearchIcon from "@mui/icons-material/Search";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import { mainListItems } from "./listItems";
 import Breadcrumb from "./components/Breadcrumb";
@@ -29,6 +42,46 @@ import BooksPage from "./components/BooksPage";
 import BookReport from "./components/Reports/BookReport";
 import NotFound from "./components/NotFound";
 
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(3),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
+    },
+  },
+}));
+
 function App() {
   const [currentRecord, setCurrentRecord] = React.useState("");
 
@@ -36,7 +89,50 @@ function App() {
     <Box>
       <CssBaseline />
       <AppBar>
-        <Toolbar></Toolbar>
+        <Toolbar>
+          <Box sx={{ marginLeft: 20 }} />
+          <Typography variant="h4">Athena</Typography>
+          <Typography variant="caption">v2.0</Typography>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
+              <Badge badgeContent={4} color="error">
+                <MailIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="show 17 new notifications"
+              color="inherit"
+            >
+              <Badge badgeContent={17} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <Tooltip title="Open settings">
+              <IconButton sx={{ pl: 2 }}>
+                <Avatar
+                  alt="Remy Sharp"
+                  src="/assets/cat-charlton-photo-300x300_orig.png"
+                  sx={{ width: 40, height: 40 }}
+                />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Toolbar>
       </AppBar>
       <Drawer variant="permanent">
         <Card>
