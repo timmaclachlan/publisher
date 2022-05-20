@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { ThemeProvider } from "@mui/material";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 //import { makeServer } from "./api/fakeApi";
 import { theme } from "./theme/theme";
@@ -15,13 +16,19 @@ import { theme } from "./theme/theme";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </LocalizationProvider>
-    </BrowserRouter>
+    <Auth0Provider
+      domain="rowanvale.eu.auth0.com"
+      clientId="KfviRnWx94eF1m99YxnicEhpxgDe0X15"
+      redirectUri={window.location.origin}
+    >
+      <BrowserRouter>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </LocalizationProvider>
+      </BrowserRouter>
+    </Auth0Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
