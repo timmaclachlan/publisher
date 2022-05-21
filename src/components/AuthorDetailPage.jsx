@@ -8,6 +8,7 @@ import {
   Snackbar,
   Backdrop,
   Alert as MuiAlert,
+  Typography,
 } from "@mui/material";
 
 import Books from "./Books";
@@ -165,8 +166,11 @@ const AuthorDetail = ({ onRecordChange }) => {
             )}
           </Grid>
 
-          <Grid item md={2}>
-            <Books books={books} hideAuthorColumn={true} gridWidth={1000} />
+          <Grid item md={2}></Grid>
+
+          <Grid item md={10}>
+            <Typography variant="h5">Books</Typography>
+            <Books books={books} hideAuthorColumn={true} gridHeight={400} />
           </Grid>
         </Grid>
       </Box>

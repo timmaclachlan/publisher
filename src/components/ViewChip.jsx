@@ -21,7 +21,7 @@ const ViewChip = ({ label, value, color, tooltip, size, variant, width }) => {
           label={text}
           color={color ? color : "primary"}
           variant={getVariant()}
-          icon={value ? <DoneIcon /> : value === false ? <CloseIcon /> : null}
+          icon={value ? <DoneIcon /> : <CloseIcon />}
           size={size}
           sx={{ width: width, mr: 1 }}
         />

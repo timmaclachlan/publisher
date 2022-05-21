@@ -68,9 +68,19 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
         <Typography variant="h5">{author.realname}</Typography>
       </Grid>
       <Grid item md={4}>
-        <Stack direction="row" spacing={1}>
-          <BorderColorIcon color="primary" />
-          <Typography variant="subtitle1">{author.penname}</Typography>
+        <Stack spacing={2} direction="row">
+          <ViewChip
+            label="Active"
+            value={author.active}
+            color="primary"
+            width={100}
+          />
+          <ViewChip
+            label="Retained"
+            value={author.retained}
+            color="primary"
+            width={100}
+          />
         </Stack>
       </Grid>
 
@@ -79,11 +89,13 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
           <CardHeader subheader="Personal Details"></CardHeader>
           <CardContent>
             <Grid container>
-              <Grid item md={7}>
+              <Grid item md={4}>
                 <Stack spacing={2}>
                   <Stack direction="row" spacing={1}>
-                    <EmailIcon color="primary" />
-                    <Typography variant="subtitle1">{author.email}</Typography>
+                    <BorderColorIcon color="primary" />
+                    <Typography variant="subtitle1">
+                      {author.penname}
+                    </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
                     <LanguageIcon color="primary" />
@@ -91,19 +103,40 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                       {DisplayField(author.website)}
                     </Typography>
                   </Stack>
-
-                  <ViewChip
-                    label="Active"
-                    value={author.active}
-                    color="primary"
-                  />
                 </Stack>
               </Grid>
 
               <Grid item md={5}>
                 <Stack spacing={2}>
                   <Stack direction="row" spacing={1}>
+                    <EmailIcon color="primary" />
+                    <Typography variant="subtitle1">{author.email}</Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
                     <PhoneIcon color="primary" />
+                    <Typography
+                      variant="caption"
+                      sx={{ marginLeft: "-5px !important" }}
+                    >
+                      1
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      {DisplayField(author.phonenumber)}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Grid>
+
+              <Grid item md={3}>
+                <Stack spacing={2}>
+                  <Stack direction="row" spacing={1}>
+                    <PhoneIcon color="primary" />
+                    <Typography
+                      variant="caption"
+                      sx={{ marginLeft: "-5px !important" }}
+                    >
+                      2
+                    </Typography>
                     <Typography variant="subtitle1">
                       {DisplayField(author.phonenumber)}
                     </Typography>
@@ -114,12 +147,6 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                       {DisplayField(author.location)}
                     </Typography>
                   </Stack>
-
-                  <ViewChip
-                    label="Retained"
-                    value={author.retained}
-                    color="primary"
-                  />
                 </Stack>
               </Grid>
             </Grid>
@@ -154,7 +181,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
       </Grid>
 
       <Grid item md={6}>
-        <Card>
+        <Card sx={{ height: 200 }}>
           <CardHeader subheader="Address Details"></CardHeader>
           <CardContent>
             <Stack spacing={1}>
@@ -169,7 +196,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
       </Grid>
 
       <Grid item md={6}>
-        <Card>
+        <Card sx={{ height: 200 }}>
           <CardHeader subheader="Notes"></CardHeader>
           <CardContent>
             <Typography variant="subtitle1">{author.notes}</Typography>

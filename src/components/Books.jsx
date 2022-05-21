@@ -28,7 +28,7 @@ const LinkComponentAuthor = ({ data }) => {
   );
 };
 
-const Books = ({ books, hideAuthorColumn, gridWidth }) => {
+const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
   const navigate = useNavigate();
   const createClick = (event) => {
     navigate("/books/new");
@@ -90,7 +90,7 @@ const Books = ({ books, hideAuthorColumn, gridWidth }) => {
 
       <Box
         className="ag-theme-alpine"
-        style={{ height: 600, width: gridWidth }}
+        style={{ height: gridHeight, width: gridWidth }}
       >
         <AgGridReact
           defaultColDef={{

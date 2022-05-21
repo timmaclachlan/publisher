@@ -15,16 +15,12 @@ import {
   Card,
   CardHeader,
   CardContent,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   FormGroup,
   FormControlLabel,
   Checkbox,
   Switch,
 } from "@mui/material";
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PeopleIcon from "@mui/icons-material/People";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
@@ -188,18 +184,14 @@ const AuthorEdit = ({
                 />
               </Grid>
 
-              <Grid item md={2}></Grid>
-
-              <Grid item md={2}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="active"
-                      checked={author.active}
-                      onChange={checkedChange}
-                    />
-                  }
-                  label="Active"
+              <Grid item md={4}>
+                <TextField
+                  label="Phone 2"
+                  name="phonenumber2"
+                  variant="outlined"
+                  value={author.phonenumber}
+                  onChange={valueChange}
+                  fullWidth
                 />
               </Grid>
 
@@ -216,7 +208,7 @@ const AuthorEdit = ({
 
               <Grid item md={4}>
                 <TextField
-                  label="Phone"
+                  label="Phone 1"
                   name="phonenumber"
                   variant="outlined"
                   value={author.phonenumber}
@@ -301,7 +293,7 @@ const AuthorEdit = ({
                     name="notes"
                     variant="outlined"
                     multiline
-                    rows={8}
+                    rows={14}
                     value={author.notes}
                     onChange={valueChange}
                     fullWidth
@@ -314,61 +306,55 @@ const AuthorEdit = ({
           <Grid item md={3}>
             <Grid container spacing={2}>
               <Grid item md={12}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Payment Details
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Stack spacing={2}>
-                      <TextField
-                        label="Sort Code"
-                        name="sortcode"
-                        variant="outlined"
-                        value={author.sortcode}
-                        onChange={valueChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Account"
-                        name="accountno"
-                        variant="outlined"
-                        value={author.accountno}
-                        onChange={valueChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Paypal"
-                        name="paypal"
-                        variant="outlined"
-                        value={author.paypal}
-                        onChange={valueChange}
-                        fullWidth
-                      />
-                    </Stack>
-                  </AccordionDetails>
-                </Accordion>
+                <Stack spacing={2}>
+                  <TextField
+                    label="Sort Code"
+                    name="sortcode"
+                    variant="outlined"
+                    value={author.sortcode}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Account"
+                    name="accountno"
+                    variant="outlined"
+                    value={author.accountno}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Paypal"
+                    name="paypal"
+                    variant="outlined"
+                    value={author.paypal}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                </Stack>
               </Grid>
 
               <Grid item md={12}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Options
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Stack spacing={2}>
-                      <FormGroup>
-                        <FormControlLabel
-                          label="Retained Client"
-                          labelPlacement="start"
-                          control={<Checkbox />}
-                          name="retainedClient"
-                          checked={author.retainedClient}
-                          onChange={checkedChange}
-                        />
-                      </FormGroup>
-                    </Stack>
-                  </AccordionDetails>
-                </Accordion>
+                <Stack spacing={2}>
+                  <FormGroup>
+                    <FormControlLabel
+                      label="Retained Client"
+                      labelPlacement="start"
+                      control={<Checkbox />}
+                      name="retainedClient"
+                      checked={author.retainedClient}
+                      onChange={checkedChange}
+                    />
+                  </FormGroup>
+                  <FormControlLabel
+                    label="Active"
+                    labelPlacement="start"
+                    control={<Checkbox />}
+                    name="active"
+                    checked={author.active}
+                    onChange={checkedChange}
+                  />
+                </Stack>
               </Grid>
             </Grid>
           </Grid>
