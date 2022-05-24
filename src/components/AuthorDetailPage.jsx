@@ -76,12 +76,21 @@ const AuthorDetail = ({ onRecordChange }) => {
     callApi();
   };
 
+  const makeUpdate = () => {
+    const callApi = async () => {
+      await updateById(author, id, "author");
+    };
+    callApi();
+  };
+
   const saveAuthor = (ev) => {
     ev.preventDefault();
+    debugger;
     if (createMode) {
       makeChange(create.bind(null, author));
     } else {
-      makeChange(updateById.bind(null, author, id));
+      makeUpdate();
+      //makeChange(updateById.bind(null, author, id));
     }
     setNotification((prevState) => ({
       ...prevState,

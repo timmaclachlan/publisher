@@ -5,7 +5,16 @@ import { Chip, Tooltip } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 
-const ViewChip = ({ label, value, color, tooltip, size, variant, width }) => {
+const ViewChip = ({
+  label,
+  value,
+  color,
+  tooltip,
+  size,
+  variant,
+  width,
+  onClick,
+}) => {
   const getVariant = () => {
     if (variant) return variant;
     if (value) return "contained";
@@ -24,6 +33,7 @@ const ViewChip = ({ label, value, color, tooltip, size, variant, width }) => {
           icon={value ? <DoneIcon /> : <CloseIcon />}
           size={size}
           sx={{ width: width, mr: 1 }}
+          onClick={onClick}
         />
       </Tooltip>
     );

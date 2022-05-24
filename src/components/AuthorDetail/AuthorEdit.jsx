@@ -27,6 +27,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import WarningIcon from "@mui/icons-material/Warning";
 
+import ViewChip from "../ViewChip";
+
 const AuthorEdit = ({
   author,
   isNew,
@@ -50,9 +52,8 @@ const AuthorEdit = ({
     handleChange(name, value);
   };
 
-  const checkedChange = (event) => {
-    const { name, checked } = event.target;
-    handleChange(name, checked);
+  const toggleChange = (name) => {
+    handleChange(name, !author[name]);
   };
 
   const handleCloseDeleteConfirmation = () => setShowDeleteConfirmation(false);
@@ -160,134 +161,208 @@ const AuthorEdit = ({
           </Grid>
 
           <Grid item md={9}>
-            <Grid container spacing={2}>
-              <Grid item md={4}>
-                <TextField
-                  label="Real Name"
-                  name="realname"
-                  variant="outlined"
-                  value={author.realname}
-                  onChange={valueChange}
-                  fullWidth
-                  required
-                />
-              </Grid>
-              <Grid item md={4}>
-                <TextField
-                  label="Email"
-                  name="email"
-                  variant="outlined"
-                  value={author.email}
-                  onChange={valueChange}
-                  fullWidth
-                  required
-                />
-              </Grid>
+            <TextField
+              label="Real Name"
+              name="realname"
+              variant="outlined"
+              value={author.realname}
+              onChange={valueChange}
+              fullWidth
+              required
+            />
+          </Grid>
 
-              <Grid item md={4}>
-                <TextField
-                  label="Phone 2"
-                  name="phonenumber2"
-                  variant="outlined"
-                  value={author.phonenumber}
-                  onChange={valueChange}
-                  fullWidth
-                />
-              </Grid>
+          <Grid item md={3}>
+            <Stack spacing={2} direction="row">
+              <ViewChip
+                label="Active"
+                value={author.active}
+                color="primary"
+                width={100}
+                onClick={() => toggleChange("active")}
+              />
+              <ViewChip
+                label="Retained"
+                value={author.retained}
+                color="primary"
+                width={100}
+                onClick={() => toggleChange("retained")}
+              />
+            </Stack>
+          </Grid>
 
-              <Grid item md={4}>
-                <TextField
-                  label="Pen Name"
-                  name="penname"
-                  variant="outlined"
-                  value={author.penname}
-                  onChange={valueChange}
-                  fullWidth
-                />
-              </Grid>
-
-              <Grid item md={4}>
-                <TextField
-                  label="Phone 1"
-                  name="phonenumber"
-                  variant="outlined"
-                  value={author.phonenumber}
-                  onChange={valueChange}
-                  fullWidth
-                />
-              </Grid>
-
-              <Grid item md={4}>
-                <TextField
-                  label="Location"
-                  name="location"
-                  variant="outlined"
-                  value={author.location}
-                  onChange={valueChange}
-                  fullWidth
-                />
-              </Grid>
-
-              <Grid item md={6}>
-                <Card>
-                  <CardHeader subheader="Address Details" />
-                  <CardContent>
+          <Grid item md={9}>
+            <Card>
+              <CardHeader subheader="Personal Details"></CardHeader>
+              <CardContent>
+                <Grid container columnSpacing={2}>
+                  <Grid item md={4}>
                     <Stack spacing={2}>
                       <TextField
-                        label="Building/Apartment"
-                        name="address1"
+                        label="Pen Name"
+                        name="penname"
                         variant="outlined"
-                        value={author.address1}
+                        value={author.penname}
                         onChange={valueChange}
                         fullWidth
                       />
                       <TextField
-                        label="Street"
-                        name="address2"
+                        label="Website"
+                        name="website"
                         variant="outlined"
-                        value={author.address2}
-                        onChange={valueChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Town/City"
-                        name="address3"
-                        variant="outlined"
-                        value={author.address3}
-                        onChange={valueChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="County/State"
-                        name="address4"
-                        variant="outlined"
-                        value={author.address4}
-                        onChange={valueChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Post/Zip Code"
-                        name="postcode"
-                        variant="outlined"
-                        value={author.postcode}
+                        value={author.website}
                         onChange={valueChange}
                         fullWidth
                       />
                     </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
+                  </Grid>
 
-              <Grid item md={6}>
+                  <Grid item md={5}>
+                    <Stack spacing={2}>
+                      <TextField
+                        label="Email 1"
+                        name="email"
+                        variant="outlined"
+                        value={author.email}
+                        onChange={valueChange}
+                        fullWidth
+                        required
+                      />
+                      <TextField
+                        label="Email 2"
+                        name="email2"
+                        variant="outlined"
+                        value={author.email2}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                    </Stack>
+                  </Grid>
+
+                  <Grid item md={3}>
+                    <Stack spacing={2}>
+                      <TextField
+                        label="Phone 1"
+                        name="phonenumber"
+                        variant="outlined"
+                        value={author.phonenumber}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Phone 2"
+                        name="phonenumber2"
+                        variant="outlined"
+                        value={author.phonenumber2}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item md={3}>
+            <Card>
+              <CardHeader subheader="Banking Details"></CardHeader>
+              <CardContent>
                 <Stack spacing={2}>
+                  <Stack spacing={1} direction="row">
+                    <TextField
+                      label="Sort Code"
+                      name="sortcode"
+                      variant="outlined"
+                      value={author.sortcode}
+                      onChange={valueChange}
+                      fullWidth
+                    />
+                    <TextField
+                      label="Account"
+                      name="accountno"
+                      variant="outlined"
+                      value={author.accountno}
+                      onChange={valueChange}
+                      fullWidth
+                    />
+                  </Stack>
                   <TextField
-                    label="Website"
-                    name="website"
+                    label="Paypal"
+                    name="paypal"
                     variant="outlined"
-                    value={author.website}
+                    value={author.paypal}
                     onChange={valueChange}
                     fullWidth
                   />
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item md={6}>
+            <Card>
+              <CardHeader subheader="Address Details" />
+              <CardContent>
+                <Stack spacing={1}>
+                  <TextField
+                    label="Building/Apartment"
+                    name="address1"
+                    variant="outlined"
+                    value={author.address1}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Street"
+                    name="address2"
+                    variant="outlined"
+                    value={author.address2}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Town/City"
+                    name="address3"
+                    variant="outlined"
+                    value={author.address3}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="County/State"
+                    name="address4"
+                    variant="outlined"
+                    value={author.address4}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Post/Zip Code"
+                    name="postcode"
+                    variant="outlined"
+                    value={author.postcode}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Location"
+                    name="location"
+                    variant="outlined"
+                    value={author.location}
+                    onChange={valueChange}
+                    fullWidth
+                  />
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item md={6}>
+            <Stack spacing={1}>
+              <Card sx={{ height: 470 }}>
+                <CardHeader subheader="Notes"></CardHeader>
+                <CardContent>
                   <TextField
                     label="Notes"
                     name="notes"
@@ -298,65 +373,9 @@ const AuthorEdit = ({
                     onChange={valueChange}
                     fullWidth
                   />
-                </Stack>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item md={3}>
-            <Grid container spacing={2}>
-              <Grid item md={12}>
-                <Stack spacing={2}>
-                  <TextField
-                    label="Sort Code"
-                    name="sortcode"
-                    variant="outlined"
-                    value={author.sortcode}
-                    onChange={valueChange}
-                    fullWidth
-                  />
-                  <TextField
-                    label="Account"
-                    name="accountno"
-                    variant="outlined"
-                    value={author.accountno}
-                    onChange={valueChange}
-                    fullWidth
-                  />
-                  <TextField
-                    label="Paypal"
-                    name="paypal"
-                    variant="outlined"
-                    value={author.paypal}
-                    onChange={valueChange}
-                    fullWidth
-                  />
-                </Stack>
-              </Grid>
-
-              <Grid item md={12}>
-                <Stack spacing={2}>
-                  <FormGroup>
-                    <FormControlLabel
-                      label="Retained Client"
-                      labelPlacement="start"
-                      control={<Checkbox />}
-                      name="retainedClient"
-                      checked={author.retainedClient}
-                      onChange={checkedChange}
-                    />
-                  </FormGroup>
-                  <FormControlLabel
-                    label="Active"
-                    labelPlacement="start"
-                    control={<Checkbox />}
-                    name="active"
-                    checked={author.active}
-                    onChange={checkedChange}
-                  />
-                </Stack>
-              </Grid>
-            </Grid>
+                </CardContent>
+              </Card>
+            </Stack>
           </Grid>
         </Grid>
       </form>

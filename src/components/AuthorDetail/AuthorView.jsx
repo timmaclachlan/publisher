@@ -110,18 +110,24 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                 <Stack spacing={2}>
                   <Stack direction="row" spacing={1}>
                     <EmailIcon color="primary" />
-                    <Typography variant="subtitle1">{author.email}</Typography>
-                  </Stack>
-                  <Stack direction="row" spacing={1}>
-                    <PhoneIcon color="primary" />
                     <Typography
                       variant="caption"
-                      sx={{ marginLeft: "-5px !important" }}
+                      sx={{ marginLeft: "-2px !important" }}
                     >
                       1
                     </Typography>
+                    <Typography variant="subtitle1">{author.email}</Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    <EmailIcon color="primary" />
+                    <Typography
+                      variant="caption"
+                      sx={{ marginLeft: "-2px !important" }}
+                    >
+                      2
+                    </Typography>
                     <Typography variant="subtitle1">
-                      {DisplayField(author.phonenumber)}
+                      {DisplayField(author.email2)}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -135,16 +141,22 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                       variant="caption"
                       sx={{ marginLeft: "-5px !important" }}
                     >
-                      2
+                      1
                     </Typography>
                     <Typography variant="subtitle1">
                       {DisplayField(author.phonenumber)}
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
-                    <LocationCityIcon color="primary" />
+                    <PhoneIcon color="primary" />
+                    <Typography
+                      variant="caption"
+                      sx={{ marginLeft: "-5px !important" }}
+                    >
+                      2
+                    </Typography>
                     <Typography variant="subtitle1">
-                      {DisplayField(author.location)}
+                      {DisplayField(author.phonenumber2)}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -181,7 +193,7 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
       </Grid>
 
       <Grid item md={6}>
-        <Card sx={{ height: 200 }}>
+        <Card sx={{ height: 300 }}>
           <CardHeader subheader="Address Details"></CardHeader>
           <CardContent>
             <Stack spacing={1}>
@@ -190,13 +202,19 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
               <Typography variant="subtitle1">{author.address3}</Typography>
               <Typography variant="subtitle1">{author.address4}</Typography>
               <Typography variant="subtitle1">{author.postcode}</Typography>
+              <Stack direction="row" spacing={1}>
+                <LocationCityIcon color="primary" />
+                <Typography variant="subtitle1">
+                  {DisplayField(author.location)}
+                </Typography>
+              </Stack>
             </Stack>
           </CardContent>
         </Card>
       </Grid>
 
       <Grid item md={6}>
-        <Card sx={{ height: 200 }}>
+        <Card sx={{ height: 300 }}>
           <CardHeader subheader="Notes"></CardHeader>
           <CardContent>
             <Typography variant="subtitle1">{author.notes}</Typography>

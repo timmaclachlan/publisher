@@ -90,7 +90,10 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
 
       <Box
         className="ag-theme-alpine"
-        style={{ height: gridHeight, width: gridWidth }}
+        style={{
+          height: gridHeight ? gridHeight : 600,
+          width: gridWidth ? gridWidth : 600,
+        }}
       >
         <AgGridReact
           defaultColDef={{

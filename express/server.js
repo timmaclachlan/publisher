@@ -83,7 +83,8 @@ router.patch("/authors/:id", (req, res) => {
     website = $11, notes = $12,
     retained = $13, sortcode = $14,
     accountno = $15, paypal = $16,
-    active = $17
+    active = $17, email2 = $18,
+    phonenumber2 = $19
     WHERE id='${req.params.id}'`;
   let data = [
     req.body.realname,
@@ -102,7 +103,9 @@ router.patch("/authors/:id", (req, res) => {
     req.body.sortcode,
     req.body.accountno,
     req.body.paypal,
-    req.body.active
+    req.body.active,
+    req.body.email2,
+    req.body.phonenumber2
   ];
 
   return updateQuery(sql, data, res);
