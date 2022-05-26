@@ -15,9 +15,11 @@ import {
 
 import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
+import BookTabEditorial from "./BookDetail/Tabs/BookTabEditorial";
+import BookTabFormats from "./BookDetail/Tabs/BookTabFormats";
+import BookTabDesign from "./BookDetail/Tabs/BookTabDesign";
 import TabPanel from "./TabPanel";
 
-import BookTabViewFormats from "./BookDetail/BookTabViewFormats";
 import BookDetailHeader from "./BookDetail/BookDetailHeader";
 
 import {
@@ -37,10 +39,26 @@ const getSingleResult = (result) => {
   return result;
 };
 
+const TAB_FORMATS = 4;
+
+const blankFormat = (bookid, format) => {
+  return {
+    id: null,
+    bookid,
+    format,
+    price: 0,
+    isbn: "",
+    width: 0,
+    height: 0,
+    pageCount: 0,
+  };
+};
+
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
   const [genres, setGenres] = useState([]);
+  const [formats, setFormats] = useState({});
   const [bookServices, setBookServices] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
@@ -57,6 +75,36 @@ const BookDetail = ({ onRecordChange }) => {
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
+
+    if (newValue === TAB_FORMATS && isEmptyObject(formats)) {
+      const retrieveFormats = async () => {
+        let response = await readByIdAll("book", "format", id);
+        setFormats(response.result);
+      };
+      retrieveFormats();
+    }
+  };
+
+  const getFormatData = (format) => {
+    if (Array.isArray(formats)) {
+      let selectedFormats = formats.filter((item) => item.format === format);
+      if (selectedFormats.length > 0) {
+        return selectedFormats[0];
+      }
+    }
+    return null;
+  };
+
+  const onChangeFormats = (ev, format, field) => {
+    let newFormats = [...formats];
+    let selectedFormat = getFormatData(format);
+    if (selectedFormat === null) {
+      newFormats.push(blankFormat(id, format));
+    } else {
+      selectedFormat[field] = ev.target.value;
+    }
+
+    setFormats(newFormats);
   };
 
   useEffect(() => {
@@ -118,6 +166,8 @@ const BookDetail = ({ onRecordChange }) => {
 
   const saveBook = (ev) => {
     ev.preventDefault();
+    debugger;
+    book.formats = formats;
     makeChange(updateById.bind(null, book, id));
     setNotification((prevState) => ({
       ...prevState,
@@ -227,19 +277,24 @@ const BookDetail = ({ onRecordChange }) => {
       </TabPanel>
 
       <TabPanel value={currentTab} index={1}>
-        <Typography variant="h5">Editorial</Typography>
+        <BookTabEditorial book={book} editMode={editMode} />
       </TabPanel>
 
       <TabPanel value={currentTab} index={2}>
-        <Typography variant="h5">Design</Typography>
+        <BookTabDesign book={book} editMode={editMode} />
       </TabPanel>
 
       <TabPanel value={currentTab} index={3}>
         <Typography variant="h5">Marketing</Typography>
       </TabPanel>
 
-      <TabPanel value={currentTab} index={4}>
-        <BookTabViewFormats book={book} />
+      <TabPanel value={currentTab} index={TAB_FORMATS}>
+        <BookTabFormats
+          book={book}
+          editMode={editMode}
+          formats={formats}
+          onChange={onChangeFormats}
+        />
       </TabPanel>
     </>
   );

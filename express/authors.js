@@ -1,19 +1,104 @@
 const express = require("express");
 const router = express.Router();
 const Pool = require("pg").Pool;
+const v4 = require("uuid").v4;
 
 const TABLE_AUTHORS = "authors";
 const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
 
-let routeBuilder = path => {
-
+let routeBuilder = (path) => {
   router.get(`${path}`, (req, res) => {
-  let sql = `SELECT * FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
-  return getQuery(sql, res);
+    let sql = `SELECT * FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
+    return getQuery(sql, res);
   });
-  
+
+  router.get("/authors/:id", (req, res) => {
+    let sql = `SELECT * FROM ${TABLEQUAL_AUTHORS} WHERE id='${req.params.id}'`;
+    return getQuery(sql, res);
+  });
+
+  router.get("/lookup/authors", (req, res) => {
+    let sql = `SELECT id,realname FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
+    return getQuery(sql, res);
+  });
+
+  router.delete("/authors/:id", (req, res) => {
+    let sql = `DELETE FROM ${TABLEQUAL_AUTHORS} WHERE id='${req.params.id}'`;
+    return deleteQuery(sql, res);
+  });
+
+  router.post("/authors", (req, res) => {
+    let sql = `INSERT INTO ${TABLEQUAL_AUTHORS} 
+  (id, realname,penname,email,phonenumber,location,
+    address1,address2,address3,address4,postcode,
+    website,notes,retained,sortcode,accountno,paypal,active)
+  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) RETURNING id`;
+    let data = [
+      v4(),
+      req.body.realname,
+      req.body.penname,
+      req.body.email,
+      req.body.phonenumber,
+      req.body.location,
+      req.body.address1,
+      req.body.address2,
+      req.body.address3,
+      req.body.address4,
+      req.body.postcode,
+      req.body.website,
+      req.body.notes,
+      req.body.retained,
+      req.body.sortcode,
+      req.body.accountno,
+      req.body.paypal,
+      req.body.active,
+    ];
+    return updateQuery(sql, data, res);
+  });
+
+  router.patch("/authors/:id", (req, res) => {
+    console.log("in Patch");
+    console.log(req.body);
+
+    let sql = `UPDATE ${TABLEQUAL_AUTHORS} SET 
+    realname = $1, penname = $2,
+    email = $3, phonenumber = $4,
+    location = $5, address1 = $6,
+    address2 = $7, address3 = $8,
+    address4 = $9, postcode = $10,
+    website = $11, notes = $12,
+    retained = $13, sortcode = $14,
+    accountno = $15, paypal = $16,
+    active = $17, email2 = $18,
+    phonenumber2 = $19
+    WHERE id='${req.params.id}'`;
+    let data = [
+      req.body.realname,
+      req.body.penname,
+      req.body.email,
+      req.body.phonenumber,
+      req.body.location,
+      req.body.address1,
+      req.body.address2,
+      req.body.address3,
+      req.body.address4,
+      req.body.postcode,
+      req.body.website,
+      req.body.notes,
+      req.body.retained,
+      req.body.sortcode,
+      req.body.accountno,
+      req.body.paypal,
+      req.body.active,
+      req.body.email2,
+      req.body.phonenumber2,
+    ];
+
+    return updateQuery(sql, data, res);
+  });
+
   return router;
-}
+};
 
 function getQuery(sql, res) {
   console.log(sql);
@@ -30,6 +115,35 @@ function getQuery(sql, res) {
     res.statusCode = 200;
     res.json({ message: "success", result: results.rows });
   });
+}
+
+function updateQuery(sql, data, res) {
+  const pool = new Pool();
+  console.log("UPDATE QUERY:" + sql);
+  console.log(data);
+  pool.query(sql, data, (error, results) => {
+    if (error) {
+      console.error(error);
+      res.statusCode = 500;
+      return res.json({ errors: ["Failed to create/update record:" + error] });
+    }
+    res.statusCode = 200;
+    res.json({ message: "success" });
+  });
+}
+
+function deleteQuery(sql, res) {
+  const pool = new Pool();
+  console.log("DELETE QUERY:" + sql);
+  pool.query(sql, (error) => {
+    if(error) {
+      console.error(error);
+      res.statusCode = 500;
+      return res.json({ errors: ["Failed to delete record:" + error] });
+    }
+    res.statusCode = 200;
+    res.json({ message: "success" });
+  })
 }
 
 module.exports = routeBuilder;
