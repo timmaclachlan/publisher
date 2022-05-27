@@ -11,7 +11,6 @@ import {
   Checkbox,
   TextField,
 } from "@mui/material";
-import { FormatTextdirectionRToLTwoTone } from "@mui/icons-material";
 
 const PAPERBACK = 1;
 const HARDBACK = 2;
@@ -19,50 +18,39 @@ const EBOOK = 28;
 //const EBOOKNA = 32;
 //const KUPAGESREAD = 64;
 
-const BookTabFormats = ({ formats, book, editMode, onChange }) => {
-  const [paperbackEnabled, setPaperbackEnabled] = React.useState(false);
-  const [hardbackEnabled, setHardbackEnabled] = React.useState(false);
-  const [ebookEnabled, setEbookEnabled] = React.useState(false);
-
-  const getFormatData = React.useCallback(
-    (format) => {
-      if (Array.isArray(formats)) {
-        let selectedFormats = formats.filter((item) => item.format === format);
-        if (selectedFormats.length > 0) {
-          return selectedFormats[0];
-        }
+const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
+  const getFormatData = (format) => {
+    if (Array.isArray(formats)) {
+      let selectedFormats = formats.filter((item) => item.format === format);
+      if (selectedFormats.length > 0) {
+        return selectedFormats[0];
       }
-      return null;
-    },
-    [formats]
-  );
-
-  const enableFormatCheckbox = React.useCallback(
-    (format, method) => {
-      let selectedFormat = getFormatData(format);
-      if (selectedFormat !== null) {
-        method(true);
-      }
-    },
-    [getFormatData]
-  );
-
-  React.useEffect(() => {
-    enableFormatCheckbox(PAPERBACK, setPaperbackEnabled);
-    enableFormatCheckbox(HARDBACK, setHardbackEnabled);
-    enableFormatCheckbox(EBOOK, setEbookEnabled);
-  }, [formats, enableFormatCheckbox]);
-
-  const onPaperbackCheckChange = () => {
-    setPaperbackEnabled(!paperbackEnabled);
+    }
+    return null;
   };
 
-  const onHardbackCheckChange = () => {
-    setHardbackEnabled(!hardbackEnabled);
+  const getFormatEnabled = (format) => {
+    let selectedFormat = getFormatData(format);
+    if (selectedFormat) {
+      if (selectedFormat.enabled === undefined) return true;
+      return selectedFormat.enabled;
+    }
   };
 
-  const onEbookCheckChange = () => {
-    setEbookEnabled(!ebookEnabled);
+  let paperbackEnabled = getFormatEnabled(PAPERBACK);
+  let hardbackEnabled = getFormatEnabled(HARDBACK);
+  let ebookEnabled = getFormatEnabled(EBOOK);
+
+  const onPaperbackCheckChange = (ev) => {
+    onEnableChange(PAPERBACK, ev.target.checked);
+  };
+
+  const onHardbackCheckChange = (ev) => {
+    onEnableChange(HARDBACK, ev.target.checked);
+  };
+
+  const onEbookCheckChange = (ev) => {
+    onEnableChange(EBOOK, ev.target.checked);
   };
 
   const renderFormatDetail = (text) => {
@@ -345,7 +333,7 @@ const BookTabFormats = ({ formats, book, editMode, onChange }) => {
                         />
                         <TextField
                           variant="outlined"
-                          disabled={!ebookEnabled}
+                          disabled={!paperbackEnabled}
                           value={getFormatDetails(EBOOK, "height")}
                           onChange={(ev) => onChange(ev, EBOOK, "height")}
                         />

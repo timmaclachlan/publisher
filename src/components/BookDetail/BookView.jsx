@@ -86,13 +86,6 @@ const BookView = ({ book, bookServices, onUpdateEditMode }) => {
                       {book.author_penname}
                     </Typography>
                   </Stack>
-
-                  <ViewChip
-                    label="Published"
-                    value={book.published}
-                    color="primary"
-                    tooltip="Book has been published"
-                  />
                 </Stack>
               </Grid>
 
@@ -193,54 +186,14 @@ const BookView = ({ book, bookServices, onUpdateEditMode }) => {
         </Stack>
       </Grid>
 
-      <Grid item md={4}>
-        <Card>
-          <CardHeader subheader="Specifications"></CardHeader>
-          <CardContent>
-            <Stack spacing={2}>
-              <Stack direction="row" spacing={1}>
-                <Stack>
-                  <Typography variant="subtitle2" align="center">
-                    Width (mm)
-                  </Typography>
-                  <Tooltip title="Width of book">
-                    <Typography variant="subtitle1" align="center">
-                      {book.width}
-                    </Typography>
-                  </Tooltip>
-                </Stack>
-
-                <Divider orientation="vertical" flexItem />
-                <Stack>
-                  <Typography variant="subtitle2" align="center">
-                    Height (mm)
-                  </Typography>
-                  <Tooltip title="Height of book">
-                    <Typography variant="subtitle1" align="center">
-                      {book.height}
-                    </Typography>
-                  </Tooltip>
-                </Stack>
-
-                <Divider orientation="vertical" flexItem />
-                <Stack>
-                  <Typography variant="subtitle2" align="center">
-                    Page Count
-                  </Typography>
-                  <Tooltip title="Pages">
-                    <Typography variant="subtitle1" align="center">
-                      {book.pagecount}
-                    </Typography>
-                  </Tooltip>
-                </Stack>
-              </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      <Grid item md={8}>
+      <Grid item md={12}>
         <BookViewOptions book={book} />
+        <ViewChip
+          label="Published"
+          value={book.published}
+          color="primary"
+          tooltip="Book has been published"
+        />
       </Grid>
 
       <Grid item md={4}></Grid>

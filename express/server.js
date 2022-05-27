@@ -126,44 +126,51 @@ router.patch("/books/:id", (req, res) => {
         v.width,
         v.height,
         v.pagecount
-      ];      
+      ];
+      updateQuery(sql, data);
     }
     else {
-      sql = `UPDATE ${TABLEQUAL_BOOKSFORMATS} 
+      if (v.enabled === false) {
+        sql = `DELETE FROM ${TABLEQUAL_BOOKSFORMATS} WHERE id='${v.id}'`;
+        deleteQuery(sql);
+      }
+      else {
+        sql = `UPDATE ${TABLEQUAL_BOOKSFORMATS} 
       SET price=$1,isbn=$2,width=$3,height=$4,pagecount=$5
       WHERE id='${v.id}'`;
-      data = [
-        v.price,
-        v.isbn,
-        v.width,
-        v.height,
-        v.pagecount
-      ]
+        data = [
+          v.price,
+          v.isbn,
+          v.width,
+          v.height,
+          v.pagecount
+        ]
+        updateQuery(sql, data);
+      }
     }
-    updateQuery(sql, data);
   });
   
-  // sql = `UPDATE ${TABLEQUAL_BOOKS} SET 
-  //   title = $1, publicationdate = $2, authorid = $3,
-  //   genreid = $4,
-  //   stillselling = $5, terminated = $6,
-  //   maturecontent = $7, onhold = $8,
-  //   published = $9, royalty=$10
-  //   WHERE id='${req.params.id}'`;
-  // data = [
-  //   req.body.title,
-  //   req.body.publicationdate,
-  //   req.body.author.id,
-  //   req.body.genreid,
-  //   req.body.stillselling,
-  //   req.body.terminated,
-  //   req.body.maturecontent,
-  //   req.body.onhold,
-  //   req.body.published,
-  //   req.body.royalty
-  // ];
+  sql = `UPDATE ${TABLEQUAL_BOOKS} SET 
+    title = $1, publicationdate = $2, authorid = $3,
+    genreid = $4,
+    stillselling = $5, terminated = $6,
+    maturecontent = $7, onhold = $8,
+    published = $9, royalty=$10
+    WHERE id='${req.params.id}'`;
+  data = [
+    req.body.title,
+    req.body.publicationdate,
+    req.body.author.id,
+    req.body.genreid,
+    req.body.stillselling,
+    req.body.terminated,
+    req.body.maturecontent,
+    req.body.onhold,
+    req.body.published,
+    req.body.royalty
+  ];
   
-  // updateQueryWithStatus(sql, data, res);
+  updateQueryWithStatus(sql, data, res);
 
 
 });
@@ -186,7 +193,6 @@ router.get("/reports/book", (req, res) => {
 });
 
 
-
 function updateQueryWithStatus(sql, data, res) {
   try {
     updateQuery(sql, data);
@@ -204,6 +210,17 @@ function updateQuery(sql, data) {
   console.log("UPDATE QUERY:" + sql);
   console.log(data);
   pool.query(sql, data, (error, results) => {
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+  });
+}
+
+function deleteQuery(sql) {
+  const pool = new Pool();
+  console.log("DELETE QUERY:" + sql);
+  pool.query(sql, (error, results) => {
     if (error) {
       console.error(error);
       throw error;

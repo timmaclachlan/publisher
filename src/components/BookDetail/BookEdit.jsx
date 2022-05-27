@@ -145,6 +145,7 @@ const BookEdit = ({
               </Grid>
 
               <Grid item md={4}>
+                <InputLabel>Author</InputLabel>
                 <AutoSuggest
                   data={authors}
                   value={book.author}
@@ -169,6 +170,7 @@ const BookEdit = ({
               </Grid>
 
               <Grid item md={2}>
+                <InputLabel id="service-label">Service</InputLabel>
                 <FormControl fullWidth>
                   <InputLabel id="service-label">Service</InputLabel>
                   <Select
@@ -193,103 +195,6 @@ const BookEdit = ({
                   inputFormat="dd/MM/yyyy"
                   renderInput={(params) => <TextField {...params} />}
                 />
-              </Grid>
-
-              <Grid item md={4}>
-                <Card>
-                  <CardContent>
-                    <FormGroup>
-                      <Stack spacing={2}>
-                        <FormControlLabel
-                          label="Paperback"
-                          labelPlacement="end"
-                          control={<Checkbox defaultChecked />}
-                        />
-                        <TextField
-                          name="pricePaperback"
-                          label="Price"
-                          variant="outlined"
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                £
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                        <TextField
-                          name="isbnPaperback"
-                          label="ISBN"
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </FormGroup>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item md={4}>
-                <Card>
-                  <CardContent>
-                    <FormGroup>
-                      <Stack spacing={2}>
-                        <FormControlLabel
-                          label="Hardback"
-                          labelPlacement="end"
-                          control={<Checkbox defaultChecked />}
-                        />
-                        <TextField
-                          name="priceHardback"
-                          label="Price"
-                          variant="outlined"
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                £
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                        <TextField
-                          name="isbnHardback"
-                          label="ISBN"
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </FormGroup>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item md={4}>
-                <Card>
-                  <CardContent>
-                    <FormGroup>
-                      <Stack spacing={2}>
-                        <FormControlLabel
-                          label="E-Book"
-                          labelPlacement="end"
-                          control={<Checkbox defaultChecked />}
-                        />
-                        <TextField
-                          name="pricePaperback"
-                          label="Price"
-                          variant="outlined"
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                £
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                        <TextField
-                          name="isbnPaperback"
-                          label="ISBN"
-                          variant="outlined"
-                        />
-                      </Stack>
-                    </FormGroup>
-                  </CardContent>
-                </Card>
               </Grid>
             </Grid>
           </Grid>

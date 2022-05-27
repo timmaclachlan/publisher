@@ -45,6 +45,7 @@ const blankFormat = (bookid, format) => {
   return {
     id: null,
     bookid,
+    enabled: false,
     format,
     price: 0,
     isbn: "",
@@ -79,6 +80,7 @@ const BookDetail = ({ onRecordChange }) => {
     if (newValue === TAB_FORMATS && isEmptyObject(formats)) {
       const retrieveFormats = async () => {
         let response = await readByIdAll("book", "format", id);
+        debugger;
         setFormats(response.result);
       };
       retrieveFormats();
@@ -104,6 +106,16 @@ const BookDetail = ({ onRecordChange }) => {
       selectedFormat[field] = ev.target.value;
     }
 
+    setFormats(newFormats);
+  };
+
+  const onEnableChangeFormats = (format, enabled) => {
+    debugger;
+    let newFormats = [...formats];
+    let selectedFormat = getFormatData(format);
+    if (selectedFormat !== null) {
+      selectedFormat.enabled = enabled;
+    }
     setFormats(newFormats);
   };
 
@@ -294,6 +306,7 @@ const BookDetail = ({ onRecordChange }) => {
           editMode={editMode}
           formats={formats}
           onChange={onChangeFormats}
+          onEnableChange={onEnableChangeFormats}
         />
       </TabPanel>
     </>
