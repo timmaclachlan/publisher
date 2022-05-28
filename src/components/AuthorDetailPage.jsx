@@ -39,7 +39,6 @@ const AuthorDetail = ({ onRecordChange }) => {
   });
 
   useEffect(() => {
-    debugger;
     const retrieveAuthor = async () => {
       let authorRecord = {};
       try {

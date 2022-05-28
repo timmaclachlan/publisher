@@ -7,6 +7,7 @@ import { Box, Button } from "@mui/material";
 import { getFormattedDate } from "../utils";
 
 import ViewChip from "./ViewChip";
+import LoadingOverlay from "./LoadingOverlay";
 
 const LinkComponentBook = ({ data }) => {
   return (
@@ -30,6 +31,7 @@ const LinkComponentAuthor = ({ data }) => {
 
 const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
   const navigate = useNavigate();
+  const gridRef = React.useRef(null);
   const createClick = (event) => {
     navigate("/books/new");
   };
@@ -75,6 +77,10 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
     },
   ];
 
+  const onGridReady = () => {
+    gridRef.current.api.showLoadingOverlay();
+  };
+
   return (
     <>
       <Box sx={{ mt: 3 }}>
@@ -96,6 +102,7 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
         }}
       >
         <AgGridReact
+          ref={gridRef}
           defaultColDef={{
             resizable: true,
             sortable: true,
@@ -108,6 +115,10 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
           columnHoverHighlight={true}
           pagination={true}
           paginationPageSize={15}
+          onGridReady={onGridReady}
+          gridOptions={{
+            loadingOverlayComponent: LoadingOverlay,
+          }}
         ></AgGridReact>
       </Box>
     </>

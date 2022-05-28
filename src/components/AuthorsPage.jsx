@@ -7,6 +7,8 @@ import PeopleIcon from "@mui/icons-material/People";
 
 import { readAll } from "../fetcher";
 
+import LoadingOverlay from "./LoadingOverlay";
+
 const LinkComponent = ({ data }) => {
   return (
     <Button component={RouterLink} sx={{ p: 0 }} to={"/authors/" + data.id}>
@@ -18,6 +20,7 @@ const LinkComponent = ({ data }) => {
 const Authors = ({ onRecordChange }) => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
+  const gridRef = React.useRef(null);
 
   const createClick = (event) => {
     navigate("/authors/new");
@@ -61,6 +64,7 @@ const Authors = ({ onRecordChange }) => {
 
   const onGridReady = () => {
     const retrieveAuthors = async () => {
+      gridRef.current.api.showLoadingOverlay();
       try {
         const response = await readAll("author");
         setAuthors(response.result);
@@ -99,6 +103,7 @@ const Authors = ({ onRecordChange }) => {
 
       <Box className="ag-theme-alpine">
         <AgGridReact
+          ref={gridRef}
           defaultColDef={{
             resizable: true,
             sortable: true,
@@ -110,12 +115,16 @@ const Authors = ({ onRecordChange }) => {
             height: 700,
             width: 1500,
           }}
+          gridOptions={{
+            loadingOverlayComponent: LoadingOverlay,
+          }}
           rowData={authors}
           columnDefs={columnDefs}
           columnHoverHighlight={true}
           pagination={true}
           paginationPageSize={15}
           onGridReady={onGridReady}
+          suppressNoRowsOverlay={true}
         ></AgGridReact>
       </Box>
     </>

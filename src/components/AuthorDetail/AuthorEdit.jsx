@@ -15,10 +15,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Switch,
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
