@@ -39,7 +39,7 @@ const BookTabEditorial = ({ book, editMode }) => {
       return (
         <>
           <Grid item md={2}>
-            <TextField variant="outlined" label="Edit Mode" name="editMode" />
+            <TextField variant="outlined" label="Edit Level" name="editLevel" />
           </Grid>
           <Grid item md={2}>
             <TextField variant="outlined" label="Word Count" name="wordCount" />
@@ -47,12 +47,7 @@ const BookTabEditorial = ({ book, editMode }) => {
           <Grid item md={2}>
             <FormControl fullWidth>
               <InputLabel id="blurb-label">Blurb Level</InputLabel>
-              <Select
-                labelId="blurb-label"
-                //value={age}
-                label="Age"
-                //onChange={handleChange}
-              >
+              <Select labelId="blurb-label" label="Blurb Level">
                 <MenuItem value={1}>Level 1</MenuItem>
                 <MenuItem value={2}>Level 2</MenuItem>
                 <MenuItem value={3}>Level 3</MenuItem>

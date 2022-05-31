@@ -12,6 +12,10 @@ import {
   TextField,
 } from "@mui/material";
 
+import LoadingOverlay from "../../LoadingOverlay";
+
+import { isEmptyObject } from "../../../utils";
+
 const PAPERBACK = 1;
 const HARDBACK = 2;
 const EBOOK = 28;
@@ -19,7 +23,8 @@ const EBOOK = 28;
 //const KUPAGESREAD = 64;
 
 const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
-  debugger;
+  const loading = isEmptyObject(formats);
+
   const getFormatData = (format) => {
     if (Array.isArray(formats)) {
       let selectedFormats = formats.filter(
@@ -90,6 +95,7 @@ const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
     if (!editMode) {
       return (
         <>
+          {loading && <LoadingOverlay />}
           <Grid container spacing={2}>
             <Grid item md={12}>
               <Card>

@@ -12,6 +12,7 @@ const LoadingOverlay = () => {
           position: "absolute",
           top: "40%",
           left: "40%",
+          zIndex: 1000,
         }}
       >
         <Stack spacing={2} alignItems="center">

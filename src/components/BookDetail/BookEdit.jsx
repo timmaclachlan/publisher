@@ -153,7 +153,7 @@ const BookEdit = ({
                 />
               </Grid>
 
-              <Grid item md={3}>
+              <Grid item md={5}>
                 <InputLabel id="genre-label">Genre</InputLabel>
                 <Select
                   labelId="genre-label"
@@ -178,14 +178,17 @@ const BookEdit = ({
                     labelId="service-label"
                     onChange={valueChange}
                   >
+                    <MenuItem value="EPS">EPS</MenuItem>
                     <MenuItem value="EPPS">EPPS</MenuItem>
                     <MenuItem value="PPS">PPS</MenuItem>
-                    <MenuItem value="EPS">EPS</MenuItem>
+                    <MenuItem value="CPS">CPS</MenuItem>
+                    <MenuItem value="EPHPS">EPHPS</MenuItem>
+                    <MenuItem value="HPS">HPS</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
 
-              <Grid item md={3}>
+              <Grid item md={4}>
                 <DesktopDatePicker
                   label="Publication Date"
                   value={book.publicationdate}
@@ -194,87 +197,73 @@ const BookEdit = ({
                   renderInput={(params) => <TextField {...params} />}
                 />
               </Grid>
+
+              <Grid item md={4}>
+                <Stack spacing={2} direction="row">
+                  <TextField
+                    label="Author"
+                    name="royalty"
+                    variant="outlined"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">%</InputAdornment>
+                      ),
+                    }}
+                    value={book.royalty}
+                    onChange={valueChange}
+                  />
+                  <TextField
+                    label="Publisher"
+                    variant="outlined"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">%</InputAdornment>
+                      ),
+                    }}
+                    defaultValue={getRemainingPercentage(book.royalty)}
+                  />
+                </Stack>
+              </Grid>
             </Grid>
           </Grid>
 
           <Grid item md={3}>
             <Grid container spacing={2}>
               <Grid item md={12}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Royalties
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Stack spacing={2} direction="row">
-                      <TextField
-                        label="Author"
-                        name="royalty"
-                        variant="outlined"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">%</InputAdornment>
-                          ),
-                        }}
-                        value={book.royalty}
-                        onChange={valueChange}
-                      />
-                      <TextField
-                        label="Publisher"
-                        variant="outlined"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">%</InputAdornment>
-                          ),
-                        }}
-                        defaultValue={getRemainingPercentage(book.royalty)}
-                      />
-                    </Stack>
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
-
-              <Grid item md={12}>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    Options
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <FormGroup>
-                      <FormControlLabel
-                        label="Still Selling"
-                        labelPlacement="start"
-                        control={<Checkbox />}
-                        name="stillselling"
-                        checked={book.stillselling}
-                        onChange={checkedChange}
-                      />
-                      <FormControlLabel
-                        label="Terminated"
-                        labelPlacement="start"
-                        control={<Checkbox />}
-                        name="terminated"
-                        checked={book.terminated}
-                        onChange={checkedChange}
-                      />
-                      <FormControlLabel
-                        label="On Hold"
-                        labelPlacement="start"
-                        control={<Checkbox />}
-                        name="onhold"
-                        checked={book.onhold}
-                        onChange={checkedChange}
-                      />
-                      <FormControlLabel
-                        label="Mature Content"
-                        labelPlacement="start"
-                        control={<Checkbox />}
-                        name="maturecontent"
-                        checked={book.maturecontent}
-                        onChange={checkedChange}
-                      />
-                    </FormGroup>
-                  </AccordionDetails>
-                </Accordion>
+                <FormGroup>
+                  <FormControlLabel
+                    label="Still Selling"
+                    labelPlacement="start"
+                    control={<Checkbox />}
+                    name="stillselling"
+                    checked={book.stillselling}
+                    onChange={checkedChange}
+                  />
+                  <FormControlLabel
+                    label="Terminated"
+                    labelPlacement="start"
+                    control={<Checkbox />}
+                    name="terminated"
+                    checked={book.terminated}
+                    onChange={checkedChange}
+                  />
+                  <FormControlLabel
+                    label="On Hold"
+                    labelPlacement="start"
+                    control={<Checkbox />}
+                    name="onhold"
+                    checked={book.onhold}
+                    onChange={checkedChange}
+                  />
+                  <FormControlLabel
+                    label="Mature Content"
+                    labelPlacement="start"
+                    control={<Checkbox />}
+                    name="maturecontent"
+                    checked={book.maturecontent}
+                    onChange={checkedChange}
+                  />
+                </FormGroup>
               </Grid>
             </Grid>
           </Grid>
