@@ -2,13 +2,22 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import { Grid, Button, Typography, Stack } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Typography,
+  Stack,
+  Tooltip,
+  IconButton,
+} from "@mui/material";
 
 import LayersIcon from "@mui/icons-material/Layers";
 import EditIcon from "@mui/icons-material/Edit";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 
 const BookDetailHeader = ({
   createMode,
@@ -16,6 +25,8 @@ const BookDetailHeader = ({
   onUpdateEditMode,
   onSaveBook,
   onShowDeleteDialog,
+  isFavorite,
+  onFavoriteToggle,
 }) => {
   const navigate = useNavigate();
 
@@ -27,7 +38,19 @@ const BookDetailHeader = ({
             View Book
           </Typography>
         </Grid>
-        <Grid item md={4} />
+        <Grid item md={3} />
+        <Grid item md={1}>
+          <Tooltip title="Mark book as a favorite">
+            <IconButton
+              color="primary"
+              onClick={onFavoriteToggle}
+              sx={{ mt: -1 }}
+            >
+              {isFavorite && <FavoriteIcon fontSize="large" />}
+              {!isFavorite && <FavoriteBorder fontSize="large" />}
+            </IconButton>
+          </Tooltip>
+        </Grid>
         <Grid item md={2}>
           <Button
             variant="outlined"

@@ -11,6 +11,8 @@ import {
   CardContent,
   Stack,
   Skeleton,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
@@ -22,15 +24,21 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import LanguageIcon from "@mui/icons-material/Language";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 
 import ViewChip from "../ViewChip";
 import LoadingOverlay from "../LoadingOverlay";
 
 import { isEmptyObject } from "../../utils";
 
-const AuthorView = ({ author, onUpdateEditMode }) => {
+const AuthorView = ({
+  author,
+  onUpdateEditMode,
+  isFavorite,
+  onFavoriteToggle,
+}) => {
   const loading = isEmptyObject(author);
-
   const navigate = useNavigate();
 
   const displayField = (field, width, height) => {
@@ -55,7 +63,19 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
             View Author
           </Typography>
         </Grid>
-        <Grid item md={4} />
+        <Grid item md={3} />
+        <Grid item md={1}>
+          <Tooltip title="Mark author as a favorite">
+            <IconButton
+              color="primary"
+              onClick={onFavoriteToggle}
+              sx={{ mt: -1 }}
+            >
+              {isFavorite && <FavoriteIcon fontSize="large" />}
+              {!isFavorite && <FavoriteBorder fontSize="large" />}
+            </IconButton>
+          </Tooltip>
+        </Grid>
         <Grid item md={2}>
           <Button
             variant="outlined"
@@ -114,9 +134,9 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                       </Typography>
                     </Stack>
                     <Stack direction="row" spacing={1}>
-                      <LanguageIcon color="primary" />
+                      <LocationCityIcon color="primary" />
                       <Typography variant="subtitle1">
-                        {displayField(author.website, 150, 20)}
+                        {displayField(author.location, 150, 20)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -177,6 +197,15 @@ const AuthorView = ({ author, onUpdateEditMode }) => {
                         {displayField(author.phonenumber2, 150, 20)}
                       </Typography>
                     </Stack>
+                  </Stack>
+                </Grid>
+
+                <Grid item md={12}>
+                  <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                    <LanguageIcon color="primary" />
+                    <Typography variant="subtitle1">
+                      {displayField(author.website, 150, 20)}
+                    </Typography>
                   </Stack>
                 </Grid>
               </Grid>

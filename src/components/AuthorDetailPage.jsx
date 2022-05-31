@@ -22,7 +22,7 @@ import {
   deleteById,
   readByIdAll,
 } from "../fetcher";
-import { isEmptyObject } from "../utils";
+import { isEmptyObject, isFavorite, toggleFavorite } from "../utils";
 
 const AuthorDetail = ({ onRecordChange }) => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ const AuthorDetail = ({ onRecordChange }) => {
     message: "",
     autoHide: false,
   });
+  const [favorite, setFavorite] = useState(isFavorite(id));
 
   useEffect(() => {
     const retrieveAuthor = async () => {
@@ -134,6 +135,11 @@ const AuthorDetail = ({ onRecordChange }) => {
     }
   };
 
+  const favoriteToggle = () => {
+    toggleFavorite(id, "authors", author.realname);
+    setFavorite(!favorite);
+  };
+
   return (
     <>
       <Snackbar
@@ -159,7 +165,12 @@ const AuthorDetail = ({ onRecordChange }) => {
         <Grid container spacing={2}>
           <Grid item md={10}>
             {!editMode && !createMode && (
-              <AuthorView author={author} onUpdateEditMode={setEditMode} />
+              <AuthorView
+                author={author}
+                onUpdateEditMode={setEditMode}
+                onFavoriteToggle={favoriteToggle}
+                isFavorite={favorite}
+              />
             )}
 
             {(editMode || createMode) && (

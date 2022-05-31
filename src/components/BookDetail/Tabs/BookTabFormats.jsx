@@ -19,9 +19,12 @@ const EBOOK = 28;
 //const KUPAGESREAD = 64;
 
 const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
+  debugger;
   const getFormatData = (format) => {
     if (Array.isArray(formats)) {
-      let selectedFormats = formats.filter((item) => item.format === format);
+      let selectedFormats = formats.filter(
+        (item) => item.format === parseInt(format)
+      );
       if (selectedFormats.length > 0) {
         return selectedFormats[0];
       }

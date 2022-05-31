@@ -71,6 +71,7 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
             variant="outlined"
             size="small"
             width={80}
+            value={true}
           />
         );
       },

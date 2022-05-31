@@ -30,3 +30,31 @@ export const getFormattedCurrency = (amount) => {
 export const getRemainingPercentage = (amount) => {
   return 100 - amount;
 }
+
+export const toggleFavorite = (id, type, title) => {
+  let currentItems = getFavorites();
+  const index = getFavoriteIndex(id);
+  debugger;
+  if (index === -1) {
+    currentItems.push({ id, type, title });
+  }
+  else {
+    currentItems = currentItems.filter((value, i) => i !== index);
+  }
+  localStorage.setItem("favorites", JSON.stringify(currentItems.length > 0 ? currentItems : []));
+}
+
+const getFavoriteIndex = (id) => {
+  let currentItems = getFavorites();
+  const index = currentItems.findIndex(item => item.id === id);
+  return index;
+}
+
+export const isFavorite = (id) => {  
+  return getFavoriteIndex(id) > -1;
+}
+
+export const getFavorites = () => {
+  const items = localStorage.getItem("favorites") ? JSON.parse(localStorage.getItem("favorites")) : [];
+  return items;
+}

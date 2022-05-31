@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import {
   Grid,
-  Box,
   Snackbar,
   Alert as MuiAlert,
   Backdrop,
@@ -30,7 +29,12 @@ import {
   readAll,
   readByIdAll,
 } from "../fetcher";
-import { isEmptyObject } from "../utils";
+import {
+  isEmptyObject,
+  getFormattedDate,
+  isFavorite,
+  toggleFavorite,
+} from "../utils";
 
 const getSingleResult = (result) => {
   if (Array.isArray(result) && result.length > 0) {
@@ -71,6 +75,7 @@ const BookDetail = ({ onRecordChange }) => {
     autoHide: false,
   });
   const [currentTab, setCurrentTab] = useState(0);
+  const [favorite, setFavorite] = useState(isFavorite(id));
 
   const navigate = useNavigate();
 
@@ -80,7 +85,6 @@ const BookDetail = ({ onRecordChange }) => {
     if (newValue === TAB_FORMATS && isEmptyObject(formats)) {
       const retrieveFormats = async () => {
         let response = await readByIdAll("book", "format", id);
-        debugger;
         setFormats(response.result);
       };
       retrieveFormats();
@@ -224,6 +228,11 @@ const BookDetail = ({ onRecordChange }) => {
     }
   };
 
+  const favoriteToggle = () => {
+    toggleFavorite(id, "books", book.title);
+    setFavorite(!favorite);
+  };
+
   return (
     <>
       <Snackbar
@@ -245,70 +254,78 @@ const BookDetail = ({ onRecordChange }) => {
         </Backdrop>
       )}
 
-      <BookDetailHeader
-        createMode={createMode}
-        editMode={editMode}
-        onUpdateEditMode={setEditMode}
-        onSaveBook={saveBook}
-      />
-
-      <Box>
-        <Grid item md={12}>
-          <Tabs value={currentTab} onChange={handleTabChange}>
-            <Tab label="Book Details"></Tab>
-            <Tab label="Editorial"></Tab>
-            <Tab label="Design"></Tab>
-            <Tab label="Marketing"></Tab>
-            <Tab label="Formats"></Tab>
-          </Tabs>
-        </Grid>
-      </Box>
-
-      <TabPanel value={currentTab} index={0}>
-        {!editMode && !createMode && (
-          <BookView
-            book={book}
-            bookServices={bookServices}
+      <Grid container spacing={2}>
+        <Grid item md={10}>
+          <BookDetailHeader
+            createMode={createMode}
+            editMode={editMode}
             onUpdateEditMode={setEditMode}
-          />
-        )}
-
-        {(editMode || createMode) && (
-          <BookEdit
-            book={book}
-            authors={authors}
-            isNew={createMode}
-            onUpdateBook={updateBook}
-            onUpdateEditMode={setEditMode}
-            onDeleteBook={deleteBook}
             onSaveBook={saveBook}
-            getAuthors={getAuthors}
-            genres={genres}
+            onFavoriteToggle={favoriteToggle}
+            isFavorite={favorite}
           />
-        )}
-      </TabPanel>
+          <Grid container spacing={2}>
+            <Grid item md={12}>
+              <Tabs value={currentTab} onChange={handleTabChange}>
+                <Tab label="Book Details"></Tab>
+                <Tab label="Editorial"></Tab>
+                <Tab label="Design"></Tab>
+                <Tab label="Marketing"></Tab>
+                <Tab label="Formats"></Tab>
+              </Tabs>
+            </Grid>
 
-      <TabPanel value={currentTab} index={1}>
-        <BookTabEditorial book={book} editMode={editMode} />
-      </TabPanel>
+            <Grid item md={12}>
+              <TabPanel value={currentTab} index={0}>
+                {!editMode && !createMode && (
+                  <BookView
+                    book={book}
+                    bookServices={bookServices}
+                    onUpdateEditMode={setEditMode}
+                  />
+                )}
 
-      <TabPanel value={currentTab} index={2}>
-        <BookTabDesign book={book} editMode={editMode} />
-      </TabPanel>
+                {(editMode || createMode) && (
+                  <BookEdit
+                    book={book}
+                    authors={authors}
+                    isNew={createMode}
+                    onUpdateBook={updateBook}
+                    onUpdateEditMode={setEditMode}
+                    onDeleteBook={deleteBook}
+                    onSaveBook={saveBook}
+                    getAuthors={getAuthors}
+                    genres={genres}
+                  />
+                )}
+              </TabPanel>
 
-      <TabPanel value={currentTab} index={3}>
-        <Typography variant="h5">Marketing</Typography>
-      </TabPanel>
+              <TabPanel value={currentTab} index={1}>
+                <BookTabEditorial book={book} editMode={editMode} />
+              </TabPanel>
 
-      <TabPanel value={currentTab} index={TAB_FORMATS}>
-        <BookTabFormats
-          book={book}
-          editMode={editMode}
-          formats={formats}
-          onChange={onChangeFormats}
-          onEnableChange={onEnableChangeFormats}
-        />
-      </TabPanel>
+              <TabPanel value={currentTab} index={2}>
+                <BookTabDesign book={book} editMode={editMode} />
+              </TabPanel>
+
+              <TabPanel value={currentTab} index={3}>
+                <Typography variant="h5">Marketing</Typography>
+              </TabPanel>
+
+              <TabPanel value={currentTab} index={TAB_FORMATS}>
+                <BookTabFormats
+                  book={book}
+                  editMode={editMode}
+                  formats={formats}
+                  onChange={onChangeFormats}
+                  onEnableChange={onEnableChangeFormats}
+                />
+              </TabPanel>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={2}></Grid>
+      </Grid>
     </>
   );
 };
