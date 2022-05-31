@@ -29,12 +29,7 @@ import {
   readAll,
   readByIdAll,
 } from "../fetcher";
-import {
-  isEmptyObject,
-  getFormattedDate,
-  isFavorite,
-  toggleFavorite,
-} from "../utils";
+import { isEmptyObject, isFavorite, toggleFavorite } from "../utils";
 
 const getSingleResult = (result) => {
   if (Array.isArray(result) && result.length > 0) {
@@ -55,7 +50,12 @@ const blankFormat = (bookid, format) => {
     isbn: "",
     width: 0,
     height: 0,
-    pageCount: 0,
+    pagecount: 0,
+    estpagecount: 0,
+    unitcost: 0,
+    estunitcost: 0,
+    paperstock: "",
+    coverlaminate: "",
   };
 };
 

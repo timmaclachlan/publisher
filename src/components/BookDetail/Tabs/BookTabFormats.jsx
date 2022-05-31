@@ -1,4 +1,5 @@
 import React from "react";
+import Barcode from "react-barcode";
 
 import {
   Typography,
@@ -10,15 +11,16 @@ import {
   Divider,
   Checkbox,
   TextField,
+  Box,
 } from "@mui/material";
 
 import LoadingOverlay from "../../LoadingOverlay";
 
-import { isEmptyObject } from "../../../utils";
+import { isEmptyObject, getFormattedCurrency } from "../../../utils";
 
 const PAPERBACK = 1;
 const HARDBACK = 2;
-const EBOOK = 28;
+const EBOOK = 3;
 //const EBOOKNA = 32;
 //const KUPAGESREAD = 64;
 
@@ -91,100 +93,156 @@ const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
     return renderFormatDetail(detail);
   };
 
+  const CardTop = (props) => {
+    return (
+      <Box sx={{ backgroundColor: "primary.main" }}>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="h6" color="white" sx={{ pl: 1 }}>
+            {props.title}
+          </Typography>
+          <Typography variant="h6" color="white">
+            {getFormattedCurrency(getFormatDetails(props.format, "price"))}
+          </Typography>
+
+          <Typography variant="h6" color="white">
+            {getFormatDetails(props.format, "isbn")}
+          </Typography>
+
+          <Typography variant="h6" color="white" sx={{ pr: 1 }}>
+            Ingram Spark
+          </Typography>
+        </Stack>
+      </Box>
+    );
+  };
+
+  const renderFormatCard = (format, formatDisplay) => {
+    return (
+      <>
+        <Grid item md={10}>
+          <Card>
+            <CardHeader
+              sx={{ p: 0, m: 0 }}
+              subheader={<CardTop format={format} title={formatDisplay} />}
+            ></CardHeader>
+            <CardContent>
+              <Stack spacing={2}>
+                <Stack direction="row" spacing={1}>
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Width
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "width")}
+                    </Typography>
+                  </Stack>
+                  <Divider orientation="vertical" flexItem />
+
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Height
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "height")}
+                    </Typography>
+                  </Stack>
+                  <Divider orientation="vertical" flexItem />
+
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Est. Page Count
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "estpagecount")}
+                    </Typography>
+                  </Stack>
+
+                  <Divider orientation="vertical" flexItem />
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Act. Page Count
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "pagecount")}
+                    </Typography>
+                  </Stack>
+                </Stack>
+
+                <Stack direction="row" spacing={1}>
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Est. Unit Cost
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "estunitcost")}
+                    </Typography>
+                  </Stack>
+
+                  <Divider orientation="vertical" flexItem />
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Act. Unit Cost
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "unitcost")}
+                    </Typography>
+                  </Stack>
+
+                  <Divider orientation="vertical" flexItem />
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Paper Stock
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "paperstock")}
+                    </Typography>
+                  </Stack>
+
+                  <Divider orientation="vertical" flexItem />
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Cover Laminate
+                    </Typography>
+
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(format, "coverlaminate")}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={2}>
+          <Box sx={{ pt: 5 }}>
+            <Barcode
+              value={getFormatDetails(format, "isbn")}
+              height={50}
+              width={1}
+            />
+          </Box>
+        </Grid>
+      </>
+    );
+  };
+
   const renderControls = () => {
     if (!editMode) {
       return (
         <>
           {loading && <LoadingOverlay />}
           <Grid container spacing={2}>
-            <Grid item md={12}>
-              <Card>
-                <CardHeader subheader="Formats"></CardHeader>
-                <CardContent>
-                  <Stack spacing={2}>
-                    <Stack direction="row" spacing={1}>
-                      <Stack sx={{ flex: 0.25 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Format
-                        </Typography>
-                        {renderFormatDetail("Paperback")}
-                        {renderFormatDetail("Hardback")}
-                        {renderFormatDetail("E-Book")}
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.25 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Price
-                        </Typography>
-                        {renderFormatFieldDetail(PAPERBACK, "price")}
-                        {renderFormatFieldDetail(HARDBACK, "price")}
-                        {renderFormatFieldDetail(EBOOK, "price")}
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.75 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Isbn
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(PAPERBACK, "isbn")}
-                          {renderFormatFieldDetail(HARDBACK, "isbn")}
-                          {renderFormatFieldDetail(EBOOK, "isbn")}
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Distributor
-                        </Typography>
-
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatDetail("Ingram Spark")}
-                          {renderFormatDetail("Ingram Spark")}
-                          {renderFormatDetail("Ingram Spark")}
-                        </Typography>
-                      </Stack>
-
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Width
-                        </Typography>
-
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(PAPERBACK, "width")}
-                          {renderFormatFieldDetail(HARDBACK, "width")}
-                          {renderFormatFieldDetail(EBOOK, "width")}
-                        </Typography>
-                      </Stack>
-
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Height
-                        </Typography>
-
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(PAPERBACK, "height")}
-                          {renderFormatFieldDetail(HARDBACK, "height")}
-                          {renderFormatFieldDetail(EBOOK, "height")}
-                        </Typography>
-                      </Stack>
-
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Page Count
-                        </Typography>
-
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(PAPERBACK, "pagecount")}
-                          {renderFormatFieldDetail(HARDBACK, "pagecount")}
-                          {renderFormatFieldDetail(EBOOK, "pagecount")}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
+            {paperbackEnabled && renderFormatCard(PAPERBACK, "Paperback")}
+            {hardbackEnabled && renderFormatCard(HARDBACK, "Hardback")}
+            {ebookEnabled && renderFormatCard(EBOOK, "E-Book")}
           </Grid>
         </>
       );
