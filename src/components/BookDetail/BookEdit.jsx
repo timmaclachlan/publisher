@@ -10,9 +10,6 @@ import {
   FormControl,
   Checkbox,
   FormControlLabel,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   InputAdornment,
   FormGroup,
   Switch,
@@ -24,7 +21,6 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CancelIcon from "@mui/icons-material/Cancel";
 import WarningIcon from "@mui/icons-material/Warning";
 

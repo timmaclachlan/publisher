@@ -1,6 +1,14 @@
 import React from "react";
 
-import { Card, CardHeader, CardContent, Stack, Grid } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Stack,
+  Grid,
+  Box,
+  Typography,
+} from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
 import LayersIcon from "@mui/icons-material/Layers";
@@ -30,13 +38,25 @@ const Dashboard = () => {
     return "No favorites";
   };
 
+  const CardTop = () => {
+    return (
+      <Box sx={{ backgroundColor: "primary.main" }}>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="h6" color="white" sx={{ pl: 1 }}>
+            Quick Access
+          </Typography>
+        </Stack>
+      </Box>
+    );
+  };
+
   return (
     <>
       <div>
         <Grid container>
           <Grid item md={3}>
             <Card>
-              <CardHeader subheader="Quick Access" />
+              <CardHeader sx={{ p: 0, m: 0 }} subheader={<CardTop />} />
               <CardContent>{renderFavorites()}</CardContent>
             </Card>
           </Grid>

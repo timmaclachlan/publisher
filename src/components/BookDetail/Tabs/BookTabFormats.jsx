@@ -24,6 +24,37 @@ const EBOOK = 3;
 //const EBOOKNA = 32;
 //const KUPAGESREAD = 64;
 
+const FIELD_WIDTH = "width";
+const FIELD_HEIGHT = "height";
+const FIELD_PAGECOUNT = "pagecount";
+const FIELD_ESTPAGECOUNT = "estpagecount";
+const FIELD_UNITCOST = "unitcost";
+const FIELD_ESTUNITCOST = "estunitcost";
+const FIELD_PAPERSTOCK = "paperstock";
+const FIELD_COVERLAMINATE = "coverlaminate";
+
+const EBOOK_FIELDS = [FIELD_PAGECOUNT, FIELD_ESTPAGECOUNT];
+const PAPERBACK_FIELDS = [
+  FIELD_WIDTH,
+  FIELD_HEIGHT,
+  FIELD_PAGECOUNT,
+  FIELD_ESTPAGECOUNT,
+  FIELD_UNITCOST,
+  FIELD_ESTUNITCOST,
+  FIELD_PAPERSTOCK,
+  FIELD_COVERLAMINATE,
+];
+const HARDBACK_FIELDS = [
+  FIELD_WIDTH,
+  FIELD_HEIGHT,
+  FIELD_PAGECOUNT,
+  FIELD_ESTPAGECOUNT,
+  FIELD_UNITCOST,
+  FIELD_ESTUNITCOST,
+  FIELD_PAPERSTOCK,
+  FIELD_COVERLAMINATE,
+];
+
 const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
   const loading = isEmptyObject(formats);
 
@@ -93,6 +124,18 @@ const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
     return renderFormatDetail(detail);
   };
 
+  const getFormatFields = (format) => {
+    switch (format) {
+      case PAPERBACK:
+        return PAPERBACK_FIELDS;
+      case HARDBACK:
+        return HARDBACK_FIELDS;
+      case EBOOK:
+        return EBOOK_FIELDS;
+      default:
+    }
+  };
+
   const CardTop = (props) => {
     return (
       <Box sx={{ backgroundColor: "primary.main" }}>
@@ -117,6 +160,12 @@ const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
   };
 
   const renderFormatCard = (format, formatDisplay) => {
+    const fields = getFormatFields(format);
+
+    const isInFields = (field) => {
+      return fields.includes(field);
+    };
+
     return (
       <>
         <Grid item md={10}>
@@ -128,93 +177,121 @@ const BookTabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
             <CardContent>
               <Stack spacing={2}>
                 <Stack direction="row" spacing={1}>
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Width
-                    </Typography>
+                  {isInFields(FIELD_WIDTH) && (
+                    <>
+                      <Stack sx={{ flex: 0.5 }}>
+                        <Typography variant="subtitle2" align="center">
+                          Width
+                        </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "width")}
-                    </Typography>
-                  </Stack>
-                  <Divider orientation="vertical" flexItem />
+                        <Typography variant="subtitle1" align="center">
+                          {renderFormatFieldDetail(format, "width")}
+                        </Typography>
+                      </Stack>
+                      <Divider orientation="vertical" flexItem />
+                    </>
+                  )}
 
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Height
-                    </Typography>
+                  {isInFields(FIELD_HEIGHT) && (
+                    <>
+                      <Stack sx={{ flex: 0.5 }}>
+                        <Typography variant="subtitle2" align="center">
+                          Height
+                        </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "height")}
-                    </Typography>
-                  </Stack>
-                  <Divider orientation="vertical" flexItem />
+                        <Typography variant="subtitle1" align="center">
+                          {renderFormatFieldDetail(format, "height")}
+                        </Typography>
+                      </Stack>
+                      <Divider orientation="vertical" flexItem />
+                    </>
+                  )}
 
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Est. Page Count
-                    </Typography>
+                  {isInFields(FIELD_ESTPAGECOUNT) && (
+                    <>
+                      <Stack sx={{ flex: 0.5 }}>
+                        <Typography variant="subtitle2" align="center">
+                          Est. Page Count
+                        </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "estpagecount")}
-                    </Typography>
-                  </Stack>
+                        <Typography variant="subtitle1" align="center">
+                          {renderFormatFieldDetail(format, "estpagecount")}
+                        </Typography>
+                      </Stack>
+                      <Divider orientation="vertical" flexItem />
+                    </>
+                  )}
 
-                  <Divider orientation="vertical" flexItem />
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Act. Page Count
-                    </Typography>
+                  {isInFields(FIELD_PAGECOUNT) && (
+                    <Stack sx={{ flex: 0.5 }}>
+                      <Typography variant="subtitle2" align="center">
+                        Act. Page Count
+                      </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "pagecount")}
-                    </Typography>
-                  </Stack>
+                      <Typography variant="subtitle1" align="center">
+                        {renderFormatFieldDetail(format, "pagecount")}
+                      </Typography>
+                    </Stack>
+                  )}
                 </Stack>
 
                 <Stack direction="row" spacing={1}>
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Est. Unit Cost
-                    </Typography>
+                  {isInFields(FIELD_ESTUNITCOST) && (
+                    <>
+                      <Stack sx={{ flex: 0.5 }}>
+                        <Typography variant="subtitle2" align="center">
+                          Est. Unit Cost
+                        </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "estunitcost")}
-                    </Typography>
-                  </Stack>
+                        <Typography variant="subtitle1" align="center">
+                          {renderFormatFieldDetail(format, "estunitcost")}
+                        </Typography>
+                      </Stack>
+                      <Divider orientation="vertical" flexItem />
+                    </>
+                  )}
 
-                  <Divider orientation="vertical" flexItem />
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Act. Unit Cost
-                    </Typography>
+                  {isInFields(FIELD_UNITCOST) && (
+                    <>
+                      <Stack sx={{ flex: 0.5 }}>
+                        <Typography variant="subtitle2" align="center">
+                          Act. Unit Cost
+                        </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "unitcost")}
-                    </Typography>
-                  </Stack>
+                        <Typography variant="subtitle1" align="center">
+                          {renderFormatFieldDetail(format, "unitcost")}
+                        </Typography>
+                      </Stack>
+                      <Divider orientation="vertical" flexItem />
+                    </>
+                  )}
 
-                  <Divider orientation="vertical" flexItem />
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Paper Stock
-                    </Typography>
+                  {isInFields(FIELD_PAPERSTOCK) && (
+                    <>
+                      <Stack sx={{ flex: 0.5 }}>
+                        <Typography variant="subtitle2" align="center">
+                          Paper Stock
+                        </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "paperstock")}
-                    </Typography>
-                  </Stack>
+                        <Typography variant="subtitle1" align="center">
+                          {renderFormatFieldDetail(format, "paperstock")}
+                        </Typography>
+                      </Stack>
+                      <Divider orientation="vertical" flexItem />
+                    </>
+                  )}
 
-                  <Divider orientation="vertical" flexItem />
-                  <Stack sx={{ flex: 0.5 }}>
-                    <Typography variant="subtitle2" align="center">
-                      Cover Laminate
-                    </Typography>
+                  {isInFields(FIELD_COVERLAMINATE) && (
+                    <Stack sx={{ flex: 0.5 }}>
+                      <Typography variant="subtitle2" align="center">
+                        Cover Laminate
+                      </Typography>
 
-                    <Typography variant="subtitle1" align="center">
-                      {renderFormatFieldDetail(format, "coverlaminate")}
-                    </Typography>
-                  </Stack>
+                      <Typography variant="subtitle1" align="center">
+                        {renderFormatFieldDetail(format, "coverlaminate")}
+                      </Typography>
+                    </Stack>
+                  )}
                 </Stack>
               </Stack>
             </CardContent>
