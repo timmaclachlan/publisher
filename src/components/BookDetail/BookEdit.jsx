@@ -4,7 +4,6 @@ import {
   Grid,
   TextField,
   Select,
-  Button,
   MenuItem,
   InputLabel,
   FormControl,
@@ -13,16 +12,8 @@ import {
   InputAdornment,
   FormGroup,
   Switch,
-  Typography,
   Stack,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@mui/material";
-
-import CancelIcon from "@mui/icons-material/Cancel";
-import WarningIcon from "@mui/icons-material/Warning";
 
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
@@ -30,20 +21,7 @@ import AutoSuggest from "../AutoSuggest";
 
 import { getRemainingPercentage } from "../../utils";
 
-const BookEdit = ({
-  book,
-  authors,
-  isNew,
-  onUpdateBook,
-  onUpdateEditMode,
-  onDeleteBook,
-  onSaveBook,
-  getAuthors,
-  genres,
-}) => {
-  const [showDeleteConfirmation, setShowDeleteConfirmation] =
-    React.useState(false);
-
+const BookEdit = ({ book, authors, onUpdateBook, getAuthors, genres }) => {
   const handleChange = (name, value) => {
     if (onUpdateBook) {
       onUpdateBook(name, value);
@@ -65,15 +43,6 @@ const BookEdit = ({
     handleChange(name, value);
   };
 
-  const handleCloseDeleteConfirmation = () => setShowDeleteConfirmation(false);
-
-  const handleConfirmDelete = () => {
-    setShowDeleteConfirmation(false);
-    if (onDeleteBook) {
-      onDeleteBook();
-    }
-  };
-
   const renderGenres = () => {
     if (genres) {
       return genres.map((genre) => {
@@ -84,35 +53,6 @@ const BookEdit = ({
 
   return (
     <>
-      <Dialog
-        open={showDeleteConfirmation}
-        onClose={handleCloseDeleteConfirmation}
-      >
-        <DialogTitle>Warning</DialogTitle>
-        <DialogContent>
-          <Typography variant="h6">
-            Are you sure you wish to delete this book?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleConfirmDelete}
-            startIcon={<WarningIcon />}
-          >
-            Yes
-          </Button>
-          <Button
-            variant="outlined"
-            autoFocus
-            onClick={() => setShowDeleteConfirmation(false)}
-            startIcon={<CancelIcon />}
-          >
-            No
-          </Button>
-        </DialogActions>
-      </Dialog>
       <form>
         <Grid container spacing={2}>
           <Grid item md={9}>

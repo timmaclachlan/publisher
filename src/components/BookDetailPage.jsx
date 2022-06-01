@@ -10,12 +10,20 @@ import {
   Tabs,
   Tab,
   Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
+
+import CancelIcon from "@mui/icons-material/Cancel";
+import WarningIcon from "@mui/icons-material/Warning";
 
 import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
 import BookTabEditorial from "./BookDetail/Tabs/BookTabEditorial";
-import BookTabFormats from "./BookDetail/Tabs/BookTabFormats";
+import TabFormats from "./BookDetail/Tabs/Formats/TabFormats";
 import BookTabDesign from "./BookDetail/Tabs/BookTabDesign";
 import TabPanel from "./TabPanel";
 
@@ -76,6 +84,8 @@ const BookDetail = ({ onRecordChange }) => {
   });
   const [currentTab, setCurrentTab] = useState(0);
   const [favorite, setFavorite] = useState(isFavorite(id));
+  const [showDeleteConfirmation, setShowDeleteConfirmation] =
+    React.useState(false);
 
   const navigate = useNavigate();
 
@@ -217,6 +227,12 @@ const BookDetail = ({ onRecordChange }) => {
     }));
   };
 
+  const handleCloseDeleteConfirmation = () => setShowDeleteConfirmation(false);
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={20} ref={ref} variant="filled" {...props} />;
   });
@@ -235,6 +251,35 @@ const BookDetail = ({ onRecordChange }) => {
 
   return (
     <>
+      <Dialog
+        open={showDeleteConfirmation}
+        onClose={handleCloseDeleteConfirmation}
+      >
+        <DialogTitle>Warning</DialogTitle>
+        <DialogContent>
+          <Typography variant="h6">
+            Are you sure you wish to delete this book?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleConfirmDelete}
+            startIcon={<WarningIcon />}
+          >
+            Yes
+          </Button>
+          <Button
+            variant="outlined"
+            autoFocus
+            onClick={() => setShowDeleteConfirmation(false)}
+            startIcon={<CancelIcon />}
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Snackbar
         open={notification.show}
         autoHideDuration={notification.autoHide ? 5000 : null}
@@ -263,6 +308,7 @@ const BookDetail = ({ onRecordChange }) => {
             onSaveBook={saveBook}
             onFavoriteToggle={favoriteToggle}
             isFavorite={favorite}
+            onShowDeleteDialog={() => setShowDeleteConfirmation(true)}
           />
           <Grid container spacing={2}>
             <Grid item md={12}>
@@ -313,7 +359,7 @@ const BookDetail = ({ onRecordChange }) => {
               </TabPanel>
 
               <TabPanel value={currentTab} index={TAB_FORMATS}>
-                <BookTabFormats
+                <TabFormats
                   book={book}
                   editMode={editMode}
                   formats={formats}
