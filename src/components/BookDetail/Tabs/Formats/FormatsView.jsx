@@ -19,6 +19,8 @@ import {
   PAPERBACK,
   HARDBACK,
   EBOOK,
+  FIELD_PRICE,
+  FIELD_ISBN,
   FIELD_WIDTH,
   FIELD_HEIGHT,
   FIELD_PAGECOUNT,
@@ -27,10 +29,13 @@ import {
   FIELD_ESTUNITCOST,
   FIELD_PAPERSTOCK,
   FIELD_COVERLAMINATE,
+  FIELD_DISTRIBUTOR,
   getFormatDetails,
-  getFormatFields,
   getFormatEnabled,
   renderFormatFieldDetail,
+  getDistributorDisplayLabel,
+  getPaperStockDisplayLabel,
+  getCoverLaminateDisplayLabel,
 } from "./FormatsHelper";
 
 const FormatsView = ({ formats }) => {
@@ -47,16 +52,18 @@ const FormatsView = ({ formats }) => {
           </Typography>
           <Typography variant="h6" color="white">
             {getFormattedCurrency(
-              getFormatDetails(formats, props.format, "price")
+              getFormatDetails(formats, props.format, FIELD_PRICE)
             )}
           </Typography>
 
           <Typography variant="h6" color="white">
-            {getFormatDetails(formats, props.format, "isbn")}
+            {getFormatDetails(formats, props.format, FIELD_ISBN)}
           </Typography>
 
           <Typography variant="h6" color="white" sx={{ pr: 1 }}>
-            Ingram Spark
+            {getDistributorDisplayLabel(
+              getFormatDetails(formats, props.format, FIELD_DISTRIBUTOR)
+            )}
           </Typography>
         </Stack>
       </Box>
@@ -64,12 +71,6 @@ const FormatsView = ({ formats }) => {
   };
 
   const renderFormatCard = (format, formatDisplay) => {
-    const fields = getFormatFields(format);
-
-    const isInFields = (field) => {
-      return fields.includes(field);
-    };
-
     return (
       <>
         <Grid item md={10}>
@@ -81,138 +82,116 @@ const FormatsView = ({ formats }) => {
             <CardContent>
               <Stack spacing={2}>
                 <Stack direction="row" spacing={1}>
-                  {isInFields(FIELD_WIDTH) && (
-                    <>
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Width
-                        </Typography>
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Width
+                    </Typography>
 
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(format, "width")}
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                    </>
-                  )}
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(formats, format, FIELD_WIDTH)}
+                    </Typography>
+                  </Stack>
+                  <Divider orientation="vertical" flexItem />
 
-                  {isInFields(FIELD_HEIGHT) && (
-                    <>
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Height
-                        </Typography>
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Height
+                    </Typography>
 
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(formats, format, "height")}
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                    </>
-                  )}
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(formats, format, FIELD_HEIGHT)}
+                    </Typography>
+                  </Stack>
+                  <Divider orientation="vertical" flexItem />
 
-                  {isInFields(FIELD_ESTPAGECOUNT) && (
-                    <>
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Est. Page Count
-                        </Typography>
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Est. Page Count
+                    </Typography>
 
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(
-                            formats,
-                            format,
-                            "estpagecount"
-                          )}
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                    </>
-                  )}
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(
+                        formats,
+                        format,
+                        FIELD_ESTPAGECOUNT
+                      )}
+                    </Typography>
+                  </Stack>
+                  <Divider orientation="vertical" flexItem />
 
-                  {isInFields(FIELD_PAGECOUNT) && (
-                    <Stack sx={{ flex: 0.5 }}>
-                      <Typography variant="subtitle2" align="center">
-                        Act. Page Count
-                      </Typography>
+                  <Stack sx={{ flex: 0.5 }}>
+                    <Typography variant="subtitle2" align="center">
+                      Act. Page Count
+                    </Typography>
 
-                      <Typography variant="subtitle1" align="center">
-                        {renderFormatFieldDetail(formats, format, "pagecount")}
-                      </Typography>
-                    </Stack>
-                  )}
+                    <Typography variant="subtitle1" align="center">
+                      {renderFormatFieldDetail(
+                        formats,
+                        format,
+                        FIELD_PAGECOUNT
+                      )}
+                    </Typography>
+                  </Stack>
                 </Stack>
 
-                <Stack direction="row" spacing={1}>
-                  {isInFields(FIELD_ESTUNITCOST) && (
-                    <>
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Est. Unit Cost
-                        </Typography>
-
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(
-                            formats,
-                            format,
-                            "estunitcost"
-                          )}
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                    </>
-                  )}
-
-                  {isInFields(FIELD_UNITCOST) && (
-                    <>
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Act. Unit Cost
-                        </Typography>
-
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(formats, format, "unitcost")}
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                    </>
-                  )}
-
-                  {isInFields(FIELD_PAPERSTOCK) && (
-                    <>
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Paper Stock
-                        </Typography>
-
-                        <Typography variant="subtitle1" align="center">
-                          {renderFormatFieldDetail(
-                            formats,
-                            format,
-                            "paperstock"
-                          )}
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                    </>
-                  )}
-
-                  {isInFields(FIELD_COVERLAMINATE) && (
+                {format !== EBOOK && (
+                  <Stack direction="row" spacing={1}>
                     <Stack sx={{ flex: 0.5 }}>
                       <Typography variant="subtitle2" align="center">
-                        Cover Laminate
+                        Est. Unit Cost
                       </Typography>
 
                       <Typography variant="subtitle1" align="center">
                         {renderFormatFieldDetail(
                           formats,
                           format,
-                          "coverlaminate"
+                          FIELD_ESTUNITCOST
                         )}
                       </Typography>
                     </Stack>
-                  )}
-                </Stack>
+                    <Divider orientation="vertical" flexItem />
+
+                    <Stack sx={{ flex: 0.5 }}>
+                      <Typography variant="subtitle2" align="center">
+                        Act. Unit Cost
+                      </Typography>
+
+                      <Typography variant="subtitle1" align="center">
+                        {renderFormatFieldDetail(
+                          formats,
+                          format,
+                          FIELD_UNITCOST
+                        )}
+                      </Typography>
+                    </Stack>
+                    <Divider orientation="vertical" flexItem />
+
+                    <Stack sx={{ flex: 0.5 }}>
+                      <Typography variant="subtitle2" align="center">
+                        Paper Stock
+                      </Typography>
+
+                      <Typography variant="subtitle1" align="center">
+                        {getPaperStockDisplayLabel(
+                          getFormatDetails(formats, format, FIELD_PAPERSTOCK)
+                        )}
+                      </Typography>
+                    </Stack>
+                    <Divider orientation="vertical" flexItem />
+
+                    <Stack sx={{ flex: 0.5 }}>
+                      <Typography variant="subtitle2" align="center">
+                        Cover Laminate
+                      </Typography>
+
+                      <Typography variant="subtitle1" align="center">
+                        {getCoverLaminateDisplayLabel(
+                          getFormatDetails(formats, format, FIELD_COVERLAMINATE)
+                        )}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                )}
               </Stack>
             </CardContent>
           </Card>
@@ -221,7 +200,7 @@ const FormatsView = ({ formats }) => {
         <Grid item md={2}>
           <Box sx={{ pt: 5 }}>
             <Barcode
-              value={getFormatDetails(formats, format, "isbn")}
+              value={getFormatDetails(formats, format, FIELD_ISBN)}
               height={50}
               width={1}
             />

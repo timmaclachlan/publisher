@@ -25,7 +25,7 @@ const Dashboard = () => {
         <Stack>
           {favorites.map((item, index) => (
             <div>
-              <Stack direction="row" spacing={1}>
+              <Stack key={index} direction="row" spacing={1}>
                 {item.type === "authors" && <PersonIcon color="primary" />}
                 {item.type === "books" && <LayersIcon color="primary" />}
                 <Link field="title" data={item} rootType={item.type} />

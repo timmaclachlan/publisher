@@ -3,22 +3,34 @@ import React from "react";
 import {
   Typography,
   Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Stack,
-  Divider,
   Checkbox,
   TextField,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 
 import {
   PAPERBACK,
   HARDBACK,
   EBOOK,
+  FIELD_COVERLAMINATE,
+  FIELD_PAGECOUNT,
+  FIELD_WIDTH,
+  FIELD_HEIGHT,
+  FIELD_UNITCOST,
+  FIELD_ESTUNITCOST,
+  FIELD_PAPERSTOCK,
+  FIELD_ESTPAGECOUNT,
+  FIELD_PRICE,
+  FIELD_ISBN,
+  FIELD_DISTRIBUTOR,
   getFormatEnabled,
   getFormatDetails,
-  renderFormatDetail,
+  getDistributorPairs,
+  getPaperStockPairs,
+  getCoverLaminiatePairs,
 } from "./FormatsHelper";
 
 const FormatsEdit = ({
@@ -32,193 +44,231 @@ const FormatsEdit = ({
   let hardbackEnabled = getFormatEnabled(formats, HARDBACK);
   let ebookEnabled = getFormatEnabled(formats, EBOOK);
 
+  const distributorPairs = getDistributorPairs();
+  const distributorValues = Object.keys(distributorPairs);
+  const paperstockPairs = getPaperStockPairs();
+  const paperstockValues = Object.keys(paperstockPairs);
+  const coverlaminatePairs = getCoverLaminiatePairs();
+  const coverlaminateValues = Object.keys(coverlaminatePairs);
+
+  const renderFormat = (format, formatDisplay, enabledFlag, onChecked) => {
+    const renderPair = (pair, pairDisplay) => {
+      return pair.map((value, index) => {
+        return (
+          <MenuItem key={value} value={value}>
+            {pairDisplay[value]}
+          </MenuItem>
+        );
+      });
+    };
+
+    return (
+      <>
+        <Grid item md={12}></Grid>
+
+        {/* Row 1 */}
+        <Grid item md={1}>
+          <Checkbox
+            checked={enabledFlag}
+            sx={{ ml: 4, mt: -0.5 }}
+            onChange={onChecked}
+          />
+        </Grid>
+
+        <Grid item md={2}>
+          <Typography variant="h6" align="start">
+            {formatDisplay}
+          </Typography>
+        </Grid>
+
+        <Grid item md={2}>
+          <TextField
+            variant="outlined"
+            disabled={!enabledFlag}
+            label="Price"
+            value={getFormatDetails(formats, format, FIELD_PRICE)}
+            onChange={(ev, format, field) => onChange(ev, format, FIELD_PRICE)}
+          />
+        </Grid>
+
+        <Grid item md={3}>
+          <TextField
+            variant="outlined"
+            label="Isbn"
+            disabled={!enabledFlag}
+            value={getFormatDetails(formats, format, FIELD_ISBN)}
+            onChange={(ev) => onChange(ev, format, FIELD_ISBN)}
+          />
+        </Grid>
+
+        <Grid item md={4}>
+          <FormControl fullWidth>
+            <InputLabel id="distributor">Distributor</InputLabel>
+            <Select
+              labelId="distributor"
+              label="Distributor"
+              disabled={!enabledFlag}
+              value={getFormatDetails(formats, format, FIELD_DISTRIBUTOR)}
+              onChange={(ev) => onChange(ev, format, FIELD_DISTRIBUTOR)}
+            >
+              <MenuItem value="">
+                <em>[Not Set]</em>
+              </MenuItem>
+              {renderPair(distributorValues, distributorPairs)}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        {/* Row 2 */}
+        <Grid item md={3}></Grid>
+
+        <Grid item md={2.5}>
+          <TextField
+            variant="outlined"
+            disabled={!enabledFlag}
+            label="Est. Page Count"
+            value={getFormatDetails(formats, format, FIELD_ESTPAGECOUNT)}
+            onChange={(ev) => onChange(ev, format, FIELD_ESTPAGECOUNT)}
+          ></TextField>
+        </Grid>
+
+        {format !== EBOOK && (
+          <Grid item md={2}>
+            <TextField
+              variant="outlined"
+              disabled={!enabledFlag}
+              label="Est. Unit Cost"
+              value={getFormatDetails(formats, format, FIELD_ESTUNITCOST)}
+              onChange={(ev) => onChange(ev, format, FIELD_ESTUNITCOST)}
+            ></TextField>
+          </Grid>
+        )}
+
+        <Grid item md={1.5}>
+          <TextField
+            variant="outlined"
+            disabled={!enabledFlag}
+            label="Width"
+            value={getFormatDetails(formats, format, FIELD_WIDTH)}
+            onChange={(ev) => onChange(ev, format, FIELD_WIDTH)}
+          ></TextField>
+        </Grid>
+        {format === EBOOK && (
+          <>
+            <Grid item md={1.5}>
+              <TextField
+                variant="outlined"
+                disabled={!enabledFlag}
+                label="Height"
+                value={getFormatDetails(formats, format, FIELD_HEIGHT)}
+                onChange={(ev) => onChange(ev, format, FIELD_HEIGHT)}
+              ></TextField>
+            </Grid>
+            <Grid item md={2.5}>
+              <TextField
+                variant="outlined"
+                disabled={!enabledFlag}
+                label="Act. Page Count"
+                value={getFormatDetails(formats, format, FIELD_PAGECOUNT)}
+                onChange={(ev) => onChange(ev, format, FIELD_PAGECOUNT)}
+              ></TextField>
+            </Grid>
+          </>
+        )}
+
+        {format !== EBOOK && (
+          <Grid item md={3}>
+            <FormControl fullWidth>
+              <InputLabel id="paperstock">Paper Stock</InputLabel>
+              <Select
+                labelId="paperstock"
+                label="Paper Stock"
+                disabled={!enabledFlag}
+                value={getFormatDetails(formats, format, FIELD_PAPERSTOCK)}
+                onChange={(ev) => onChange(ev, format, FIELD_PAPERSTOCK)}
+              >
+                <MenuItem value="">
+                  <em>[Not Set]</em>
+                </MenuItem>
+                {renderPair(paperstockValues, paperstockPairs)}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+
+        {/* Row 3 */}
+
+        <Grid item md={3}></Grid>
+
+        {format !== EBOOK && (
+          <>
+            <Grid item md={2.5}>
+              <TextField
+                variant="outlined"
+                disabled={!enabledFlag}
+                label="Act. Page Count"
+                value={getFormatDetails(formats, format, FIELD_PAGECOUNT)}
+                onChange={(ev) => onChange(ev, format, FIELD_PAGECOUNT)}
+              ></TextField>
+            </Grid>
+
+            <Grid item md={2}>
+              <TextField
+                variant="outlined"
+                disabled={!enabledFlag}
+                label="Act. Unit Cost"
+                value={getFormatDetails(formats, format, FIELD_UNITCOST)}
+                onChange={(ev) => onChange(ev, format, FIELD_UNITCOST)}
+              ></TextField>
+            </Grid>
+
+            <Grid item md={1.5}>
+              <TextField
+                variant="outlined"
+                disabled={!enabledFlag}
+                label="Height"
+                value={getFormatDetails(formats, format, FIELD_HEIGHT)}
+                onChange={(ev) => onChange(ev, format, FIELD_HEIGHT)}
+              ></TextField>
+            </Grid>
+            <Grid item md={3}>
+              <FormControl fullWidth>
+                <InputLabel id="coverlaminate">Cover Laminate</InputLabel>
+                <Select
+                  labelId="coverlaminate"
+                  label="Cover Laminate"
+                  disabled={!enabledFlag}
+                  value={getFormatDetails(formats, format, FIELD_COVERLAMINATE)}
+                  onChange={(ev) => onChange(ev, format, FIELD_COVERLAMINATE)}
+                >
+                  <MenuItem value="">
+                    <em>[Not Set]</em>
+                  </MenuItem>
+                  {renderPair(coverlaminateValues, coverlaminatePairs)}
+                </Select>
+              </FormControl>
+            </Grid>
+          </>
+        )}
+      </>
+    );
+  };
+
   return (
     <Grid container spacing={2}>
-      <Grid item md={12}>
-        <Card>
-          <CardHeader subheader="Edit Formats"></CardHeader>
-          <CardContent>
-            <Stack spacing={2}>
-              <Stack direction="row" spacing={1}>
-                <Stack sx={{ flex: 0.25 }} spacing={4}>
-                  <Typography variant="subtitle2" align="center">
-                    Format
-                  </Typography>
-                  <Typography variant="subtitle1" align="center">
-                    <Stack direction="row">
-                      <Checkbox
-                        checked={paperbackEnabled}
-                        sx={{ padding: 0, pr: 1 }}
-                        onChange={onPaperbackCheckChange}
-                      />
-                      Paperback
-                    </Stack>
-                  </Typography>
-
-                  <Stack direction="row" sx={{ pt: 1 }}>
-                    <Checkbox
-                      checked={hardbackEnabled}
-                      sx={{ padding: 0, pr: 1 }}
-                      onChange={onHardbackCheckChange}
-                    />
-
-                    <Typography variant="subtitle1" align="center">
-                      Hardback
-                    </Typography>
-                  </Stack>
-
-                  <Stack direction="row" sx={{ pt: 1 }}>
-                    <Checkbox
-                      checked={ebookEnabled}
-                      sx={{ padding: 0, pr: 1 }}
-                      onChange={onEbookCheckChange}
-                    />
-                    <Typography variant="subtitle1" align="center">
-                      E-Book
-                    </Typography>
-                  </Stack>
-                </Stack>
-                <Divider orientation="vertical" flexItem />
-                <Stack sx={{ flex: 0.25 }} spacing={2}>
-                  <Typography variant="subtitle2" align="center">
-                    Price
-                  </Typography>
-                  <TextField
-                    variant="outlined"
-                    disabled={!paperbackEnabled}
-                    value={getFormatDetails(formats, PAPERBACK, "price")}
-                    onChange={(ev, format, field) =>
-                      onChange(ev, PAPERBACK, "price")
-                    }
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!hardbackEnabled}
-                    value={getFormatDetails(formats, HARDBACK, "price")}
-                    onChange={(ev) => onChange(ev, HARDBACK, "price")}
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!ebookEnabled}
-                    value={getFormatDetails(formats, EBOOK, "price")}
-                    onChange={(ev) => onChange(ev, EBOOK, "price")}
-                  />
-                </Stack>
-                <Divider orientation="vertical" flexItem />
-                <Stack sx={{ flex: 0.75 }} spacing={2}>
-                  <Typography variant="subtitle2" align="center">
-                    Isbn
-                  </Typography>
-                  <TextField
-                    variant="outlined"
-                    disabled={!paperbackEnabled}
-                    value={getFormatDetails(formats, PAPERBACK, "isbn")}
-                    onChange={(ev) => onChange(ev, PAPERBACK, "isbn")}
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!hardbackEnabled}
-                    value={getFormatDetails(formats, HARDBACK, "isbn")}
-                    onChange={(ev) => onChange(ev, HARDBACK, "isbn")}
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!ebookEnabled}
-                    value={getFormatDetails(formats, EBOOK, "isbn")}
-                    onChange={(ev) => onChange(ev, EBOOK, "isbn")}
-                  />
-                </Stack>
-                <Divider orientation="vertical" flexItem />
-                <Stack sx={{ flex: 0.5 }}>
-                  <Typography variant="subtitle2" align="center">
-                    Distributor
-                  </Typography>
-
-                  {renderFormatDetail("Ingram Spark")}
-                  {renderFormatDetail("Ingram Spark")}
-                  {renderFormatDetail("Ingram Spark")}
-                </Stack>
-
-                <Divider orientation="vertical" flexItem />
-                <Stack sx={{ flex: 0.5 }} spacing={2}>
-                  <Typography variant="subtitle2" align="center">
-                    Width
-                  </Typography>
-
-                  <TextField
-                    variant="outlined"
-                    disabled={!paperbackEnabled}
-                    value={getFormatDetails(formats, PAPERBACK, "width")}
-                    onChange={(ev) => onChange(ev, PAPERBACK, "width")}
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!hardbackEnabled}
-                    value={getFormatDetails(formats, HARDBACK, "width")}
-                    onChange={(ev) => onChange(ev, HARDBACK, "width")}
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!ebookEnabled}
-                    value={getFormatDetails(formats, EBOOK, "width")}
-                    onChange={(ev) => onChange(ev, EBOOK, "width")}
-                  />
-                </Stack>
-
-                <Stack sx={{ flex: 0.5 }} spacing={2}>
-                  <Typography variant="subtitle2" align="center">
-                    Height
-                  </Typography>
-
-                  <TextField
-                    variant="outlined"
-                    disabled={!paperbackEnabled}
-                    value={getFormatDetails(formats, PAPERBACK, "height")}
-                    onChange={(ev) => onChange(ev, PAPERBACK, "height")}
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!hardbackEnabled}
-                    value={getFormatDetails(formats, HARDBACK, "height")}
-                    onChange={(ev) => onChange(ev, HARDBACK, "height")}
-                  />
-                  <TextField
-                    variant="outlined"
-                    disabled={!paperbackEnabled}
-                    value={getFormatDetails(formats, EBOOK, "height")}
-                    onChange={(ev) => onChange(ev, EBOOK, "height")}
-                  />
-                </Stack>
-
-                <Stack sx={{ flex: 0.5 }} spacing={2}>
-                  <Typography variant="subtitle2" align="center">
-                    Page Count
-                  </Typography>
-
-                  <TextField
-                    variant="outlined"
-                    disabled={!paperbackEnabled}
-                    value={getFormatDetails(formats, PAPERBACK, "pagecount")}
-                    onChange={(ev) => onChange(ev, PAPERBACK, "pagecount")}
-                  ></TextField>
-                  <TextField
-                    variant="outlined"
-                    disabled={!hardbackEnabled}
-                    value={getFormatDetails(formats, HARDBACK, "pagecount")}
-                    onChange={(ev) => onChange(ev, HARDBACK, "pagecount")}
-                  ></TextField>
-                  <TextField
-                    variant="outlined"
-                    disabled={!ebookEnabled}
-                    value={getFormatDetails(formats, EBOOK, "pagecount")}
-                    onChange={(ev) => onChange(ev, EBOOK, "pagecount")}
-                  ></TextField>
-                </Stack>
-              </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
-      </Grid>
+      {renderFormat(
+        PAPERBACK,
+        "Paperback",
+        paperbackEnabled,
+        onPaperbackCheckChange
+      )}
+      {renderFormat(
+        HARDBACK,
+        "Hardback",
+        hardbackEnabled,
+        onHardbackCheckChange
+      )}
+      {renderFormat(EBOOK, "E-Book", ebookEnabled, onEbookCheckChange)}
     </Grid>
   );
 };

@@ -35,6 +35,7 @@ const TabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
       )}
       {editMode && (
         <FormatsEdit
+          formats={formats}
           onChange={onChange}
           onPaperbackCheckChange={onPaperbackCheckChange}
           onHardbackCheckChange={onHardbackCheckChange}

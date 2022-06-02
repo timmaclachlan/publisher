@@ -10,8 +10,8 @@ const Pool = require("pg").Pool;
 
 require("dotenv").config();
 
-var authorRoutes = require('./authors');
-router.use(authorRoutes('/authors'));  
+var authorRoutes = require("./authors");
+router.use(authorRoutes("/authors"));
 
 app.use(
   cors({
@@ -49,12 +49,9 @@ router.get("/authors/:id/books", (req, res) => {
   JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid
   WHERE bookid = books.id) AS "service"
   FROM ${TABLEQUAL_BOOKS} WHERE authorid='${req.params.id}'`;
-  
+
   return getQuery(sql, res);
 });
-
-
-
 
 router.get("/genres", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_GENRES} ORDER BY genre`;
@@ -65,8 +62,6 @@ router.get("/genres/:id", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_GENRES} WHERE id='${req.params.id}'`;
   return getQuery(sql, res);
 });
-
-
 
 router.get("/books", (req, res) => {
   console.log("calling books");
@@ -80,7 +75,6 @@ router.get("/books", (req, res) => {
   FROM ${TABLEQUAL_BOOKS} books 
   JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
   ORDER BY publicationdate DESC, title`;
-
 
   console.log(sql);
   return getQuery(sql, res);
@@ -101,7 +95,7 @@ router.get("/books/:id/services", (req, res) => {
 router.get("/books/:id/formats", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_BOOKSFORMATS} WHERE bookid='${req.params.id}'`;
   return getQuery(sql, res);
-})
+});
 
 router.patch("/books/:id", (req, res) => {
   console.log("in Patch for Books");
@@ -110,13 +104,14 @@ router.patch("/books/:id", (req, res) => {
   let formats = req.body.formats;
   console.log(formats);
 
-  let sql = '';
+  let sql = "";
   let data = [];
   Object.entries(formats).forEach(([k, v]) => {
     if (v.id === null) {
       sql = `INSERT INTO ${TABLEQUAL_BOOKSFORMATS}
-      (id, bookid, format, price, isbn, width, height, pagecount)
-      VALUES($1,$2,$3,$4,$5,$6,$7,$8)`;
+      (id, bookid, format, price, isbn, width, height, 
+        pagecount, estpagecount, unitcost, estunitcost, paperstock, coverlaminate, distributor)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`;
       data = [
         v4(),
         v.bookid,
@@ -125,31 +120,42 @@ router.patch("/books/:id", (req, res) => {
         v.isbn,
         v.width,
         v.height,
-        v.pagecount
+        v.pagecount,
+        v.estpagecount,
+        v.unitcost,
+        v.estunitcost,
+        v.paperstock,
+        v.coverlaminate,
+        v.distributor
       ];
       updateQuery(sql, data);
-    }
-    else {
+    } else {
       if (v.enabled === false) {
         sql = `DELETE FROM ${TABLEQUAL_BOOKSFORMATS} WHERE id='${v.id}'`;
         deleteQuery(sql);
-      }
-      else {
+      } else {
         sql = `UPDATE ${TABLEQUAL_BOOKSFORMATS} 
-      SET price=$1,isbn=$2,width=$3,height=$4,pagecount=$5
+      SET price=$1,isbn=$2,width=$3,height=$4,pagecount=$5,estpagecount=$6,
+      unitcost=$7,estunitcost=$8,paperstock=$9,coverlaminate=$10,distributor=$11
       WHERE id='${v.id}'`;
         data = [
           v.price,
           v.isbn,
           v.width,
           v.height,
-          v.pagecount
-        ]
+          v.pagecount,
+          v.estpagecount,
+          v.unitcost,
+          v.estunitcost,
+          v.paperstock,
+          v.coverlaminate,
+          v.distributor
+        ];
         updateQuery(sql, data);
       }
     }
   });
-  
+
   sql = `UPDATE ${TABLEQUAL_BOOKS} SET 
     title = $1, publicationdate = $2, authorid = $3,
     genreid = $4,
@@ -167,12 +173,10 @@ router.patch("/books/:id", (req, res) => {
     req.body.maturecontent,
     req.body.onhold,
     req.body.published,
-    req.body.royalty
+    req.body.royalty,
   ];
-  
+
   updateQueryWithStatus(sql, data, res);
-
-
 });
 
 router.get("/orders", (req, res) => {
@@ -192,14 +196,12 @@ router.get("/reports/book", (req, res) => {
   return getQuery(sql, res);
 });
 
-
 function updateQueryWithStatus(sql, data, res) {
   try {
     updateQuery(sql, data);
-  }
-  catch (error) {
-      res.statusCode = 500;
-      return res.json({ errors: ["Failed to create/update record:" + error] });
+  } catch (error) {
+    res.statusCode = 500;
+    return res.json({ errors: ["Failed to create/update record:" + error] });
   }
   res.statusCode = 200;
   res.json({ message: "success" });

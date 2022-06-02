@@ -6,6 +6,8 @@ export const EBOOK = 3;
 //const EBOOKNA = 32;
 //const KUPAGESREAD = 64;
 
+export const FIELD_PRICE = "price";
+export const FIELD_ISBN = "isbn";
 export const FIELD_WIDTH = "width";
 export const FIELD_HEIGHT = "height";
 export const FIELD_PAGECOUNT = "pagecount";
@@ -14,28 +16,8 @@ export const FIELD_UNITCOST = "unitcost";
 export const FIELD_ESTUNITCOST = "estunitcost";
 export const FIELD_PAPERSTOCK = "paperstock";
 export const FIELD_COVERLAMINATE = "coverlaminate";
+export const FIELD_DISTRIBUTOR = "distributor";
 
-const EBOOK_FIELDS = [FIELD_PAGECOUNT, FIELD_ESTPAGECOUNT];
-const PAPERBACK_FIELDS = [
-  FIELD_WIDTH,
-  FIELD_HEIGHT,
-  FIELD_PAGECOUNT,
-  FIELD_ESTPAGECOUNT,
-  FIELD_UNITCOST,
-  FIELD_ESTUNITCOST,
-  FIELD_PAPERSTOCK,
-  FIELD_COVERLAMINATE,
-];
-const HARDBACK_FIELDS = [
-  FIELD_WIDTH,
-  FIELD_HEIGHT,
-  FIELD_PAGECOUNT,
-  FIELD_ESTPAGECOUNT,
-  FIELD_UNITCOST,
-  FIELD_ESTUNITCOST,
-  FIELD_PAPERSTOCK,
-  FIELD_COVERLAMINATE,
-];
 
 export const getFormatDetails = (formats, format, field) => {
   if (Array.isArray(formats)) {
@@ -46,18 +28,6 @@ export const getFormatDetails = (formats, format, field) => {
   }
   return null;
 };
-
-export const getFormatFields = (format) => {
-    switch (format) {
-      case PAPERBACK:
-        return PAPERBACK_FIELDS;
-      case HARDBACK:
-        return HARDBACK_FIELDS;
-      case EBOOK:
-        return EBOOK_FIELDS;
-      default:
-    }
-  };
 
 const getFormatData = (formats, format) => {
   if (Array.isArray(formats)) {
@@ -97,4 +67,53 @@ export const renderFormatDetail = (text) => {
         {outputText}
       </Typography>
     );
-  };
+};
+  
+export const getDistributorPairs = () => {
+  let dict = {
+    "KDP": "Kindle Direct Publishing",
+    "IS": "Ingram Spark",
+    "LS": "Lightning Source",
+    "PODWW": "Print on Demand World Wide"
+  }
+  return dict;
+}
+
+export const getPaperStockPairs = () => {
+  let dict = {
+    "MCR": "Mono Creme",
+    "MWH": "Mono White",
+    "CSTD": "Colour 70/Standard",
+    "PREM": "Premium"
+  }
+  return dict;
+}
+
+export const getCoverLaminiatePairs = () => {
+  let dict = {
+    "GLS": "Gloss",
+    "MAT": "Matt",
+    "GLSJ": "Gloss with Jacket",
+    "MATJ": "Matte with Jacket",
+    "GDCNJ": "Grey Digital Cloth NJ",
+    "BDCNJ": "Blue Digital Cloth NJ",
+    "GDCNJ": "Grey Digital Cloth WJ",
+    "BDCNJ": "Blue Digital Cloth WJ"
+  }
+  return dict;
+}
+
+export const getDistributorDisplayLabel = (value) => {
+  let dict = getDistributorPairs();
+  return dict[value];
+}
+
+export const getPaperStockDisplayLabel = (value) => {
+  let dict = getPaperStockPairs();
+  return dict[value];
+}
+
+export const getCoverLaminateDisplayLabel = (value) => {
+  let dict = getCoverLaminiatePairs();
+  return dict[value];
+}
