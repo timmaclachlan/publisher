@@ -97,8 +97,8 @@ export const getCoverLaminiatePairs = () => {
     "MATJ": "Matte with Jacket",
     "GDCNJ": "Grey Digital Cloth NJ",
     "BDCNJ": "Blue Digital Cloth NJ",
-    "GDCNJ": "Grey Digital Cloth WJ",
-    "BDCNJ": "Blue Digital Cloth WJ"
+    "GDCWJ": "Grey Digital Cloth WJ",
+    "BDCWJ": "Blue Digital Cloth WJ"
   }
   return dict;
 }
