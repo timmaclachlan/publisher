@@ -44,6 +44,8 @@ const FormatsEdit = ({
   let hardbackEnabled = getFormatEnabled(formats, HARDBACK);
   let ebookEnabled = getFormatEnabled(formats, EBOOK);
 
+  debugger;
+
   const distributorPairs = getDistributorPairs();
   const distributorValues = Object.keys(distributorPairs);
   const paperstockPairs = getPaperStockPairs();

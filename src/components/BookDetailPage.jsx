@@ -22,7 +22,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 
 import BookEdit from "./BookDetail/BookEdit";
 import BookView from "./BookDetail/BookView";
-import BookTabEditorial from "./BookDetail/Tabs/BookTabEditorial";
+import TabEditorial from "./BookDetail/Tabs/Editorial/TabEditorial";
 import TabFormats from "./BookDetail/Tabs/Formats/TabFormats";
 import BookTabDesign from "./BookDetail/Tabs/BookTabDesign";
 import TabPanel from "./TabPanel";
@@ -46,6 +46,7 @@ const getSingleResult = (result) => {
   return result;
 };
 
+const TAB_EDITORIAL = 1;
 const TAB_FORMATS = 4;
 
 const blankFormat = (bookid, format) => {
@@ -72,6 +73,7 @@ const BookDetail = ({ onRecordChange }) => {
   const [book, setBook] = useState({});
   const [genres, setGenres] = useState([]);
   const [formats, setFormats] = useState({});
+  const [editorial, setEditorial] = useState({});
   const [bookServices, setBookServices] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [editMode, setEditMode] = useState(false);
@@ -98,6 +100,14 @@ const BookDetail = ({ onRecordChange }) => {
         setFormats(response.result);
       };
       retrieveFormats();
+    }
+
+    if (newValue === TAB_EDITORIAL && isEmptyObject(editorial)) {
+      const retrieveEditorial = async () => {
+        let response = await readByIdAll("book", "editorial", id);
+        setEditorial(response.result);
+      };
+      retrieveEditorial();
     }
   };
 
@@ -347,7 +357,7 @@ const BookDetail = ({ onRecordChange }) => {
               </TabPanel>
 
               <TabPanel value={currentTab} index={1}>
-                <BookTabEditorial book={book} editMode={editMode} />
+                <TabEditorial editorial={editorial} editMode={editMode} />
               </TabPanel>
 
               <TabPanel value={currentTab} index={2}>

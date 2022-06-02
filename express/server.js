@@ -29,6 +29,7 @@ const TABLE_ORDERS = "retailorders";
 const TABLE_SERVICES = "services";
 const TABLE_SERVICESASSIGNED = "servicesassigned";
 const TABLE_BOOKS_FORMATS = "booksformats";
+const TABLE_BOOKS_EDITORIAL = "bookseditorial";
 
 //const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
 //const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
@@ -40,6 +41,7 @@ const TABLEQUAL_ORDERS = `"timm2006/athena"."${TABLE_ORDERS}"`;
 const TABLEQUAL_SERVICES = `"timm2006/athena"."${TABLE_SERVICES}"`;
 const TABLEQUAL_SERVICESASSIGNED = `"timm2006/athena"."${TABLE_SERVICESASSIGNED}"`;
 const TABLEQUAL_BOOKSFORMATS = `"timm2006/athena"."${TABLE_BOOKS_FORMATS}"`;
+const TABLEQUAL_BOOKSEDITORIAL = `"timm2006/athena"."${TABLE_BOOKS_EDITORIAL}"`;
 
 router.get("/authors/:id/books", (req, res) => {
   console.log("get books for authors");
@@ -94,6 +96,11 @@ router.get("/books/:id/services", (req, res) => {
 
 router.get("/books/:id/formats", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_BOOKSFORMATS} WHERE bookid='${req.params.id}'`;
+  return getQuery(sql, res);
+});
+
+router.get("/books/:id/editorials", (req, res) => {
+  let sql = `SELECT * FROM ${TABLEQUAL_BOOKSEDITORIAL} WHERE bookid='${req.params.id}'`;
   return getQuery(sql, res);
 });
 
@@ -155,6 +162,31 @@ router.patch("/books/:id", (req, res) => {
       }
     }
   });
+
+  if (req.body.editorial.id === null) {
+    sql = `INSERT INTO ${TABLEQUAL_BOOKSEDITORIAL}
+    (id,bookid,editlevel,wordcount,blurblebel)
+    VALUES($1,$2,$3,$4,$5)`;
+    data = [
+      v4(),
+      req.body.editorial.bookid,
+      req.body.editorial.editlevel,
+      req.body.editorial.wordcount,
+      req.body.editorial.blurblevel
+    ];
+    updateQuery(sql, data);
+  }
+  else {
+    sql = `UPDATE ${TABLEQUAL_BOOKSEDITORIAL} SET
+    editlevel = $1, wordcount = $2, blurblevel = $3
+    WHERE id='${req.params.id}'`;
+    data = [
+      req.body.editorial.editlevel,
+      req.body.editorial.wordcount,
+      req.body.editorial.blurblevel
+    ];
+    updateQuery(sql, data);
+  }
 
   sql = `UPDATE ${TABLEQUAL_BOOKS} SET 
     title = $1, publicationdate = $2, authorid = $3,
