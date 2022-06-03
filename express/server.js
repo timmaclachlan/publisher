@@ -163,9 +163,9 @@ router.patch("/books/:id", (req, res) => {
     }
   });
 
-  if (req.body.editorial.id === null) {
+  if (req.body.editorial.isnew === true) {
     sql = `INSERT INTO ${TABLEQUAL_BOOKSEDITORIAL}
-    (id,bookid,editlevel,wordcount,blurblebel)
+    (id,bookid,editlevel,wordcount,blurblevel)
     VALUES($1,$2,$3,$4,$5)`;
     data = [
       v4(),
@@ -179,7 +179,7 @@ router.patch("/books/:id", (req, res) => {
   else {
     sql = `UPDATE ${TABLEQUAL_BOOKSEDITORIAL} SET
     editlevel = $1, wordcount = $2, blurblevel = $3
-    WHERE id='${req.params.id}'`;
+    WHERE bookid='${req.params.id}'`;
     data = [
       req.body.editorial.editlevel,
       req.body.editorial.wordcount,
@@ -265,12 +265,13 @@ function deleteQuery(sql) {
 function getQuery(sql, res) {
   console.log(sql);
   console.log(
-    "ENV: (user)" + process.env.PGUSER + " pghost:" + process.env.PGHOST
+    "ENV: (user)" + process.env.PGUSER + " pghost:" + process.env.PGHOST + " SSL:" + process.env.PGSSLMODE
   );
 
   const pool = new Pool();
   pool.query(sql, (error, results) => {
     if (error) {
+      console.log("ERROR" + error.message);
       res.statusCode = 500;
       return res.json({ errors: ["Failed to retrieve: " + error.message] });
     }

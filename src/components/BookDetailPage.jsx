@@ -68,6 +68,17 @@ const blankFormat = (bookid, format) => {
   };
 };
 
+const blankEditorial = (bookid) => {
+  return {
+    id: null,
+    isnew: true,
+    bookid,
+    editlevel: "0",
+    blurblevel: "",
+    wordcount: "0",
+  };
+};
+
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [book, setBook] = useState({});
@@ -105,7 +116,11 @@ const BookDetail = ({ onRecordChange }) => {
     if (newValue === TAB_EDITORIAL && isEmptyObject(editorial)) {
       const retrieveEditorial = async () => {
         let response = await readByIdAll("book", "editorial", id);
-        setEditorial(response.result);
+        if (response.result.length > 0) {
+          setEditorial(response.result[0]);
+        } else {
+          setEditorial(blankEditorial(id));
+        }
       };
       retrieveEditorial();
     }
@@ -119,6 +134,12 @@ const BookDetail = ({ onRecordChange }) => {
       }
     }
     return null;
+  };
+
+  const onChangeEditorial = (field, value) => {
+    let newEditorial = { ...editorial };
+    newEditorial[field] = value;
+    setEditorial(newEditorial);
   };
 
   const onChangeFormats = (ev, format, field) => {
@@ -202,8 +223,9 @@ const BookDetail = ({ onRecordChange }) => {
 
   const saveBook = (ev) => {
     ev.preventDefault();
-    debugger;
+
     book.formats = formats;
+    book.editorial = editorial;
     makeChange(updateById.bind(null, book, id));
     setNotification((prevState) => ({
       ...prevState,
@@ -212,6 +234,7 @@ const BookDetail = ({ onRecordChange }) => {
       autoHide: true,
       message: "Changes saved successfully",
     }));
+    onChangeEditorial("isnew", false);
     if (onRecordChange) {
       onRecordChange(book.name);
     }
@@ -357,7 +380,11 @@ const BookDetail = ({ onRecordChange }) => {
               </TabPanel>
 
               <TabPanel value={currentTab} index={1}>
-                <TabEditorial editorial={editorial} editMode={editMode} />
+                <TabEditorial
+                  editorial={editorial}
+                  editMode={editMode}
+                  onChange={onChangeEditorial}
+                />
               </TabPanel>
 
               <TabPanel value={currentTab} index={2}>

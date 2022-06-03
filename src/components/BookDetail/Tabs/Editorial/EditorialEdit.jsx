@@ -9,19 +9,44 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const EditorialEdit = () => {
+const EditorialEdit = ({ editorial, onChange }) => {
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    if (onChange) {
+      onChange(name, value);
+    }
+  };
+
   return (
     <>
       <Grid item md={2}>
-        <TextField variant="outlined" label="Edit Level" name="editLevel" />
+        <TextField
+          variant="outlined"
+          label="Edit Level"
+          name="editlevel"
+          value={editorial.editlevel}
+          onChange={handleChange}
+        />
       </Grid>
       <Grid item md={2}>
-        <TextField variant="outlined" label="Word Count" name="wordCount" />
+        <TextField
+          variant="outlined"
+          label="Word Count"
+          name="wordcount"
+          value={editorial.wordcount}
+          onChange={handleChange}
+        />
       </Grid>
       <Grid item md={2}>
         <FormControl fullWidth>
           <InputLabel id="blurb-label">Blurb Level</InputLabel>
-          <Select labelId="blurb-label" label="Blurb Level">
+          <Select
+            labelId="blurb-label"
+            label="Blurb Level"
+            name="blurblevel"
+            value={editorial.blurblevel}
+            onChange={handleChange}
+          >
             <MenuItem value="">
               <em>[Not Set]</em>
             </MenuItem>

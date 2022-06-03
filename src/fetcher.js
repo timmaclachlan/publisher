@@ -16,6 +16,7 @@ const makeRequest = async (
   console.log("Server URL:" + SERVER_URL);
   console.log("Environment:" + process.env.NODE_ENV);
 
+
   const requestInit = {
     method: method,
     headers: { Accept: "application/json", "Content-Type": "application/json" },

@@ -1,6 +1,16 @@
 import React from "react";
 
-import { Typography, Grid, Skeleton } from "@mui/material";
+import {
+  Typography,
+  Grid,
+  Skeleton,
+  Card,
+  CardHeader,
+  CardContent,
+  Box,
+  Stack,
+  Divider,
+} from "@mui/material";
 
 import LoadingOverlay from "../../../LoadingOverlay";
 
@@ -21,32 +31,72 @@ const EditorialView = ({ editorial }) => {
 
   return (
     <>
-      <Grid item md={2}>
-        <Typography variant="subtitle1">Edit Level</Typography>
-      </Grid>
-      <Grid item md={2}>
-        <Typography variant="subtitle1">
-          {displayField(editorial.editlevel)}
-        </Typography>
-      </Grid>
-      <Grid item md={2}>
-        <Typography variant="subtitle1">Word Count</Typography>
-      </Grid>
-      <Grid item md={1}>
-        <Typography variant="subtitle1">
-          {displayField(editorial.wordcount)}
-        </Typography>
-      </Grid>
-      <Grid item md={2}>
-        <Typography variant="subtitle1">Blurb Level</Typography>
-      </Grid>
-      <Grid item md={1}>
-        <Typography variant="subtitle1">
-          {displayField(editorial.blurblevel)}
-        </Typography>
+      <Grid item md={12}>
+        <Card>
+          <CardHeader
+            sx={{ p: 0, m: 0 }}
+            subheader={<CardTopHeader title="Editorial Details" />}
+          ></CardHeader>
+          <CardContent>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={1}>
+                <Stack sx={{ flex: 0.5 }}>
+                  <Typography variant="subtitle2" align="center">
+                    Edit Level
+                  </Typography>
+
+                  <Typography variant="subtitle1" align="center">
+                    {displayField(editorial.editlevel)}
+                  </Typography>
+                </Stack>
+                <Divider orientation="vertical" flexItem />
+                <Stack sx={{ flex: 0.5 }}>
+                  <Typography variant="subtitle2" align="center">
+                    Word Count
+                  </Typography>
+
+                  <Typography variant="subtitle1" align="center">
+                    {displayField(editorial.wordcount)}
+                  </Typography>
+                </Stack>
+                <Divider orientation="vertical" flexItem />
+                <Stack sx={{ flex: 0.5 }}>
+                  <Typography variant="subtitle2" align="center">
+                    Blurb Level
+                  </Typography>
+
+                  <Typography variant="subtitle1" align="center">
+                    {displayField(editorial.blurblevel)}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
       </Grid>
     </>
   );
 };
 
 export default EditorialView;
+
+const CardTopHeader = (props) => {
+  return (
+    <CardHeader
+      sx={{ p: 0, m: 0 }}
+      subheader={<CardTop title={props.title} />}
+    />
+  );
+};
+
+const CardTop = (props) => {
+  return (
+    <Box sx={{ backgroundColor: "primary.main" }}>
+      <Stack direction="row" justifyContent="space-between">
+        <Typography variant="h6" color="white" sx={{ pl: 1 }}>
+          {props.title}
+        </Typography>
+      </Stack>
+    </Box>
+  );
+};

@@ -14,6 +14,7 @@ import {
   Tooltip,
   Avatar,
   Skeleton,
+  Box,
 } from "@mui/material";
 
 import BorderColorIcon from "@mui/icons-material/BorderColor";
@@ -41,6 +42,7 @@ const renderServices = (services) => {
         key={`service${index}`}
         label={service.service}
         color="primary"
+        value={true}
         tooltip="Product type"
       />
     );
@@ -83,7 +85,7 @@ const BookView = ({ book, bookServices, onUpdateEditMode }) => {
 
         <Grid item md={8}>
           <Card>
-            <CardHeader subheader="Book Details"></CardHeader>
+            <CardTopHeader title="Book Details" />
             <CardContent>
               <Grid container>
                 <Grid item md={7}>
@@ -133,8 +135,6 @@ const BookView = ({ book, bookServices, onUpdateEditMode }) => {
                           : "No date"}
                       </Typography>
                     </Stack>
-
-                    {renderServices(bookServices)}
                   </Stack>
                 </Grid>
               </Grid>
@@ -143,8 +143,8 @@ const BookView = ({ book, bookServices, onUpdateEditMode }) => {
         </Grid>
 
         <Grid item md={2}>
-          <Card>
-            <CardHeader subheader="Royalties"></CardHeader>
+          <Card sx={{ height: 144 }}>
+            <CardTopHeader title="Royalties" />
             <CardContent>
               <Stack spacing={2}>
                 <Stack direction="row" spacing={1}>
@@ -176,56 +176,115 @@ const BookView = ({ book, bookServices, onUpdateEditMode }) => {
           </Card>
         </Grid>
 
-        <Grid item md={2}>
-          <Stack direction="row">
-            <Stack>
-              <Typography variant="caption">Acc. Man.</Typography>
-              <Tooltip title="Some lady">
-                <Avatar
-                  alt="some lady"
-                  src="/assets/user_3.jpg"
-                  sx={{ width: 48, height: 48 }}
-                />
-              </Tooltip>
-            </Stack>
-            <Stack>
-              <Typography variant="caption">Last Edit.</Typography>
-              <Tooltip title="Some dude">
-                <Avatar
-                  alt="some dude"
-                  src="/assets/user_2.jpg"
-                  sx={{ width: 48, height: 48 }}
-                />
-              </Tooltip>
-            </Stack>
-          </Stack>
+        <Grid item md={2}></Grid>
 
-          <Stack>
-            <Typography variant="caption">Pub Adv.</Typography>
-            <Tooltip title="Some dude">
-              <Avatar
-                alt="some dude"
-                src="/assets/user_1.jpg"
-                sx={{ width: 48, height: 48 }}
+        <Grid item md={3}>
+          <Card sx={{ height: 1 }}>
+            <CardTopHeader title="Pre-Pub Services" />
+            <CardContent>{renderServices(bookServices)}</CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={3}>
+          <Card sx={{ height: 1 }}>
+            <CardTopHeader title="Pub Services" />
+            <CardContent>{renderServices(bookServices)}</CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={3}>
+          <Card sx={{ height: 1 }}>
+            <CardTopHeader title="Post-Pub Services" />
+            <CardContent>{renderServices(bookServices)}</CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={3}>
+          <Card>
+            <CardTopHeader title="Staff" />
+            <CardContent>
+              <Stack direction="row">
+                <Stack>
+                  <Typography variant="caption">Acc. Man.</Typography>
+                  <Tooltip title="Some lady">
+                    <Avatar
+                      alt="some lady"
+                      src="/assets/user_3.jpg"
+                      sx={{ width: 48, height: 48 }}
+                    />
+                  </Tooltip>
+                </Stack>
+                <Stack>
+                  <Typography variant="caption">Last Edit.</Typography>
+                  <Tooltip title="Some dude">
+                    <Avatar
+                      alt="some dude"
+                      src="/assets/user_2.jpg"
+                      sx={{ width: 48, height: 48 }}
+                    />
+                  </Tooltip>
+                </Stack>
+                <Stack>
+                  <Typography variant="caption">Pub Adv.</Typography>
+                  <Tooltip title="Some dude">
+                    <Avatar
+                      alt="some dude"
+                      src="/assets/user_1.jpg"
+                      sx={{ width: 48, height: 48 }}
+                    />
+                  </Tooltip>
+                </Stack>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={9}>
+          <Card>
+            <CardTopHeader title="Options" />
+            <CardContent>
+              <BookViewOptions book={book} />
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item md={3}>
+          <Card>
+            <CardTopHeader title="Status" />
+            <CardContent>
+              <ViewChip
+                label="Published"
+                value={book.published}
+                color="primary"
+                tooltip="Book has been published"
               />
-            </Tooltip>
-          </Stack>
+            </CardContent>
+          </Card>
         </Grid>
-
-        <Grid item md={12}>
-          <BookViewOptions book={book} />
-          <ViewChip
-            label="Published"
-            value={book.published}
-            color="primary"
-            tooltip="Book has been published"
-          />
-        </Grid>
-
-        <Grid item md={4}></Grid>
       </Grid>
     </>
   );
 };
 
 export default BookView;
+
+const CardTopHeader = (props) => {
+  return (
+    <CardHeader
+      sx={{ p: 0, m: 0 }}
+      subheader={<CardTop title={props.title} />}
+    />
+  );
+};
+
+const CardTop = (props) => {
+  return (
+    <Box sx={{ backgroundColor: "primary.main" }}>
+      <Stack direction="row" justifyContent="space-between">
+        <Typography variant="h6" color="white" sx={{ pl: 1 }}>
+          {props.title}
+        </Typography>
+      </Stack>
+    </Box>
+  );
+};
