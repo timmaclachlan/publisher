@@ -12,8 +12,6 @@ import {
   Divider,
 } from "@mui/material";
 
-import LoadingOverlay from "../../../LoadingOverlay";
-
 import { isEmptyObject } from "../../../../utils";
 
 const EditorialView = ({ editorial }) => {

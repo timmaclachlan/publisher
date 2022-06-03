@@ -33,19 +33,26 @@ import {
   isEmptyObject,
 } from "../../utils";
 
+const STAGE_PRE = 1;
+const STAGE_PUB = 2;
+const STAGE_POST = 3;
+
 const LinkWithRouter = (props) => <Link {...props} component={RouterLink} />;
 
-const renderServices = (services) => {
+const renderServices = (services, stage) => {
   return services.map((service, index) => {
-    return (
-      <ViewChip
-        key={`service${index}`}
-        label={service.service}
-        color="primary"
-        value={true}
-        tooltip="Product type"
-      />
-    );
+    if (service.stage === stage) {
+      return (
+        <ViewChip
+          key={`service${index}`}
+          label={service.service}
+          color="primary"
+          value={true}
+          tooltip="Product type"
+        />
+      );
+    }
+    return null;
   });
 };
 
@@ -181,21 +188,23 @@ const BookView = ({ book, bookServices, onUpdateEditMode }) => {
         <Grid item md={3}>
           <Card sx={{ height: 1 }}>
             <CardTopHeader title="Pre-Pub Services" />
-            <CardContent>{renderServices(bookServices)}</CardContent>
+            <CardContent>{renderServices(bookServices, STAGE_PRE)}</CardContent>
           </Card>
         </Grid>
 
         <Grid item md={3}>
           <Card sx={{ height: 1 }}>
             <CardTopHeader title="Pub Services" />
-            <CardContent>{renderServices(bookServices)}</CardContent>
+            <CardContent>{renderServices(bookServices, STAGE_PUB)}</CardContent>
           </Card>
         </Grid>
 
         <Grid item md={3}>
           <Card sx={{ height: 1 }}>
             <CardTopHeader title="Post-Pub Services" />
-            <CardContent>{renderServices(bookServices)}</CardContent>
+            <CardContent>
+              {renderServices(bookServices, STAGE_POST)}
+            </CardContent>
           </Card>
         </Grid>
 

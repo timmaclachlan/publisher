@@ -90,7 +90,8 @@ router.get("/books/:id", (req, res) => {
 });
 
 router.get("/books/:id/services", (req, res) => {
-  let sql = `SELECT id, service FROM ${TABLEQUAL_SERVICESASSIGNED} WHERE bookid='${req.params.id}'`;
+  let sql = `SELECT assigned.id, services.service, stage FROM ${TABLEQUAL_SERVICESASSIGNED} assigned 
+  JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid WHERE bookid='${req.params.id}'`;
   return getQuery(sql, res);
 });
 
