@@ -36,6 +36,7 @@ import RetailOrdersPage from "./components/RetailOrdersPage";
 import CreateRetailOrder from "./components/CreateRetailOrder";
 import BooksPage from "./components/BooksPage";
 import BookReport from "./components/Reports/BookReport";
+import RoyaltiesPage from "./components/RoyaltiesPage";
 import NotFound from "./components/NotFound";
 import SearchPanel from "./components/SearchPanel";
 
@@ -181,6 +182,7 @@ const LoggedIn = () => {
             <Route path="orders/retail" element={<RetailOrdersPage />} />
             <Route path="orders/retail/new" element={<CreateRetailOrder />} />
             <Route path="reports" element={<BookReport />} />
+            <Route path="royalties" element={<RoyaltiesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>

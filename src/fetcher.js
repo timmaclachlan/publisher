@@ -59,6 +59,10 @@ export const readLookupAll = (schema) => {
   return makeRequest(schema, true);
 };
 
+export const readAllByQuery = (schema, query) => {
+  debugger;
+}
+
 export const readById = (schema, id) => {
   return makeRequest(schema, false, id);
 };
