@@ -31,8 +31,8 @@ let routeBuilder = (path) => {
     let sql = `INSERT INTO ${TABLEQUAL_AUTHORS} 
   (id, realname,penname,email,phonenumber,location,
     address1,address2,address3,address4,postcode,
-    website,notes,retained,sortcode,accountno,paypal,active)
-  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) RETURNING id`;
+    website,notes,retained,sortcode,accountno,paypal,active,taxuk)
+  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19) RETURNING id`;
     let data = [
       v4(),
       req.body.realname,
@@ -52,6 +52,7 @@ let routeBuilder = (path) => {
       req.body.accountno,
       req.body.paypal,
       req.body.active,
+      req.body.taxuk
     ];
     return updateQuery(sql, data, res);
   });
@@ -70,7 +71,7 @@ let routeBuilder = (path) => {
     retained = $13, sortcode = $14,
     accountno = $15, paypal = $16,
     active = $17, email2 = $18,
-    phonenumber2 = $19
+    phonenumber2 = $19, taxuk = $20
     WHERE id='${req.params.id}'`;
     let data = [
       req.body.realname,
@@ -92,6 +93,7 @@ let routeBuilder = (path) => {
       req.body.active,
       req.body.email2,
       req.body.phonenumber2,
+      req.body.taxuk
     ];
 
     return updateQuery(sql, data, res);

@@ -1,7 +1,5 @@
 import React from "react";
 
-import Barcode from "react-barcode";
-
 import {
   Typography,
   Grid,
@@ -197,15 +195,7 @@ const FormatsView = ({ formats }) => {
           </Card>
         </Grid>
 
-        <Grid item md={2}>
-          <Box sx={{ pt: 5 }}>
-            <Barcode
-              value={getFormatDetails(formats, format, FIELD_ISBN)}
-              height={50}
-              width={1}
-            />
-          </Box>
-        </Grid>
+        <Grid item md={2}></Grid>
       </>
     );
   };

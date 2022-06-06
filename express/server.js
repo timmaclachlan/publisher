@@ -212,14 +212,41 @@ router.patch("/books/:id", (req, res) => {
   updateQueryWithStatus(sql, data, res);
 });
 
+router.get("/royalties", (req, res) => {
+  console.log("GET ROYALTIES");
+  let query = '';
+
+  console.log(req.query);
+  query = `WHERE ${Object.keys(req.query)[0]}`;
+  console.log(query);
+
+  
+  let sql = `SELECT *, authors.realname as "author", books.title FROM ${TABLEQUAL_ORDERS} orders
+    JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
+    JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
+    ${query} ORDER BY author DESC`;
+  
+  return getQuery(sql, res);
+});
+  
 router.get("/orders", (req, res) => {
   console.log("GET ORDERS");
+  let query = '';
+  if (req.query !== undefined) {
+    console.log(req.query);
+    query = `WHERE ${Object.keys(req.query)[0]}`;
+    console.log(query);
+  }
+  
   let sql = `SELECT *, authors.realname as "author" FROM ${TABLEQUAL_ORDERS} orders 
     JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
     JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
+    ${query}
     ORDER BY orderdate DESC`;
   return getQuery(sql, res);
 });
+
+
 
 router.get("/reports/book", (req, res) => {
   let sql = `SELECT authors.realname, books.title, books.id FROM ${TABLEQUAL_BOOKS} books
@@ -280,6 +307,7 @@ function getQuery(sql, res) {
     res.json({ message: "success", result: results.rows });
   });
 }
+
 
 app.use("/.netlify/functions/server", router); // path must route to lambda
 module.exports = app;

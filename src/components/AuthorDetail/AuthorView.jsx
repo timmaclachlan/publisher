@@ -26,6 +26,8 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
 
 import ViewChip from "../ViewChip";
 import LoadingOverlay from "../LoadingOverlay";
@@ -45,9 +47,17 @@ const AuthorView = ({
     return loading ? (
       <Skeleton variant="rectangular" width={width} height={height} />
     ) : field ? (
-      field
+      field.length > 20 ? (
+        <Tooltip title={field}>
+          <Typography variant="subtitle1">
+            {field.substr(0, 20) + "..."}
+          </Typography>
+        </Tooltip>
+      ) : (
+        <Typography variant="subtitle1">{field}</Typography>
+      )
     ) : (
-      "Not set"
+      <Typography variant="subtitle1">Not set</Typography>
     );
   };
 
@@ -98,11 +108,29 @@ const AuthorView = ({
           </Button>
         </Grid>
 
-        <Grid item md={8}>
+        <Grid item md={6}>
           <Typography variant="h5">
             {displayField(author.realname, 400, 40)}
           </Typography>
         </Grid>
+
+        <Grid item md={2}>
+          <Stack direction="row" spacing={1}>
+            {author.taxuk && (
+              <>
+                <DoneIcon color="success" />
+                <Typography variant="subtitle1">UK</Typography>
+              </>
+            )}
+            {!author.taxuk && (
+              <>
+                <CloseIcon color="success" />
+                <Typography variant="subtitle1">Non-UK</Typography>
+              </>
+            )}
+          </Stack>
+        </Grid>
+
         <Grid item md={4}>
           <Stack spacing={2} direction="row">
             <ViewChip
@@ -129,15 +157,11 @@ const AuthorView = ({
                   <Stack spacing={2}>
                     <Stack direction="row" spacing={1}>
                       <BorderColorIcon color="primary" />
-                      <Typography variant="subtitle1">
-                        {displayField(author.penname, 150, 20)}
-                      </Typography>
+                      {displayField(author.penname, 150, 20)}
                     </Stack>
                     <Stack direction="row" spacing={1}>
                       <LocationCityIcon color="primary" />
-                      <Typography variant="subtitle1">
-                        {displayField(author.location, 150, 20)}
-                      </Typography>
+                      {displayField(author.location, 150, 20)}
                     </Stack>
                   </Stack>
                 </Grid>
@@ -152,9 +176,7 @@ const AuthorView = ({
                       >
                         1
                       </Typography>
-                      <Typography variant="subtitle1">
-                        {displayField(author.email, 150, 20)}
-                      </Typography>
+                      {displayField(author.email, 150, 20)}
                     </Stack>
                     <Stack direction="row" spacing={1}>
                       <EmailIcon color="primary" />
@@ -164,9 +186,7 @@ const AuthorView = ({
                       >
                         2
                       </Typography>
-                      <Typography variant="subtitle1">
-                        {displayField(author.email2, 150, 20)}
-                      </Typography>
+                      {displayField(author.email2, 150, 20)}
                     </Stack>
                   </Stack>
                 </Grid>
@@ -193,9 +213,7 @@ const AuthorView = ({
                       >
                         2
                       </Typography>
-                      <Typography variant="subtitle1">
-                        {displayField(author.phonenumber2, 150, 20)}
-                      </Typography>
+                      {displayField(author.phonenumber2, 150, 20)}
                     </Stack>
                   </Stack>
                 </Grid>
@@ -203,9 +221,7 @@ const AuthorView = ({
                 <Grid item md={12}>
                   <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                     <LanguageIcon color="primary" />
-                    <Typography variant="subtitle1">
-                      {displayField(author.website, 150, 20)}
-                    </Typography>
+                    {displayField(author.website, 150, 20)}
                   </Stack>
                 </Grid>
               </Grid>
@@ -220,19 +236,13 @@ const AuthorView = ({
               <Stack spacing={2}>
                 <Stack direction="row" spacing={1}>
                   <AccountBalanceIcon color="primary" />
-                  <Typography variant="subtitle1">
-                    {displayField(author.sortcode, 150, 20)}
-                  </Typography>
+                  {displayField(author.sortcode, 150, 20)}
                   &nbsp;&nbsp;/
-                  <Typography variant="subtitle1">
-                    {displayField(author.accountno, 150, 20)}
-                  </Typography>
+                  {displayField(author.accountno, 150, 20)}
                 </Stack>
                 <Stack direction="row" spacing={1}>
                   <AccountBalanceIcon color="primary" />
-                  <Typography variant="subtitle1">
-                    {displayField(author.paypal, 150, 20)}
-                  </Typography>
+                  {displayField(author.paypal, 150, 20)}
                 </Stack>
               </Stack>
             </CardContent>
@@ -244,27 +254,11 @@ const AuthorView = ({
             <CardHeader subheader="Address Details"></CardHeader>
             <CardContent>
               <Stack spacing={1}>
-                <Typography variant="subtitle1">
-                  {displayField(author.address1, 150, 20)}
-                </Typography>
-                <Typography variant="subtitle1">
-                  {displayField(author.address2, 150, 20)}
-                </Typography>
-                <Typography variant="subtitle1">
-                  {displayField(author.address3, 150, 20)}
-                </Typography>
-                <Typography variant="subtitle1">
-                  {displayField(author.address4, 150, 20)}
-                </Typography>
-                <Typography variant="subtitle1">
-                  {displayField(author.postcode, 150, 20)}
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                  <LocationCityIcon color="primary" />
-                  <Typography variant="subtitle1">
-                    {displayField(author.location, 150, 20)}
-                  </Typography>
-                </Stack>
+                {displayField(author.address1, 150, 20)}
+                {displayField(author.address2, 150, 20)}
+                {displayField(author.address3, 150, 20)}
+                {displayField(author.address4, 150, 20)}
+                {displayField(author.postcode, 150, 20)}
               </Stack>
             </CardContent>
           </Card>
@@ -273,11 +267,7 @@ const AuthorView = ({
         <Grid item md={6}>
           <Card sx={{ height: 300 }}>
             <CardHeader subheader="Notes"></CardHeader>
-            <CardContent>
-              <Typography variant="subtitle1">
-                {displayField(author.notes, 300, 300)}
-              </Typography>
-            </CardContent>
+            <CardContent>{displayField(author.notes, 300, 300)}</CardContent>
           </Card>
         </Grid>
       </Grid>

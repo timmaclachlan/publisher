@@ -15,6 +15,9 @@ import {
   Card,
   CardHeader,
   CardContent,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
@@ -46,6 +49,11 @@ const AuthorEdit = ({
   const valueChange = (event) => {
     const { name, value } = event.target;
     handleChange(name, value);
+  };
+
+  const checkedChange = (event) => {
+    const { name, checked } = event.target;
+    handleChange(name, checked);
   };
 
   const toggleChange = (name) => {
@@ -156,7 +164,7 @@ const AuthorEdit = ({
             </Stack>
           </Grid>
 
-          <Grid item md={9}>
+          <Grid item md={8}>
             <TextField
               label="Real Name"
               name="realname"
@@ -166,6 +174,21 @@ const AuthorEdit = ({
               fullWidth
               required
             />
+          </Grid>
+
+          <Grid item md={1}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="taxuk"
+                    onChange={checkedChange}
+                    checked={author.taxuk}
+                  />
+                }
+                label="UK"
+              />
+            </FormGroup>
           </Grid>
 
           <Grid item md={3}>

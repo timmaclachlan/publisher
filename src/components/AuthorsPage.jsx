@@ -36,7 +36,7 @@ const Authors = ({ onRecordChange }) => {
     { field: "penname", headerName: "Pen Name", flex: 1 },
     {
       field: "retained",
-      headerName: "Retained Client",
+      headerName: "Retained",
       flex: 0.5,
       valueGetter: (params) => {
         return params.data.retained ? "Yes" : "No";
@@ -49,18 +49,27 @@ const Authors = ({ onRecordChange }) => {
       flex: 1.5,
       valueGetter: (params) => {
         let value = [
-          params.data.address1,
-          params.data.address2,
-          params.data.address3,
-          params.data.address4,
-        ].join(",");
-        value = value.replace(",,", "");
-        if (value.length === 1) value = "";
+          tidyAddressListEntry(params.data.address1),
+          tidyAddressListEntry(params.data.address2),
+          tidyAddressListEntry(params.data.address3),
+          tidyAddressListEntry(params.data.adddress4),
+        ].join(", ");
+        value = value.replace(", ,", ", ");
+        value = tidyAddressListEntry(value);
         return value;
       },
     },
     { field: "location", flex: 1 },
   ];
+
+  const tidyAddressListEntry = (addressEntry) => {
+    if (addressEntry) {
+      var newstr = addressEntry.replace(/[, ]+$/, "").trim();
+      debugger;
+      return newstr;
+    }
+    return "";
+  };
 
   const onGridReady = () => {
     const retrieveAuthors = async () => {
@@ -112,7 +121,7 @@ const Authors = ({ onRecordChange }) => {
             flex: 1,
           }}
           containerStyle={{
-            height: 700,
+            height: 600,
             width: 1500,
           }}
           gridOptions={{

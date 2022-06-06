@@ -10,7 +10,9 @@ const makeRequest = async (
   id = null,
   subschema = null,
   method = "GET",
-  body = undefined
+  body = undefined,
+  querypath = null,
+  query = null
 ) => {
   const SERVER_URL = process.env.REACT_APP_SERVERHOST;
   console.log("Server URL:" + SERVER_URL);
@@ -31,7 +33,9 @@ const makeRequest = async (
     url = `${url}lookup/`;
   }
 
-  url = `${url}${getSchemaUrl(schema)}`;
+  if (schema) {
+    url = `${url}${getSchemaUrl(schema)}`;
+  }
 
   if (id && id.length > 0) {
     url = `${url}/${id}`;
@@ -39,6 +43,11 @@ const makeRequest = async (
 
   if (subschema) {
     url = `${url}/${getSchemaUrl(subschema)}`;
+  }
+
+  if (querypath) {
+    debugger;
+    url = `${url}${querypath}?${query}`;
   }
   console.log("urlagain:" + url);
 
@@ -59,8 +68,8 @@ export const readLookupAll = (schema) => {
   return makeRequest(schema, true);
 };
 
-export const readAllByQuery = (schema, query) => {
-  debugger;
+export const readAllByQuery = (querypath, query) => {
+  return makeRequest(null, false, false, "", "GET", undefined, querypath, encodeURIComponent(query));
 }
 
 export const readById = (schema, id) => {

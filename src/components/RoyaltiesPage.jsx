@@ -23,7 +23,11 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import BuildIcon from "@mui/icons-material/Build";
 
 import { readAllByQuery } from "../fetcher";
-import { getFormattedCurrency } from "../utils";
+import {
+  getFormattedCurrency,
+  getFormattedDate,
+  getQuarterDates,
+} from "../utils";
 
 const steps = ["Choose Parameters", "Step 2", "Step 3"];
 
@@ -47,7 +51,7 @@ const RoyaltiesPage = () => {
     <>
       <Box sx={{ width: "100%" }}>
         <Grid container spacing={2}>
-          <Grid item md={10}>
+          <Grid item md={12}>
             <Grid container>
               <Grid item md={1}>
                 <BarChartIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
@@ -80,16 +84,12 @@ const RoyaltiesPage = () => {
             </Grid>
           </Grid>
 
-          <Grid item md={2}></Grid>
-
-          <Grid item md={6}>
+          <Grid item md={12}>
             <Stepper activeStep={activeStep} sx={{ mb: 3 }}>
               {steps.map((label, index) => {
-                const stepProps = {};
-                const labelProps = {};
                 return (
-                  <Step key={label} {...stepProps}>
-                    <StepLabel {...labelProps}>{label}</StepLabel>
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
                   </Step>
                 );
               })}
@@ -196,36 +196,60 @@ const Step2 = ({ quarter }) => {
   const columnDefs = [
     {
       field: "dateamountreceived",
-      headerName: "Received",
+      headerName: "Date Recv",
+      valueFormatter: (params) => getFormattedDate(params.value),
+      flex: 0.75,
     },
     {
       field: "amountreceived",
-      headerName: "Received",
+      headerName: "Amt Recv",
       filter: "agNumberColumnFilter",
       valueFormatter: (params) => getFormattedCurrency(params.value),
+      flex: 0.75,
     },
     {
       field: "royaltyauthor",
-      headerName: "Author",
+      headerName: "Author Royalty",
       filter: "agNumberColumnFilter",
       valueFormatter: (params) => getFormattedCurrency(params.value),
+      flex: 0.75,
     },
     {
       field: "format",
+      flex: 0.5,
+    },
+    {
+      field: "salessource",
+      headerName: "Source",
+      flex: 0.5,
+    },
+    {
+      field: "quantity",
+      flex: 0.5,
+      headerName: "Qty",
+    },
+    {
+      field: "author",
+    },
+    {
+      field: "title",
     },
   ];
 
   const onGridReady = () => {
-    const retrieveOrders = async () => {
+    const retrieveOrders = async (dateQuery) => {
       try {
-        debugger;
-        const result = await readAllByQuery("order", quarter);
+        const result = await readAllByQuery(
+          "royalties",
+          `dateamountreceived >= '${dateQuery.startDate}' AND dateamountreceived <= '${dateQuery.endDate} 23:59:59'`
+        );
         setData(result.result);
       } catch (error) {
         console.log(error);
       }
     };
-    retrieveOrders();
+    let dateQuery = getQuarterDates(quarter);
+    retrieveOrders(dateQuery);
   };
 
   return (
@@ -236,7 +260,7 @@ const Step2 = ({ quarter }) => {
         }}
         containerStyle={{
           height: 500,
-          width: 800,
+          width: 1200,
         }}
         rowData={data}
         columnDefs={columnDefs}

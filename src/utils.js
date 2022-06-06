@@ -1,4 +1,4 @@
-
+import { format, endOfQuarter } from "date-fns";
 
 export const isEmptyObject = (value) => {
   return value && value.constructor === Object && Object.keys(value).length === 0;
@@ -21,6 +21,18 @@ export const getFormattedDate = (dateString) => {
     return new Intl.DateTimeFormat('en-GB').format(date);
   }
   return "";
+}
+
+export const getDatabaseDate = (date) => {
+  return format(date, "yyyy-MM-dd");
+}
+
+export const getQuarterDates = (quarterWithYear) => {
+  const year = quarterWithYear.substr(1, 4);
+  const qtr = quarterWithYear.substr(0, 1);
+  const startDate = new Date(year, (qtr - 1) * 3, 1);
+  const endDate = endOfQuarter(startDate);
+  return {startDate: getDatabaseDate(startDate), endDate: getDatabaseDate(endDate)}
 }
 
 export const getFormattedCurrency = (amount) => {
