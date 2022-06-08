@@ -15,9 +15,7 @@ import {
   Card,
   CardHeader,
   CardContent,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
+  Box,
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
@@ -164,7 +162,7 @@ const AuthorEdit = ({
             </Stack>
           </Grid>
 
-          <Grid item md={8}>
+          <Grid item md={7}>
             <TextField
               label="Real Name"
               name="realname"
@@ -176,19 +174,14 @@ const AuthorEdit = ({
             />
           </Grid>
 
-          <Grid item md={1}>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="taxuk"
-                    onChange={checkedChange}
-                    checked={author.taxuk}
-                  />
-                }
-                label="UK"
-              />
-            </FormGroup>
+          <Grid item md={2}>
+            <ViewChip
+              label="In UK"
+              value={author.taxuk}
+              color="success"
+              width={100}
+              onClick={() => toggleChange("taxuk")}
+            />
           </Grid>
 
           <Grid item md={3}>
@@ -212,7 +205,7 @@ const AuthorEdit = ({
 
           <Grid item md={9}>
             <Card>
-              <CardHeader subheader="Personal Details"></CardHeader>
+              <CardTopHeader title="Personal Details" />
               <CardContent>
                 <Grid container columnSpacing={2}>
                   <Grid item md={4}>
@@ -285,7 +278,7 @@ const AuthorEdit = ({
 
           <Grid item md={3}>
             <Card>
-              <CardHeader subheader="Banking Details"></CardHeader>
+              <CardTopHeader title="Banking Details" />
               <CardContent>
                 <Stack spacing={2}>
                   <Stack spacing={1} direction="row">
@@ -321,7 +314,7 @@ const AuthorEdit = ({
 
           <Grid item md={6}>
             <Card>
-              <CardHeader subheader="Address Details" />
+              <CardTopHeader title="Address Details" />
               <CardContent>
                 <Stack spacing={1}>
                   <TextField
@@ -380,7 +373,7 @@ const AuthorEdit = ({
           <Grid item md={6}>
             <Stack spacing={1}>
               <Card sx={{ height: 470 }}>
-                <CardHeader subheader="Notes"></CardHeader>
+                <CardTopHeader title="Notes" />
                 <CardContent>
                   <TextField
                     label="Notes"
@@ -403,3 +396,24 @@ const AuthorEdit = ({
 };
 
 export default AuthorEdit;
+
+const CardTopHeader = (props) => {
+  return (
+    <CardHeader
+      sx={{ p: 0, m: 0 }}
+      subheader={<CardTop title={props.title} />}
+    />
+  );
+};
+
+const CardTop = (props) => {
+  return (
+    <Box sx={{ backgroundColor: "primary.main" }}>
+      <Stack direction="row" justifyContent="space-between">
+        <Typography variant="h6" color="white" sx={{ pl: 1 }}>
+          {props.title}
+        </Typography>
+      </Stack>
+    </Box>
+  );
+};

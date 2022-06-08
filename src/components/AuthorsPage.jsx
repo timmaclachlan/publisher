@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import { Typography, Box, Grid, Button } from "@mui/material";
+import { Typography, Box, Grid, Button, Avatar } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
 
 import { readAll } from "../fetcher";
@@ -17,6 +17,29 @@ const LinkComponent = ({ data }) => {
   );
 };
 
+const AvatarComponent = ({ data }) => {
+  const nameSplit = data.realname.split(" ");
+  const namemap = nameSplit
+    .map((word) => {
+      return word[0].toUpperCase();
+    })
+    .join("");
+
+  return (
+    <Avatar
+      alt={data.realname}
+      src={`/assets/authors/${data.id}.jpg`}
+      sx={{
+        width: 38,
+        height: 38,
+        ml: -1,
+      }}
+    >
+      {namemap}
+    </Avatar>
+  );
+};
+
 const Authors = ({ onRecordChange }) => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
@@ -27,6 +50,11 @@ const Authors = ({ onRecordChange }) => {
   };
 
   const columnDefs = [
+    {
+      cellRenderer: AvatarComponent,
+      flex: 0.25,
+      filter: false,
+    },
     {
       field: "realname",
       headerName: "Author Name",
@@ -60,6 +88,14 @@ const Authors = ({ onRecordChange }) => {
       },
     },
     { field: "location", flex: 1 },
+    {
+      field: "taxuk",
+      flex: 0.5,
+      headerName: "In uk",
+      valueGetter: (params) => {
+        return params.data.taxuk ? "Yes" : "No";
+      },
+    },
   ];
 
   const tidyAddressListEntry = (addressEntry) => {

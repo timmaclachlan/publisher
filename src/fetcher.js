@@ -46,7 +46,6 @@ const makeRequest = async (
   }
 
   if (querypath) {
-    debugger;
     url = `${url}${querypath}?${query}`;
   }
   console.log("urlagain:" + url);
@@ -81,7 +80,6 @@ export const readByIdAll = (schema, subschema, id) => {
 };
 
 export const updateById = (model, id, schema) => {
-  debugger;
   return makeRequest(schema, false, id, null, "PATCH", model);
 };
 
@@ -90,6 +88,5 @@ export const deleteById = (id, schema) => {
 };
 
 export const create = (model, schema) => {
-  debugger;
   return makeRequest(schema, false, 0, null, "POST", model);
 };

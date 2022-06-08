@@ -197,21 +197,21 @@ const Step2 = ({ quarter }) => {
     {
       field: "dateamountreceived",
       headerName: "Date Recv",
-      valueFormatter: (params) => getFormattedDate(params.value),
+      //valueFormatter: (params) => getFormattedDate(params.value),
       flex: 0.75,
     },
     {
       field: "amountreceived",
       headerName: "Amt Recv",
       filter: "agNumberColumnFilter",
-      valueFormatter: (params) => getFormattedCurrency(params.value),
+      //valueFormatter: (params) => getFormattedCurrency(params.value),
       flex: 0.75,
     },
     {
       field: "royaltyauthor",
       headerName: "Author Royalty",
       filter: "agNumberColumnFilter",
-      valueFormatter: (params) => getFormattedCurrency(params.value),
+      //valueFormatter: (params) => getFormattedCurrency(params.value),
       flex: 0.75,
     },
     {
@@ -243,6 +243,7 @@ const Step2 = ({ quarter }) => {
           "royalties",
           `dateamountreceived >= '${dateQuery.startDate}' AND dateamountreceived <= '${dateQuery.endDate} 23:59:59'`
         );
+        debugger;
         setData(result.result);
       } catch (error) {
         console.log(error);

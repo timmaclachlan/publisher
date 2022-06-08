@@ -11,6 +11,7 @@ const Pool = require("pg").Pool;
 require("dotenv").config();
 
 var authorRoutes = require("./authors");
+const { ContentPasteSearchOutlined } = require("@mui/icons-material");
 router.use(authorRoutes("/authors"));
 
 app.use(
@@ -52,17 +53,17 @@ router.get("/authors/:id/books", (req, res) => {
   WHERE bookid = books.id) AS "service"
   FROM ${TABLEQUAL_BOOKS} WHERE authorid='${req.params.id}'`;
 
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/genres", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_GENRES} ORDER BY genre`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/genres/:id", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_GENRES} WHERE id='${req.params.id}'`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/books", (req, res) => {
@@ -79,30 +80,30 @@ router.get("/books", (req, res) => {
   ORDER BY publicationdate DESC, title`;
 
   console.log(sql);
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/books/:id", (req, res) => {
   let sql = `SELECT books.*, authors.realname AS "author_name", authors.penname AS "author_penname" 
   FROM ${TABLEQUAL_BOOKS} books JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid 
   WHERE books.id='${req.params.id}'`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/books/:id/services", (req, res) => {
   let sql = `SELECT assigned.id, services.service, stage FROM ${TABLEQUAL_SERVICESASSIGNED} assigned 
   JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid WHERE bookid='${req.params.id}'`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/books/:id/formats", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_BOOKSFORMATS} WHERE bookid='${req.params.id}'`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/books/:id/editorials", (req, res) => {
   let sql = `SELECT * FROM ${TABLEQUAL_BOOKSEDITORIAL} WHERE bookid='${req.params.id}'`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 router.patch("/books/:id", (req, res) => {
@@ -134,7 +135,7 @@ router.patch("/books/:id", (req, res) => {
         v.estunitcost,
         v.paperstock,
         v.coverlaminate,
-        v.distributor
+        v.distributor,
       ];
       updateQuery(sql, data);
     } else {
@@ -157,7 +158,7 @@ router.patch("/books/:id", (req, res) => {
           v.estunitcost,
           v.paperstock,
           v.coverlaminate,
-          v.distributor
+          v.distributor,
         ];
         updateQuery(sql, data);
       }
@@ -173,18 +174,17 @@ router.patch("/books/:id", (req, res) => {
       req.body.editorial.bookid,
       req.body.editorial.editlevel,
       req.body.editorial.wordcount,
-      req.body.editorial.blurblevel
+      req.body.editorial.blurblevel,
     ];
     updateQuery(sql, data);
-  }
-  else {
+  } else {
     sql = `UPDATE ${TABLEQUAL_BOOKSEDITORIAL} SET
     editlevel = $1, wordcount = $2, blurblevel = $3
     WHERE bookid='${req.params.id}'`;
     data = [
       req.body.editorial.editlevel,
       req.body.editorial.wordcount,
-      req.body.editorial.blurblevel
+      req.body.editorial.blurblevel,
     ];
     updateQuery(sql, data);
   }
@@ -214,46 +214,49 @@ router.patch("/books/:id", (req, res) => {
 
 router.get("/royalties", (req, res) => {
   console.log("GET ROYALTIES");
-  let query = '';
+  let query = "";
 
-  console.log(req.query);
   query = `WHERE ${Object.keys(req.query)[0]}`;
-  console.log(query);
 
-  
-  let sql = `SELECT *, authors.realname as "author", books.title FROM ${TABLEQUAL_ORDERS} orders
-    JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
-    JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
-    ${query} ORDER BY author DESC`;
-  
-  return getQuery(sql, res);
+   let sql = `SELECT *, authors.realname as "author", books.title FROM ${TABLEQUAL_ORDERS} orders
+     JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
+     JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
+     ${query} ORDER BY author DESC`;
+
+
+  getQueryWithPromise(sql).then(function (result) {
+  res.statusCode = 200;
+  res.json({ message: "success", result: result });
+  }).catch(function (err) {
+    console.log(err);
+  })
+
+
 });
-  
+
 router.get("/orders", (req, res) => {
   console.log("GET ORDERS");
-  let query = '';
+  let query = "";
   if (req.query !== undefined) {
     console.log(req.query);
     query = `WHERE ${Object.keys(req.query)[0]}`;
     console.log(query);
   }
-  
+
   let sql = `SELECT *, authors.realname as "author" FROM ${TABLEQUAL_ORDERS} orders 
     JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
     JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
     ${query}
     ORDER BY orderdate DESC`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
-
-
 
 router.get("/reports/book", (req, res) => {
   let sql = `SELECT authors.realname, books.title, books.id FROM ${TABLEQUAL_BOOKS} books
   JOIN ${TABLEQUAL_AUTHORS} authors
   ON authors.id = books.authorid
   ORDER BY authors.realname`;
-  return getQuery(sql, res);
+  return getQueryWithStatus(sql, res);
 });
 
 function updateQueryWithStatus(sql, data, res) {
@@ -290,7 +293,32 @@ function deleteQuery(sql) {
   });
 }
 
-function getQuery(sql, res) {
+function getQueryWithPromise(sql) {
+  console.log(sql);
+  console.log(
+    "ENV: (user)" +
+      process.env.PGUSER +
+      " pghost:" +
+      process.env.PGHOST +
+      " SSL:" +
+      process.env.PGSSLMODE
+  );
+
+  return new Promise(function (resolve, reject) {
+    const pool = new Pool();
+    pool.query(sql, (error, result) => {
+      if (error) {
+        console.log("ERROR" + error.message);
+        return reject(error);
+      }
+      resolve(result.rows);
+    });
+    pool.end();
+  });
+}
+
+
+function getQueryWithStatus(sql, res) {
   console.log(sql);
   console.log(
     "ENV: (user)" + process.env.PGUSER + " pghost:" + process.env.PGHOST + " SSL:" + process.env.PGSSLMODE
@@ -307,7 +335,6 @@ function getQuery(sql, res) {
     res.json({ message: "success", result: results.rows });
   });
 }
-
 
 app.use("/.netlify/functions/server", router); // path must route to lambda
 module.exports = app;
