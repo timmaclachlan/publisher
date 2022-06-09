@@ -5,6 +5,8 @@ const v4 = require("uuid").v4;
 
 const TABLE_AUTHORS = "authors";
 const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
+const TABLE_BOOKS_ROYALTIESHISTORY = "royaltieshistory";
+const TABLEQUAL_ROYALITESHISTORY = `"timm2006/athena"."${TABLE_BOOKS_ROYALTIESHISTORY}"`;
 
 let routeBuilder = (path) => {
   router.get(`${path}`, (req, res) => {
@@ -13,7 +15,22 @@ let routeBuilder = (path) => {
   });
 
   router.get("/authors/:id", (req, res) => {
-    let sql = `SELECT * FROM ${TABLEQUAL_AUTHORS} WHERE id='${req.params.id}'`;
+    // calculate current quarter
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const quarter = month / 3;
+    const quarterString = `${quarter}${now.getFullYear()}`
+ 
+    console.log(quarterString);
+
+    let sql = `SELECT authors.*, 
+    rh.balance,rh.grossowed,rh.netowed,rh.tax,
+    rh.royaltiesthisperiod,rh.royaltiesprevperiod,rh.royaltiestotal,
+    rh.paymentsthisperiod,rh.paymentsprevperiod,rh.paymentstotal
+    FROM ${TABLEQUAL_AUTHORS} authors
+    LEFT JOIN ${TABLEQUAL_ROYALITESHISTORY} rh ON rh.authorid = authors.id
+    AND period='${quarterString}'
+    WHERE authors.id='${req.params.id}'`;
     return getQuery(sql, res);
   });
 

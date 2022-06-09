@@ -1,5 +1,6 @@
 import React from "react";
 import { AgGridReact } from "ag-grid-react";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
   Grid,
@@ -23,13 +24,21 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import BuildIcon from "@mui/icons-material/Build";
 
 import { readAllByQuery } from "../fetcher";
-import {
-  getFormattedCurrency,
-  getFormattedDate,
-  getQuarterDates,
-} from "../utils";
+import { getQuarterDates, getFormattedCurrency } from "../utils";
 
 const steps = ["Choose Parameters", "Step 2", "Step 3"];
+
+const LinkComponent = ({ data }) => {
+  return (
+    <Button
+      component={RouterLink}
+      sx={{ p: 0 }}
+      to={"/authors/" + data.authorid}
+    >
+      {data.author}
+    </Button>
+  );
+};
 
 const RoyaltiesPage = () => {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -195,44 +204,115 @@ const Step2 = ({ quarter }) => {
 
   const columnDefs = [
     {
-      field: "dateamountreceived",
-      headerName: "Date Recv",
-      //valueFormatter: (params) => getFormattedDate(params.value),
-      flex: 0.75,
-    },
-    {
-      field: "amountreceived",
-      headerName: "Amt Recv",
-      filter: "agNumberColumnFilter",
-      //valueFormatter: (params) => getFormattedCurrency(params.value),
-      flex: 0.75,
-    },
-    {
-      field: "royaltyauthor",
-      headerName: "Author Royalty",
-      filter: "agNumberColumnFilter",
-      //valueFormatter: (params) => getFormattedCurrency(params.value),
-      flex: 0.75,
-    },
-    {
-      field: "format",
-      flex: 0.5,
-    },
-    {
-      field: "salessource",
-      headerName: "Source",
-      flex: 0.5,
-    },
-    {
-      field: "quantity",
-      flex: 0.5,
-      headerName: "Qty",
-    },
-    {
       field: "author",
+      flex: 0.5,
+      valueFormatter: (params) => params.value,
+      cellRenderer: LinkComponent,
     },
     {
-      field: "title",
+      field: "balance",
+      headerName: "Balance",
+    },
+    {
+      headerName: "Owed",
+      children: [
+        {
+          field: "netowed",
+          headerName: "Owed (Net)",
+        },
+        {
+          field: "grossowed",
+          headerName: "Owed (Gross)",
+          columnGroupShow: "open",
+        },
+        {
+          field: "tax",
+          headerName: "Tax",
+          columnGroupShow: "open",
+        },
+      ],
+    },
+    {
+      headerName: "Royalties",
+      children: [
+        {
+          field: "royaltiesthisperiod",
+          headerName: "Current",
+        },
+        {
+          field: "royaltiesprevperiod",
+          headerName: "Previous",
+          columnGroupShow: "open",
+        },
+        {
+          field: "royaltiestotal",
+          headerName: "Total",
+          columnGroupShow: "open",
+        },
+      ],
+    },
+    {
+      headerName: "Payments",
+      children: [
+        {
+          field: "paymentsthisperiod",
+          headerName: "Current",
+        },
+        {
+          field: "paymentsprevperiod",
+          headerName: "Previous",
+          columnGroupShow: "open",
+        },
+        {
+          field: "paymentstotal",
+          headerName: "Total",
+          columnGroupShow: "open",
+        },
+      ],
+    },
+    {
+      headerName: "Paid Sales",
+      children: [
+        {
+          field: "paidsalesthisperiod",
+          headerName: "Current",
+          valueFormatter: (params) => params.value,
+        },
+        {
+          field: "paidsalesprevperiod",
+          headerName: "Previous",
+          columnGroupShow: "open",
+          valueFormatter: (params) => params.value,
+        },
+        {
+          field: "paidsalestotal",
+          headerName: "Total",
+          columnGroupShow: "open",
+          valueFormatter: (params) => params.value,
+        },
+      ],
+    },
+    {
+      headerName: "Free Sales",
+      children: [
+        {
+          field: "freesalesthisperiod",
+          headerName: "Current",
+          valueFormatter: (params) => params.value,
+        },
+        {
+          field: "freesalesprevperiod",
+          headerName: "Previous",
+          columnGroupShow: "open",
+          valueFormatter: (params) => params.value,
+        },
+        {
+          field: "freesalestotal",
+          headerName: "Total",
+          columnGroupShow: "open",
+          valueFormatter: (params) => params.value,
+        },
+      ],
     },
   ];
 
@@ -241,7 +321,7 @@ const Step2 = ({ quarter }) => {
       try {
         const result = await readAllByQuery(
           "royalties",
-          `dateamountreceived >= '${dateQuery.startDate}' AND dateamountreceived <= '${dateQuery.endDate} 23:59:59'`
+          `period = '${dateQuery}'`
         );
         debugger;
         setData(result.result);
@@ -249,6 +329,7 @@ const Step2 = ({ quarter }) => {
         console.log(error);
       }
     };
+    debugger;
     let dateQuery = getQuarterDates(quarter);
     retrieveOrders(dateQuery);
   };
@@ -257,7 +338,9 @@ const Step2 = ({ quarter }) => {
     <Box className="ag-theme-alpine">
       <AgGridReact
         defaultColDef={{
-          flex: 1,
+          flex: 0.25,
+          filter: "agNumberColumnFilter",
+          valueFormatter: (params) => getFormattedCurrency(params.value),
         }}
         containerStyle={{
           height: 500,

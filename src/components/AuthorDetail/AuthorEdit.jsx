@@ -49,11 +49,6 @@ const AuthorEdit = ({
     handleChange(name, value);
   };
 
-  const checkedChange = (event) => {
-    const { name, checked } = event.target;
-    handleChange(name, checked);
-  };
-
   const toggleChange = (name) => {
     handleChange(name, !author[name]);
   };

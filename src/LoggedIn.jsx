@@ -139,10 +139,19 @@ const LoggedIn = () => {
         <List component="nav">{mainListItems}</List>
       </Drawer>
 
-      <Container sx={{ marginTop: "80px", marginLeft: "180px" }}>
+      <Box
+        sx={{
+          marginTop: "80px",
+          marginLeft: "180px",
+        }}
+      >
         <Breadcrumb record={currentRecord} />
 
-        <Container sx={{ marginTop: "20px", marginLeft: "-20px" }}>
+        <Box
+          sx={{
+            marginTop: "20px",
+          }}
+        >
           <Routes>
             <Route index element={<Dashboard />} />
             <Route
@@ -185,8 +194,8 @@ const LoggedIn = () => {
             <Route path="royalties" element={<RoyaltiesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Container>
-      </Container>
+        </Box>
+      </Box>
     </Box>
   );
 };

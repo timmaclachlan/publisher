@@ -7,6 +7,9 @@ export const theme = createTheme({
     },
     secondary: {
       main: '#d81b4d'
+    },
+    whitepanel: {
+      main: '#ffffff'
     }
   }
 });

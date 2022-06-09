@@ -26,7 +26,7 @@ function ListItemLink(props) {
 
   return (
     <ListItemButton component={renderLink}>
-      {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+      {icon ? <ListItemIcon color="primary">{icon}</ListItemIcon> : null}
       <ListItemText primary={primary} />
     </ListItemButton>
   );
