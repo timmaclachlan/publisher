@@ -1,6 +1,8 @@
 import React from "react";
 
-import { Box, Stack, Typography, Button } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
+import { Box, Stack, Typography, Button, IconButton } from "@mui/material";
 
 const CardTop = (props) => {
   return (
@@ -26,6 +28,11 @@ const CardTop = (props) => {
           >
             Edit
           </Button>
+        )}
+        {props.allowClose && (
+          <IconButton color="whitepanel" onClick={props.onCloseClick}>
+            <CloseIcon />
+          </IconButton>
         )}
       </Stack>
     </Box>

@@ -37,6 +37,15 @@ let routeBuilder = (path) => {
     return getQuery(sql, res);
   });
 
+  router.get("/authors/:id/royaltieshistorys", (req, res) => {
+    console.log("GET ROYALTIESHISTORY");
+
+    let sql = `SELECT * FROM ${TABLEQUAL_ROYALITESHISTORY} 
+    WHERE authorid='${req.params.id}' ORDER BY startperiod`;
+
+    return getQuery(sql, res);
+  });
+
   router.get("/lookup/authors", (req, res) => {
     let sql = `SELECT id,realname FROM ${TABLEQUAL_AUTHORS} ORDER BY realname`;
     return getQuery(sql, res);

@@ -45,7 +45,6 @@ const AuthorDetail = ({ onRecordChange }) => {
       try {
         let response = await readById("author", id);
         if (Array.isArray(response.result) && response.result.length > 0) {
-          debugger;
           authorRecord = response.result[0];
         }
         if (isEmptyObject(authorRecord)) {

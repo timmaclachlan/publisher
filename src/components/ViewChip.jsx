@@ -8,6 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const ViewChip = ({
   label,
   value,
+  mykey,
   color,
   tooltip,
   size,
@@ -46,7 +47,7 @@ const ViewChip = ({
         return renderViewChip(text, `service-${index}`);
       });
     }
-    return renderViewChip(label, "service-1");
+    return renderViewChip(label, mykey);
   }
   return null;
 };

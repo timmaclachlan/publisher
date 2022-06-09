@@ -36,6 +36,17 @@ export const getQuarterDates = (quarterWithYear) => {
   return quarterWithYear;
 }
 
+export const convertQuarterStringToDisplay = (quarterString) => {
+  if (quarterString.includes("-")) {
+    const split = quarterString.split("-");
+    return `${split[0].substr(1)} to ${split[1]}`;
+  }
+  if (quarterString.substr(0, 1) === "0") {
+    return quarterString.substr(1);
+  }
+  return `${quarterString.substr(1)} Q${quarterString.substr(0, 1)}`;
+}
+
 export const getFormattedCurrency = (amount) => {
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
 }

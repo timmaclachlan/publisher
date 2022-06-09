@@ -1,6 +1,6 @@
 import { Typography, CircularProgress, Stack, Box } from "@mui/material";
 
-const LoadingOverlay = () => {
+const LoadingOverlay = ({ top = "40%", left = "40%" }) => {
   return (
     <>
       <Box
@@ -10,8 +10,8 @@ const LoadingOverlay = () => {
           borderColor: "primary.dark",
           padding: "30px",
           position: "absolute",
-          top: "40%",
-          left: "40%",
+          top: { top },
+          left: { left },
           zIndex: 1000,
         }}
       >

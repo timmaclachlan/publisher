@@ -254,19 +254,24 @@ const AuthorView = ({
                         label="Active"
                         value={author.active}
                         color="primary"
+                        mykey="chip-active"
+                        tooltip="Author is active"
                         width={100}
                       />
                       <ViewChip
                         label="Retained"
                         value={author.retained}
                         color="primary"
+                        mykey="chip-retained"
                         width={100}
+                        tooltip="Author is retained"
                       />
                       <ViewChip
                         label="In UK"
                         value={author.taxuk}
                         color="success"
                         tooltip="Pays UK tax (or not)"
+                        mykey="chip-taxuk"
                         width={100}
                       />
                     </Stack>
@@ -440,6 +445,7 @@ const AuthorView = ({
 
               <Grid item md={4}>
                 <HistorySummary
+                  authorId={author.id}
                   loading={loading}
                   width={100}
                   height={30}
