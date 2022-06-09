@@ -16,6 +16,7 @@ import {
   Avatar,
   Box,
   Divider,
+  TextField,
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
@@ -36,20 +37,37 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import BalanceIcon from "@mui/icons-material/Balance";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
 
 import ViewChip from "../ViewChip";
 import LoadingOverlay from "../LoadingOverlay";
+import CardTopHeader from "../CardTopHeader";
+import HistorySummary from "./HistorySummary";
 
 import { isEmptyObject, getFormattedCurrency } from "../../utils";
 
 const AuthorView = ({
   author,
   onUpdateEditMode,
+  onUpdateAuthor,
   isFavorite,
   onFavoriteToggle,
 }) => {
   const loading = isEmptyObject(author);
   const navigate = useNavigate();
+
+  const [notesEditMode, setNotesEditMode] = React.useState(false);
+
+  const handleChange = (name, value) => {
+    if (onUpdateAuthor) {
+      onUpdateAuthor(name, value);
+    }
+  };
+
+  const valueChange = (event) => {
+    const { name, value } = event.target;
+    handleChange(name, value);
+  };
 
   const displayField = (
     field,
@@ -309,9 +327,25 @@ const AuthorView = ({
                   <CardTopHeader
                     title="Notes"
                     icon={<SpeakerNotesIcon />}
+                    allowEdit
+                    editMode
+                    onEditClick={() => setNotesEditMode(!notesEditMode)}
                   ></CardTopHeader>
                   <CardContent>
-                    {displayField(author.notes, 300, 300, "subtitle1", 200)}
+                    {!notesEditMode &&
+                      displayField(author.notes, 300, 300, "subtitle1", 200)}
+                    {notesEditMode && (
+                      <TextField
+                        label="Notes"
+                        name="notes"
+                        variant="outlined"
+                        multiline
+                        rows={6}
+                        value={author.notes}
+                        onChange={valueChange}
+                        fullWidth
+                      />
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
@@ -360,14 +394,28 @@ const AuthorView = ({
                           <Typography variant="subtitle2" align="center">
                             PayPal
                           </Typography>
-
                           <Typography variant="subtitle1" align="center">
                             {displayField(author.paypal, 150, 20)}
                           </Typography>
                         </Stack>
                         <Divider orientation="vertical" flexItem />
-                        <Stack sx={{ flex: 0.5 }}></Stack>
-                        <Stack sx={{ flex: 0.5 }}></Stack>
+                        <Stack sx={{ flex: 0.5 }}>
+                          <Typography variant="subtitle2" align="center">
+                            IBAN
+                          </Typography>
+                          <Typography variant="subtitle1" align="center">
+                            Not set
+                          </Typography>
+                        </Stack>
+                        <Divider orientation="vertical" flexItem />
+                        <Stack sx={{ flex: 0.5 }}>
+                          <Typography variant="subtitle2" align="center">
+                            SwiftBIC
+                          </Typography>
+                          <Typography variant="subtitle1" align="center">
+                            Not set
+                          </Typography>
+                        </Stack>
                       </Stack>
                     </Stack>
                   </CardContent>
@@ -375,143 +423,97 @@ const AuthorView = ({
               </Grid>
 
               <Grid item md={4}>
-                <Card>
-                  <CardTopHeader
-                    title="Current Financials"
-                    icon={<BalanceIcon />}
-                  />
-                  <CardContent>
-                    <Stack spacing={1} direction="row">
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Balance
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.balance)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Owed Gross
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.grossowed)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Net Gross
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.netowed)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Tax
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.tax)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                <HistorySummary
+                  loading={loading}
+                  width={100}
+                  height={30}
+                  headerTitle="Current Financials"
+                  headerIcon={<BalanceIcon />}
+                  label1="Balance"
+                  label2="Owed Gross"
+                  label3="Owed Net"
+                  value1={author.balance}
+                  value2={author.grossowed}
+                  value3={author.netowed}
+                />
               </Grid>
 
               <Grid item md={4}>
-                <Card>
-                  <CardTopHeader title="Royalties" icon={<BarChartIcon />} />
-                  <CardContent>
-                    <Stack spacing={1} direction="row">
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          This Period
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.royaltiesthisperiod)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Previous Period
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.royaltiesprevperiod)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Total Royalties
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.royaltiestotal)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                <HistorySummary
+                  loading={loading}
+                  width={100}
+                  height={30}
+                  headerTitle="Royalties"
+                  headerIcon={<BarChartIcon />}
+                  label1="This Period"
+                  label2="Previous Period"
+                  label3="Total Royalties"
+                  value1={author.royaltiesthisperiod}
+                  value2={author.royaltiesprevperiod}
+                  value3={author.royaltiestotal}
+                />
               </Grid>
 
               <Grid item md={4}>
-                <Card>
-                  <CardTopHeader title="Payments" icon={<PaymentsIcon />} />
-                  <CardContent>
-                    <Stack spacing={1} direction="row">
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          This Period
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.paymentsthisperiod)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Previous Period
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.paymentsprevperiod)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                      <Divider orientation="vertical" flexItem />
-                      <Stack sx={{ flex: 0.5 }}>
-                        <Typography variant="subtitle2" align="center">
-                          Total Payments
-                        </Typography>
-                        <Typography variant="subtitle1" align="center">
-                          <Typography variant="h5">
-                            {getFormattedCurrency(author.paymentstotal)}
-                          </Typography>
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                <HistorySummary
+                  loading={loading}
+                  width={100}
+                  height={30}
+                  headerTitle="Tax"
+                  headerIcon={<PaymentsIcon />}
+                  label1="This Period"
+                  label3="Total Tax"
+                  value1={author.tax}
+                  value3={author.taxtotal}
+                />
+              </Grid>
+
+              <Grid item md={4}>
+                <HistorySummary
+                  loading={loading}
+                  width={100}
+                  height={30}
+                  headerTitle="Payments"
+                  headerIcon={<PaymentsIcon />}
+                  label1="This Period"
+                  label2="Previous Period"
+                  label3="Total Payments"
+                  value1={author.paymentsthisperiod}
+                  value2={author.paymentsprevperiod}
+                  value3={author.paymentstotal}
+                />
+              </Grid>
+
+              <Grid item md={4}>
+                <HistorySummary
+                  loading={loading}
+                  width={100}
+                  height={30}
+                  headerTitle="Paid Sales"
+                  headerIcon={<ShowChartIcon />}
+                  label1="This Period"
+                  label2="Previous Period"
+                  label3="Total Paid Sales"
+                  value1={author.paidsalesthisperiod}
+                  value2={author.paidsalesprevperiod}
+                  value3={author.paidsalestotal}
+                />
+              </Grid>
+
+              <Grid item md={4}>
+                <HistorySummary
+                  loading={loading}
+                  width={100}
+                  height={30}
+                  headerTitle="Free Sales"
+                  headerIcon={<ShowChartIcon />}
+                  label1="This Period"
+                  label2="Previous Period"
+                  label3="Total Free Sales"
+                  value1={author.freesalesthisperiod}
+                  value2={author.freesalesprevperiod}
+                  value3={author.freesalestotal}
+                />
               </Grid>
             </Grid>
           </Stack>
@@ -524,37 +526,3 @@ const AuthorView = ({
 };
 
 export default AuthorView;
-
-const CardTopHeader = (props) => {
-  return (
-    <CardHeader
-      sx={{ p: 0, m: 0 }}
-      subheader={<CardTop title={props.title} icon={props.icon} />}
-    />
-  );
-};
-
-const CardTop = (props) => {
-  return (
-    <Box sx={{ backgroundColor: "primary.main" }}>
-      <Stack direction="row" justifyContent="space-between">
-        <Stack direction="row" alignItems="center">
-          {props.icon && (
-            <Typography variant="caption" color="white" sx={{ pl: 1, pt: 0.5 }}>
-              {props.icon}
-            </Typography>
-          )}
-
-          <Typography variant="h6" color="white" sx={{ pl: 1 }}>
-            {props.title}
-          </Typography>
-        </Stack>
-        {props.allowEdit && (
-          <Button variant="text" size="small" color="whitepanel">
-            Edit
-          </Button>
-        )}
-      </Stack>
-    </Box>
-  );
-};

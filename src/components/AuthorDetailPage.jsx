@@ -169,6 +169,7 @@ const AuthorDetail = ({ onRecordChange }) => {
               <AuthorView
                 author={author}
                 onUpdateEditMode={setEditMode}
+                onUpdateAuthor={updateAuthor}
                 onFavoriteToggle={favoriteToggle}
                 isFavorite={favorite}
               />

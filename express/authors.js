@@ -26,7 +26,10 @@ let routeBuilder = (path) => {
     let sql = `SELECT authors.*, 
     rh.balance,rh.grossowed,rh.netowed,rh.tax,
     rh.royaltiesthisperiod,rh.royaltiesprevperiod,rh.royaltiestotal,
-    rh.paymentsthisperiod,rh.paymentsprevperiod,rh.paymentstotal
+    rh.paymentsthisperiod,rh.paymentsprevperiod,rh.paymentstotal,
+    rh.paidsalesthisperiod,rh.paidsalesprevperiod,rh.paidsalestotal,
+    rh.freesalesthisperiod,rh.freesalesprevperiod,rh.freesalestotal,
+    rh.tax, rh.taxtotal
     FROM ${TABLEQUAL_AUTHORS} authors
     LEFT JOIN ${TABLEQUAL_ROYALITESHISTORY} rh ON rh.authorid = authors.id
     AND period='${quarterString}'
