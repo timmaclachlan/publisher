@@ -38,6 +38,8 @@ const HistorySummary = ({
   value3,
   width,
   height,
+  isCurrency = true,
+  viewDetails = false,
 }) => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dataHistory, setDataHistory] = React.useState([]);
@@ -47,8 +49,11 @@ const HistorySummary = ({
     if (loading) {
       return <Skeleton variant="rectangular" width={width} height={height} />;
     }
-    return <Typography variant="h5">{value}</Typography>;
+    return <Typography variant="h7">{getFormatted(value)}</Typography>;
   };
+
+  const getFormatted = (value) =>
+    isCurrency ? getFormattedCurrency(value) : value;
 
   const onViewDetailsClick = () => {
     setOpenDialog(true);
@@ -72,61 +77,112 @@ const HistorySummary = ({
         console.log(error);
       }
     };
-    retrieveHistory();
+    debugger;
+    if (dataHistory.length === 0) retrieveHistory();
+  };
+
+  const getOrdersForPeriod = () => {
+    debugger;
+    alert("here");
   };
 
   const columnDefs = [
     {
       field: "period",
-      valueFormatter: (params) => {
-        return convertQuarterStringToDisplay(params.value);
+      cellRenderer: (params) => {
+        return (
+          <Typography variant="h6">
+            {convertQuarterStringToDisplay(params.value)}
+          </Typography>
+        );
       },
     },
     {
+      field: "paidsalesthisperiod",
+      headerName: "Copies Sold",
+      cellRenderer: (params) => {
+        return (
+          <Typography variant="h6">
+            {parseInt(params.value) === 0 ? "-" : params.value}
+          </Typography>
+        );
+      },
+    },
+    {
+      headerName: "Royalties",
       field: "royaltiesthisperiod",
-      headerName: "Current",
+      cellStyle: { color: "darkgreen" },
     },
     {
-      field: "royaltiesprevperiod",
-      headerName: "Previous",
+      headerName: "Owed (Gross)",
+      field: "grossowed",
     },
     {
-      field: "royaltiestotal",
-      headerName: "Total",
+      field: "tax",
+    },
+    {
+      headerName: "Owed (Net)",
+      field: "netowed",
+    },
+    {
+      headerName: "Payments",
+      field: "paymentsthisperiod",
+    },
+    {
+      field: "balance",
+      cellStyle: { color: "darkgreen" },
     },
   ];
 
+  const renderGrid = () => {
+    if (openDialog)
+      return (
+        <AgGridReact
+          ref={gridRef}
+          defaultColDef={{
+            flex: 0.1,
+            filter: "agNumberColumnFilter",
+            cellRenderer: (params) => {
+              return (
+                <Typography variant="h6">
+                  {parseInt(params.value) === 0
+                    ? "-"
+                    : getFormattedCurrency(params.value)}
+                </Typography>
+              );
+            },
+          }}
+          containerStyle={{
+            height: 500,
+            width: 1200,
+          }}
+          rowData={dataHistory}
+          columnDefs={columnDefs}
+          columnHoverHighlight={true}
+          pagination={true}
+          paginationPageSize={15}
+          onGridReady={onGridReady}
+          onRowClicked={() => getOrdersForPeriod()}
+          gridOptions={{
+            loadingOverlayComponent: LoadingOverlay,
+          }}
+        ></AgGridReact>
+      );
+    return null;
+  };
+
   return (
     <>
-      <Dialog open={openDialog}>
+      <Dialog open={openDialog} fullScreen maxWidth="xl">
         <CardTop
-          title="View Royalties"
+          title="Royalties / Balance Report"
           onCloseClick={onCloseDialogClick}
           allowClose
+          closeIsText
         />
-        <DialogTitle>Royalties History</DialogTitle>
-        <Box className="ag-theme-alpine">
-          <AgGridReact
-            ref={gridRef}
-            defaultColDef={{
-              flex: 0.25,
-              filter: "agNumberColumnFilter",
-              valueFormatter: (params) => getFormattedCurrency(params.value),
-            }}
-            containerStyle={{
-              height: 500,
-              width: 600,
-            }}
-            rowData={dataHistory}
-            columnDefs={columnDefs}
-            columnHoverHighlight={true}
-            pagination={true}
-            paginationPageSize={15}
-            onGridReady={onGridReady}
-            gridOptions={{
-              loadingOverlayComponent: LoadingOverlay,
-            }}
-          ></AgGridReact>
+        <DialogTitle>{`${headerTitle} History`}</DialogTitle>
+        <Box className="ag-theme-alpine" sx={{ width: "fit-content" }}>
+          {renderGrid()}
         </Box>
       </Dialog>
       <Card>
@@ -173,7 +229,10 @@ const HistorySummary = ({
             </Stack>
           </Stack>
         </CardContent>
-        <CardBottom onViewDetailsClick={onViewDetailsClick} />
+        <CardBottom
+          viewDetails={viewDetails}
+          onViewDetailsClick={onViewDetailsClick}
+        />
       </Card>
     </>
   );
@@ -185,7 +244,7 @@ const CardBottom = (props) => {
   return (
     <Box sx={{ backgroundColor: "primary.dark", height: "26px" }}>
       <Stack direction="row" justifyContent="center">
-        {props.onViewDetailsClick && (
+        {props.viewDetails && (
           <Button
             variant="text"
             size="small"

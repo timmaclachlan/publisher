@@ -71,6 +71,9 @@ const FormatsView = ({ formats }) => {
   const renderFormatCard = (format, formatDisplay) => {
     return (
       <>
+        <Grid item md={2}>
+          <img src={`/assets/${formatDisplay}.jpg`} alt={formatDisplay} />
+        </Grid>
         <Grid item md={10}>
           <Card>
             <CardHeader
@@ -194,8 +197,6 @@ const FormatsView = ({ formats }) => {
             </CardContent>
           </Card>
         </Grid>
-
-        <Grid item md={2}></Grid>
       </>
     );
   };

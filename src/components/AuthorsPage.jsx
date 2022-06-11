@@ -18,12 +18,16 @@ const LinkComponent = ({ data }) => {
 };
 
 const AvatarComponent = ({ data }) => {
-  const nameSplit = data.realname.split(" ");
-  const namemap = nameSplit
-    .map((word) => {
-      return word[0].toUpperCase();
-    })
-    .join("");
+  const nameSplit = data.realname.trim().split(" ");
+  let namemap = data.realname;
+
+  if (nameSplit.length > 1) {
+    namemap = nameSplit
+      .map((word) => {
+        return word[0].toUpperCase();
+      })
+      .join("");
+  }
 
   return (
     <Avatar
@@ -101,7 +105,6 @@ const Authors = ({ onRecordChange }) => {
   const tidyAddressListEntry = (addressEntry) => {
     if (addressEntry) {
       var newstr = addressEntry.replace(/[, ]+$/, "").trim();
-      debugger;
       return newstr;
     }
     return "";

@@ -47,7 +47,7 @@ const TABLEQUAL_ROYALITESHISTORY = `"timm2006/athena"."${TABLE_BOOKS_ROYALTIESHI
 
 router.get("/authors/:id/books", (req, res) => {
   console.log("get books for authors");
-  let sql = `SELECT id, title, publicationdate,
+  let sql = `SELECT id, title, publicationdate, published, 
   (SELECT array_to_string(array_agg(services.service), ',') 
   FROM ${TABLEQUAL_SERVICESASSIGNED} assigned
   JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid

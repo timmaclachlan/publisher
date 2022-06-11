@@ -41,7 +41,7 @@ let routeBuilder = (path) => {
     console.log("GET ROYALTIESHISTORY");
 
     let sql = `SELECT * FROM ${TABLEQUAL_ROYALITESHISTORY} 
-    WHERE authorid='${req.params.id}' ORDER BY startperiod`;
+    WHERE authorid='${req.params.id}' ORDER BY startperiod DESC`;
 
     return getQuery(sql, res);
   });

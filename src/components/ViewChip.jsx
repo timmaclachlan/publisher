@@ -4,12 +4,15 @@ import { Chip, Tooltip } from "@mui/material";
 
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
+import { ValueCache } from "ag-grid-community";
 
 const ViewChip = ({
   label,
   value,
   mykey,
   color,
+  tooltipTrue,
+  tooltipFalse,
   tooltip,
   size,
   variant,
@@ -24,8 +27,34 @@ const ViewChip = ({
   };
 
   const renderViewChip = (text, key) => {
-    return (
-      <Tooltip title={tooltip}>
+    let tooltipTitle = "";
+
+    if (tooltip) {
+      tooltipTitle = tooltip;
+    } else {
+      if (tooltipTrue && value) {
+        tooltipTitle = tooltipTrue;
+      } else {
+        tooltipTitle = tooltipFalse;
+      }
+    }
+    if (tooltipTitle) {
+      return (
+        <Tooltip title={tooltipTitle}>
+          <Chip
+            key={key}
+            label={text}
+            color={color ? color : "primary"}
+            variant={getVariant()}
+            icon={value ? <DoneIcon /> : <CloseIcon />}
+            size={size}
+            sx={{ width: width, mr: 1 }}
+            onClick={onClick}
+          />
+        </Tooltip>
+      );
+    } else {
+      return (
         <Chip
           key={key}
           label={text}
@@ -36,18 +65,19 @@ const ViewChip = ({
           sx={{ width: width, mr: 1 }}
           onClick={onClick}
         />
-      </Tooltip>
-    );
+      );
+    }
   };
 
   if (label) {
     let chips = label.split(",");
     if (chips.length > 1) {
       return chips.map((text, index) => {
-        return renderViewChip(text, `service-${index}`);
+        return renderViewChip(text, "service-" + index);
       });
+    } else {
+      return renderViewChip(label, mykey);
     }
-    return renderViewChip(label, mykey);
   }
   return null;
 };

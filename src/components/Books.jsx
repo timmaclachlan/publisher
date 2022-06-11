@@ -49,7 +49,7 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
         const dateString = getFormattedDate(params.value);
         return dateString ? dateString : "No date";
       },
-      flex: 0.5,
+      flex: 0.75,
     },
     {
       field: "authorname",
@@ -61,13 +61,13 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
     {
       field: "service",
       headerName: "Services",
-      flex: 0.75,
+      flex: 1.5,
       cellRenderer: (params) => {
         return (
           <ViewChip
+            mykey={`chip-${params.data.id}`}
             label={params.value}
             color="primary"
-            tooltip="Product type"
             variant="outlined"
             size="small"
             width={80}
@@ -99,7 +99,7 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
         className="ag-theme-alpine"
         style={{
           height: gridHeight ? gridHeight : 600,
-          width: gridWidth ? gridWidth : 600,
+          width: gridWidth ? gridWidth : 900,
         }}
       >
         <AgGridReact

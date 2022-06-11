@@ -15,7 +15,7 @@ const CardTop = (props) => {
             </Typography>
           )}
 
-          <Typography variant="h6" color="white" sx={{ pl: 1 }}>
+          <Typography variant="h7" color="white" sx={{ pl: 1 }}>
             {props.title}
           </Typography>
         </Stack>
@@ -29,10 +29,19 @@ const CardTop = (props) => {
             Edit
           </Button>
         )}
-        {props.allowClose && (
+        {props.allowClose && !props.closeIsText && (
           <IconButton color="whitepanel" onClick={props.onCloseClick}>
             <CloseIcon />
           </IconButton>
+        )}
+        {props.allowClose && props.closeIsText && (
+          <Button
+            variant="text"
+            color="whitepanel"
+            onClick={props.onCloseClick}
+          >
+            Close
+          </Button>
         )}
       </Stack>
     </Box>

@@ -140,6 +140,10 @@ const AuthorDetail = ({ onRecordChange }) => {
     setFavorite(!favorite);
   };
 
+  const isOneBookPublished = () => {
+    return books.some((book) => book.published);
+  };
+
   return (
     <>
       <Snackbar
@@ -171,6 +175,7 @@ const AuthorDetail = ({ onRecordChange }) => {
                 onUpdateAuthor={updateAuthor}
                 onFavoriteToggle={favoriteToggle}
                 isFavorite={favorite}
+                isOneBookPublished={isOneBookPublished()}
               />
             )}
 

@@ -7,7 +7,6 @@ import {
   Button,
   Typography,
   Card,
-  CardHeader,
   CardContent,
   Stack,
   Skeleton,
@@ -34,23 +33,20 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes";
 import PaymentIcon from "@mui/icons-material/Payment";
 import SettingsIcon from "@mui/icons-material/Settings";
-import BalanceIcon from "@mui/icons-material/Balance";
-import PaymentsIcon from "@mui/icons-material/Payments";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
 
 import ViewChip from "../ViewChip";
 import LoadingOverlay from "../LoadingOverlay";
 import CardTopHeader from "../CardTopHeader";
-import HistorySummary from "./HistorySummary";
+import AuthorRoyalties from "./AuthorRoyalties";
 
-import { isEmptyObject, getFormattedCurrency } from "../../utils";
+import { isEmptyObject } from "../../utils";
 
 const AuthorView = ({
   author,
   onUpdateEditMode,
   onUpdateAuthor,
   isFavorite,
+  isOneBookPublished,
   onFavoriteToggle,
 }) => {
   const loading = isEmptyObject(author);
@@ -74,7 +70,7 @@ const AuthorView = ({
     width,
     height,
     variant = "subtitle1",
-    maxchars = 50
+    maxchars = 22
   ) => {
     return loading ? (
       <Skeleton variant="rectangular" width={width} height={height} />
@@ -86,10 +82,14 @@ const AuthorView = ({
           </Typography>
         </Tooltip>
       ) : (
-        <Typography variant={variant}>{field}</Typography>
+        <Typography variant={variant} align="center">
+          {field}
+        </Typography>
       )
     ) : (
-      <Typography variant={variant}>Not set</Typography>
+      <Typography variant={variant} align="center">
+        Not set
+      </Typography>
     );
   };
 
@@ -211,9 +211,7 @@ const AuthorView = ({
                             >
                               1
                             </Typography>
-                            <Typography variant="subtitle1">
-                              {displayField(author.phonenumber, 150, 20)}
-                            </Typography>
+                            {displayField(author.phonenumber, 150, 20)}
                           </Stack>
                           <Stack direction="row" spacing={1}>
                             <PhoneIcon color="primary" />
@@ -255,7 +253,8 @@ const AuthorView = ({
                         value={author.active}
                         color="primary"
                         mykey="chip-active"
-                        tooltip="Author is active"
+                        tooltipTrue="Author is active"
+                        tooltipFalse="Author is not active"
                         width={100}
                       />
                       <ViewChip
@@ -264,13 +263,15 @@ const AuthorView = ({
                         color="primary"
                         mykey="chip-retained"
                         width={100}
-                        tooltip="Author is retained"
+                        tooltipTrue="Author is retained"
+                        tooltipFalse="Author is not retained"
                       />
                       <ViewChip
                         label="In UK"
                         value={author.taxuk}
                         color="success"
-                        tooltip="Pays UK tax (or not)"
+                        tooltipTrue="In UK so we don't deduct tax from author royalties"
+                        tooltipFalse="Not in UK so we deduct tax from author royalties"
                         mykey="chip-taxuk"
                         width={100}
                       />
@@ -299,9 +300,7 @@ const AuthorView = ({
                     alignItems="center"
                   >
                     <PersonIcon sx={{ fontSize: 60 }} />
-                    <Typography variant="subtitle1">
-                      {displayField(author.realname, 150, 20, "caption", 15)}
-                    </Typography>
+                    {displayField(author.realname, 150, 20, "caption", 15)}
                   </Stack>
                 </Avatar>
               </Grid>
@@ -369,9 +368,7 @@ const AuthorView = ({
                             Sort Code
                           </Typography>
 
-                          <Typography variant="subtitle1" align="center">
-                            {displayField(author.sortcode, 150, 20)}
-                          </Typography>
+                          {displayField(author.sortcode, 150, 20)}
                         </Stack>
                         <Divider orientation="vertical" flexItem />
                         <Stack sx={{ flex: 0.5 }}>
@@ -379,9 +376,7 @@ const AuthorView = ({
                             Account No
                           </Typography>
 
-                          <Typography variant="subtitle1" align="center">
-                            {displayField(author.accountno, 150, 20)}
-                          </Typography>
+                          {displayField(author.accountno, 150, 20)}
                         </Stack>
                         <Divider orientation="vertical" flexItem />
                         <Stack sx={{ flex: 0.5 }}>
@@ -389,9 +384,7 @@ const AuthorView = ({
                             Name
                           </Typography>
 
-                          <Typography variant="subtitle1" align="center">
-                            {displayField(author.accountname, 150, 20)}
-                          </Typography>
+                          {displayField(author.accountname, 150, 20)}
                         </Stack>
                       </Stack>
                       <Stack direction="row" spacing={1}>
@@ -399,9 +392,7 @@ const AuthorView = ({
                           <Typography variant="subtitle2" align="center">
                             PayPal
                           </Typography>
-                          <Typography variant="subtitle1" align="center">
-                            {displayField(author.paypal, 150, 20)}
-                          </Typography>
+                          {displayField(author.paypal, 150, 20)}
                         </Stack>
                         <Divider orientation="vertical" flexItem />
                         <Stack sx={{ flex: 0.5 }}>
@@ -427,100 +418,9 @@ const AuthorView = ({
                 </Card>
               </Grid>
 
-              <Grid item md={4}>
-                <HistorySummary
-                  loading={loading}
-                  width={100}
-                  height={30}
-                  headerTitle="Current Financials"
-                  headerIcon={<BalanceIcon />}
-                  label1="Balance"
-                  label2="Owed Gross"
-                  label3="Owed Net"
-                  value1={author.balance}
-                  value2={author.grossowed}
-                  value3={author.netowed}
-                />
-              </Grid>
-
-              <Grid item md={4}>
-                <HistorySummary
-                  authorId={author.id}
-                  loading={loading}
-                  width={100}
-                  height={30}
-                  headerTitle="Royalties"
-                  headerIcon={<BarChartIcon />}
-                  label1="This Period"
-                  label2="Previous Period"
-                  label3="Total Royalties"
-                  value1={author.royaltiesthisperiod}
-                  value2={author.royaltiesprevperiod}
-                  value3={author.royaltiestotal}
-                />
-              </Grid>
-
-              <Grid item md={4}>
-                <HistorySummary
-                  loading={loading}
-                  width={100}
-                  height={30}
-                  headerTitle="Tax"
-                  headerIcon={<PaymentsIcon />}
-                  label1="This Period"
-                  label3="Total Tax"
-                  value1={author.tax}
-                  value3={author.taxtotal}
-                />
-              </Grid>
-
-              <Grid item md={4}>
-                <HistorySummary
-                  loading={loading}
-                  width={100}
-                  height={30}
-                  headerTitle="Payments"
-                  headerIcon={<PaymentsIcon />}
-                  label1="This Period"
-                  label2="Previous Period"
-                  label3="Total Payments"
-                  value1={author.paymentsthisperiod}
-                  value2={author.paymentsprevperiod}
-                  value3={author.paymentstotal}
-                />
-              </Grid>
-
-              <Grid item md={4}>
-                <HistorySummary
-                  loading={loading}
-                  width={100}
-                  height={30}
-                  headerTitle="Paid Sales"
-                  headerIcon={<ShowChartIcon />}
-                  label1="This Period"
-                  label2="Previous Period"
-                  label3="Total Paid Sales"
-                  value1={author.paidsalesthisperiod}
-                  value2={author.paidsalesprevperiod}
-                  value3={author.paidsalestotal}
-                />
-              </Grid>
-
-              <Grid item md={4}>
-                <HistorySummary
-                  loading={loading}
-                  width={100}
-                  height={30}
-                  headerTitle="Free Sales"
-                  headerIcon={<ShowChartIcon />}
-                  label1="This Period"
-                  label2="Previous Period"
-                  label3="Total Free Sales"
-                  value1={author.freesalesthisperiod}
-                  value2={author.freesalesprevperiod}
-                  value3={author.freesalestotal}
-                />
-              </Grid>
+              {isOneBookPublished && (
+                <AuthorRoyalties author={author} loading={loading} />
+              )}
             </Grid>
           </Stack>
         </Box>
