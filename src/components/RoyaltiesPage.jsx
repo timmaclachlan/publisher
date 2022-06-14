@@ -18,13 +18,26 @@ import {
   Stepper,
   Step,
   StepLabel,
+  TextField,
+  Snackbar,
+  Alert as MuiAlert,
 } from "@mui/material";
+
+import { LoadingButton } from "@mui/lab";
 
 import BarChartIcon from "@mui/icons-material/BarChart";
 import BuildIcon from "@mui/icons-material/Build";
+import SaveIcon from "@mui/icons-material/Save";
 
-import { readAllByQuery } from "../fetcher";
-import { getQuarterDates, getFormattedCurrency } from "../utils";
+import LoadingOverlay from "./LoadingOverlay";
+
+import { readAllByQuery, updateAll } from "../fetcher";
+import {
+  getQuarterDates,
+  getFormattedCurrency,
+  getCurrentQuarterYear,
+  convertQuarterStringToDisplay,
+} from "../utils";
 
 const steps = ["Choose Parameters", "Step 2", "Step 3"];
 
@@ -41,8 +54,15 @@ const LinkComponent = ({ data }) => {
 };
 
 const RoyaltiesPage = () => {
+  let currentQuarter = getCurrentQuarterYear();
+  let currentPaymentThreshold = 20;
   const [activeStep, setActiveStep] = React.useState(0);
-  const [selectedQuarter, setSelectedQuarter] = React.useState("");
+  const [selectedQuarter, setSelectedQuarter] = React.useState(
+    `${currentQuarter.quarter}${currentQuarter.year}`
+  );
+  const [paymentThreshold, setPaymentThreshold] = React.useState(
+    currentPaymentThreshold
+  );
 
   const handleNextStep = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -54,6 +74,10 @@ const RoyaltiesPage = () => {
 
   const onQuarterChanged = (ev) => {
     setSelectedQuarter(ev.target.value);
+  };
+
+  const onThresholdChanged = (ev) => {
+    setPaymentThreshold(ev.target.value);
   };
 
   return (
@@ -107,11 +131,16 @@ const RoyaltiesPage = () => {
             <>
               {activeStep === 0 && (
                 <Step1
-                  quarter={selectedQuarter}
                   onQuarterChanged={onQuarterChanged}
+                  onThresholdChanged={onThresholdChanged}
                 />
               )}
-              {activeStep === 1 && <Step2 quarter={selectedQuarter} />}
+              {activeStep === 1 && (
+                <Step2
+                  quarter={selectedQuarter}
+                  paymentThreshold={paymentThreshold}
+                />
+              )}
 
               <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                 <Button
@@ -137,11 +166,13 @@ const RoyaltiesPage = () => {
 
 export default RoyaltiesPage;
 
-const Step1 = ({ selectedQuarter, onQuarterChanged }) => {
+const Step1 = ({ onQuarterChanged, onThresholdChanged }) => {
   const renderQuarters = () => {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
-    const quarter = currentMonth / 3 + 1;
+    const quarter = Math.round(currentMonth / 3);
+
+    let currentQuarter = `${quarter}${currentYear}`;
 
     let quarters = [];
     for (let y = currentYear; y > currentYear - 3; y--) {
@@ -154,12 +185,14 @@ const Step1 = ({ selectedQuarter, onQuarterChanged }) => {
         );
       }
     }
+
     return (
       <Select
         labelId="select-quarter-label"
         label="Sales Quarter"
+        defaultValue={currentQuarter}
+        variant="outlined"
         onChange={onQuarterChanged}
-        value={selectedQuarter}
       >
         {quarters}
       </Select>
@@ -181,17 +214,13 @@ const Step1 = ({ selectedQuarter, onQuarterChanged }) => {
               {renderQuarters()}
             </FormControl>
           </Grid>
-
-          <Grid item md={4}>
-            <FormControl fullWidth>
-              <InputLabel id="select-format-label">Format</InputLabel>
-              <Select labelId="select-format-label" label="Format">
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="1">Paperback</MenuItem>
-                <MenuItem value="2">Hardback</MenuItem>
-                <MenuItem value="3">E-Book</MenuItem>
-              </Select>
-            </FormControl>
+          <Grid item md={1.5}>
+            <TextField
+              variant="outlined"
+              label="Payment Threshold"
+              defaultValue={20}
+              onChange={onThresholdChanged}
+            />
           </Grid>
         </Grid>
       </CardContent>
@@ -199,8 +228,17 @@ const Step1 = ({ selectedQuarter, onQuarterChanged }) => {
   );
 };
 
-const Step2 = ({ quarter }) => {
+const Step2 = ({ quarter, paymentThreshold }) => {
   const [data, setData] = React.useState([]);
+  const gridRef = React.useRef(null);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [hasChangedData, setHasChangedData] = React.useState(false);
+  const [notification, setNotification] = React.useState({
+    show: false,
+    severity: "",
+    message: "",
+    autoHide: false,
+  });
 
   const columnDefs = [
     {
@@ -209,152 +247,192 @@ const Step2 = ({ quarter }) => {
       valueFormatter: (params) => params.value,
       cellRenderer: LinkComponent,
     },
+
     {
-      field: "balance",
-      headerName: "Balance",
+      headerName: "Owed (Gross)",
+      field: "grossowed",
     },
     {
-      headerName: "Owed",
-      children: [
-        {
-          field: "netowed",
-          headerName: "Owed (Net)",
-        },
-        {
-          field: "grossowed",
-          headerName: "Owed (Gross)",
-          columnGroupShow: "open",
-        },
-        {
-          field: "tax",
-          headerName: "Tax",
-          columnGroupShow: "open",
-        },
-      ],
+      field: "tax",
     },
     {
-      headerName: "Royalties",
-      children: [
-        {
-          field: "royaltiesthisperiod",
-          headerName: "Current",
-        },
-        {
-          field: "royaltiesprevperiod",
-          headerName: "Previous",
-          columnGroupShow: "open",
-        },
-        {
-          field: "royaltiestotal",
-          headerName: "Total",
-          columnGroupShow: "open",
-        },
-      ],
+      headerName: "Owed (Net)",
+      field: "netowed",
+      cellStyle: { color: "darkgreen" },
     },
     {
-      headerName: "Payments",
-      children: [
-        {
-          field: "paymentsthisperiod",
-          headerName: "Current",
-        },
-        {
-          field: "paymentsprevperiod",
-          headerName: "Previous",
-          columnGroupShow: "open",
-        },
-        {
-          field: "paymentstotal",
-          headerName: "Total",
-          columnGroupShow: "open",
-        },
-      ],
-    },
-    {
-      headerName: "Paid Sales",
-      children: [
-        {
-          field: "paidsalesthisperiod",
-          headerName: "Current",
-          valueFormatter: (params) => params.value,
-        },
-        {
-          field: "paidsalesprevperiod",
-          headerName: "Previous",
-          columnGroupShow: "open",
-          valueFormatter: (params) => params.value,
-        },
-        {
-          field: "paidsalestotal",
-          headerName: "Total",
-          columnGroupShow: "open",
-          valueFormatter: (params) => params.value,
-        },
-      ],
-    },
-    {
-      headerName: "Free Sales",
-      children: [
-        {
-          field: "freesalesthisperiod",
-          headerName: "Current",
-          valueFormatter: (params) => params.value,
-        },
-        {
-          field: "freesalesprevperiod",
-          headerName: "Previous",
-          columnGroupShow: "open",
-          valueFormatter: (params) => params.value,
-        },
-        {
-          field: "freesalestotal",
-          headerName: "Total",
-          columnGroupShow: "open",
-          valueFormatter: (params) => params.value,
-        },
-      ],
+      headerName: "Payment",
+      field: "paymentsthisperiod",
+      editable: true,
+      valueParser: (params) => Number(params.newValue),
     },
   ];
 
+  // https://stackblitz.com/edit/react-hooks-complex-editor?file=src%2FComponents%2FEditors%2FAsyncValidationEditor.jsx
+
   const onGridReady = () => {
-    const retrieveOrders = async (dateQuery) => {
+    const retrieveOrders = async (dateQuery, threshold) => {
+      gridRef.current.api.showLoadingOverlay();
       try {
         const result = await readAllByQuery(
           "royalties",
-          `period = '${dateQuery}'`
+          `grossowed > ${threshold} AND period = '${dateQuery}'`
         );
-        debugger;
         setData(result.result);
       } catch (error) {
         console.log(error);
       }
     };
-    debugger;
     let dateQuery = getQuarterDates(quarter);
-    retrieveOrders(dateQuery);
+    retrieveOrders(dateQuery, paymentThreshold);
   };
 
+  const onRowDataChanged = () => {
+    if (data.length > 0) {
+      setTimeout(() => {
+        gridRef.current.api.startEditingCell({
+          rowIndex: 0,
+          colKey: "paymentsthisperiod",
+        });
+      }, 200);
+    }
+  };
+
+  const savePayments = (ev) => {
+    const updatePayments = async () => {
+      setIsSaving(true);
+      try {
+        await updateAll(data, "royalties");
+        setIsSaving(false);
+        setNotification((prevState) => ({
+          ...prevState,
+          show: true,
+          severity: "success",
+          autoHide: true,
+          message: "Payments saved successfully",
+        }));
+        setHasChangedData(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    updatePayments();
+  };
+
+  const onCellValueChanged = () => {
+    setHasChangedData(true);
+  };
+
+  const onCellKeyDown = (ev) => {
+    let key = ev.event.key;
+
+    const editingCells = ev.api.getEditingCells();
+    const rowIndex = editingCells[0].rowIndex;
+    const colKey = editingCells[0].column.colId;
+
+    if (key === "ArrowDown") {
+      ev.api.stopEditing();
+      ev.api.startEditingCell({
+        rowIndex: rowIndex + 1,
+        colKey: colKey,
+      });
+    }
+    if (key === "ArrowUp") {
+      if (rowIndex > 0) {
+        ev.api.stopEditing();
+        ev.api.startEditingCell({
+          rowIndex: rowIndex - 1,
+          colKey: colKey,
+        });
+      }
+    }
+  };
+
+  const getRowId = (params) => params.data.id;
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={20} ref={ref} variant="filled" {...props} />;
+  });
+
   return (
-    <Box className="ag-theme-alpine">
-      <AgGridReact
-        defaultColDef={{
-          flex: 0.25,
-          filter: "agNumberColumnFilter",
-          valueFormatter: (params) => getFormattedCurrency(params.value),
-        }}
-        containerStyle={{
-          height: 500,
-          width: 1200,
-        }}
-        rowData={data}
-        columnDefs={columnDefs}
-        columnHoverHighlight={true}
-        pagination={true}
-        paginationPageSize={15}
-        onGridReady={onGridReady}
-        suppressNoRowsOverlay={true}
-      ></AgGridReact>
-    </Box>
+    <>
+      <Snackbar
+        open={notification.show}
+        autoHideDuration={notification.autoHide ? 5000 : null}
+        onClose={() => setNotification(false)}
+      >
+        <Alert
+          severity={notification.severity}
+          onClose={() => setNotification(false)}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
+      <Grid container>
+        <Grid item md={8}>
+          <Stack direction="row" spacing={2}>
+            <Typography variant="h5">
+              Selected Quarter: {convertQuarterStringToDisplay(quarter)}
+            </Typography>
+            <Typography variant="h5">
+              Threshold: {getFormattedCurrency(paymentThreshold)}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item md={4}>
+          <LoadingButton
+            variant="contained"
+            sx={{ mb: 2 }}
+            onClick={savePayments}
+            startIcon={<SaveIcon />}
+            loading={isSaving}
+            loadingPosition="start"
+            disabled={!hasChangedData}
+          >
+            Save
+          </LoadingButton>
+        </Grid>
+
+        <Grid item md={12}>
+          <Box className="ag-theme-alpine">
+            <AgGridReact
+              ref={gridRef}
+              defaultColDef={{
+                flex: 0.25,
+                filter: "agNumberColumnFilter",
+                cellRenderer: (params) => {
+                  return (
+                    <Typography variant="h6">
+                      {parseInt(params.value) === 0
+                        ? "-"
+                        : getFormattedCurrency(params.value)}
+                    </Typography>
+                  );
+                },
+              }}
+              containerStyle={{
+                height: 500,
+                width: 1200,
+              }}
+              gridOptions={{
+                loadingOverlayComponent: LoadingOverlay,
+              }}
+              rowData={data}
+              getRowId={getRowId}
+              columnDefs={columnDefs}
+              columnHoverHighlight={true}
+              pagination={true}
+              paginationPageSize={15}
+              onGridReady={onGridReady}
+              onRowDataChanged={onRowDataChanged}
+              onCellValueChanged={onCellValueChanged}
+              onCellKeyDown={onCellKeyDown}
+              suppressNoRowsOverlay={true}
+            ></AgGridReact>
+          </Box>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 

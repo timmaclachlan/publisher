@@ -26,6 +26,7 @@ const AuthorRoyalties = ({ author, loading }) => {
     return (
       <HistorySummary
         authorId={author.id}
+        authorName={author.realname}
         loading={loading}
         width={100}
         height={30}
@@ -67,8 +68,8 @@ const AuthorRoyalties = ({ author, loading }) => {
           "Royalties",
           "royalties",
           <BarChartIcon />,
-          "This Period",
-          "Previous Period",
+          "This Quarter",
+          "Previous Quarter",
           "Total Royalties",
           author.royaltiesthisperiod,
           author.royaltiesprevperiod,
@@ -95,8 +96,8 @@ const AuthorRoyalties = ({ author, loading }) => {
           "Payments",
           "payments",
           <PaymentsIcon />,
-          "This Period",
-          "Previous Period",
+          "This Quarter",
+          "Previous Quarter",
           "Total Payments",
           author.paymentsthisperiod,
           author.paymentsprevperiod,
@@ -109,8 +110,8 @@ const AuthorRoyalties = ({ author, loading }) => {
           "Paid Sales",
           "paidsales",
           <ShowChartIcon />,
-          "This Period",
-          "Previous Period",
+          "This Quarter",
+          "Previous Quarter",
           "Total Sales",
           author.paidsalesthisperiod,
           author.paidsalesprevperiod,
@@ -124,8 +125,8 @@ const AuthorRoyalties = ({ author, loading }) => {
           "Free Sales",
           "freesales",
           <ShowChartIcon />,
-          "This Period",
-          "Previous Period",
+          "This Quarter",
+          "Previous Quarter",
           "Total Sales",
           author.freesalesthisperiod,
           author.freesalesprevperiod,

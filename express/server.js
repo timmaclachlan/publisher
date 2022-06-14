@@ -229,14 +229,33 @@ router.get("/royalties", (req, res) => {
   }).catch(function (err) {
     console.log(err);
   })
-
-
 });
+
+router.patch("/royaltiess", (req, res) => {
+  console.log("PATCH ROYALTIES");
+
+  let sql = "";
+  let data = [];
+
+  for (let i = 0; i < req.body.length; i++) {
+    console.log(req.body[i]);
+    sql = `UPDATE ${TABLEQUAL_ROYALITESHISTORY}
+    SET paymentsthisperiod=$1
+    WHERE id='${req.body[i].id}'`
+    data = [
+      req.body[i].paymentsthisperiod
+    ]
+    updateQuery(sql, data);
+  }
+
+  res.statusCode = 200;
+  res.json({ message: "success", result: true });
+})
 
 router.get("/orders", (req, res) => {
   console.log("GET ORDERS");
   let query = "";
-  if (req.query !== undefined) {
+  if (!isEmptyObject(req.query)) {
     console.log(req.query);
     query = `WHERE ${Object.keys(req.query)[0]}`;
     console.log(query);
@@ -333,6 +352,12 @@ function getQueryWithStatus(sql, res) {
     res.statusCode = 200;
     res.json({ message: "success", result: results.rows });
   });
+}
+
+const isEmptyObject = (value) => {
+  return (
+    value && value.constructor === Object && Object.keys(value).length === 0
+  );
 }
 
 app.use("/.netlify/functions/server", router); // path must route to lambda

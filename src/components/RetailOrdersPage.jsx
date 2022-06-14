@@ -10,8 +10,10 @@ import { readAll } from "../fetcher";
 import { getFormattedDate, getFormattedCurrency } from "../utils";
 
 import SalesQuarterFilter from "./Filters/SalesQuarterFilter";
+import LoadingOverlay from "./LoadingOverlay";
 
 const RetailOrdersPage = () => {
+  const gridRef = React.useRef(null);
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
@@ -87,6 +89,7 @@ const RetailOrdersPage = () => {
   const onGridReady = () => {
     const retrieveOrders = async () => {
       try {
+        gridRef.current.api.showLoadingOverlay();
         const result = await readAll("order");
         setOrders(result.result);
       } catch (error) {
@@ -116,6 +119,7 @@ const RetailOrdersPage = () => {
       </Grid>
       <Box>
         <AgGridReact
+          ref={gridRef}
           className="ag-theme-alpine"
           defaultColDef={{
             resizable: true,
@@ -127,6 +131,9 @@ const RetailOrdersPage = () => {
           containerStyle={{
             height: 700,
             width: 1400,
+          }}
+          gridOptions={{
+            loadingOverlayComponent: LoadingOverlay,
           }}
           rowData={orders}
           columnDefs={columnDefs}

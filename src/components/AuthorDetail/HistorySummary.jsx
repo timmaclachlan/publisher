@@ -27,6 +27,7 @@ import {
 
 const HistorySummary = ({
   authorId,
+  authorName,
   loading,
   headerTitle,
   headerIcon,
@@ -77,7 +78,6 @@ const HistorySummary = ({
         console.log(error);
       }
     };
-    debugger;
     if (dataHistory.length === 0) retrieveHistory();
   };
 
@@ -180,7 +180,7 @@ const HistorySummary = ({
           allowClose
           closeIsText
         />
-        <DialogTitle>{`${headerTitle} History`}</DialogTitle>
+        <DialogTitle>{`${headerTitle} History for ${authorName}`}</DialogTitle>
         <Box className="ag-theme-alpine" sx={{ width: "fit-content" }}>
           {renderGrid()}
         </Box>

@@ -83,6 +83,11 @@ export const updateById = (model, id, schema) => {
   return makeRequest(schema, false, id, null, "PATCH", model);
 };
 
+export const updateAll = (model, schema) => {
+  debugger;
+  return makeRequest(schema, false, undefined, null, "PATCH", model);
+}
+
 export const deleteById = (id, schema) => {
   return makeRequest(schema, false, id, null, "DELETE");
 };

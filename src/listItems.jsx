@@ -34,15 +34,35 @@ function ListItemLink(props) {
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemLink to="/" primary="Dashboard" icon={<DashboardIcon />} />
+    <ListItemLink
+      to="/"
+      primary="Dashboard"
+      icon={<DashboardIcon color="success" />}
+    />
     <ListItemLink
       to="/orders/retail"
       primary="Sales"
-      icon={<ShoppingCartIcon />}
+      icon={<ShoppingCartIcon color="success" />}
     />
-    <ListItemLink to="/authors" primary="Authors" icon={<PeopleIcon />} />
-    <ListItemLink to="/books/" primary="Books" icon={<LayersIcon />} />
-    <ListItemLink to="/royalties" primary="Royalties" icon={<BarChartIcon />} />
-    <ListItemLink to="/reports" primary="Reports" icon={<AssessmentIcon />} />
+    <ListItemLink
+      to="/authors"
+      primary="Authors"
+      icon={<PeopleIcon color="success" />}
+    />
+    <ListItemLink
+      to="/books/"
+      primary="Books"
+      icon={<LayersIcon color="success" />}
+    />
+    <ListItemLink
+      to="/royalties"
+      primary="Royalties"
+      icon={<BarChartIcon color="success" />}
+    />
+    <ListItemLink
+      to="/reports"
+      primary="Reports"
+      icon={<AssessmentIcon color="success" />}
+    />
   </React.Fragment>
 );
