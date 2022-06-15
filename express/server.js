@@ -26,6 +26,8 @@ const TABLE_AUTHORS = "authors";
 const TABLE_BOOKS = "books";
 const TABLE_GENRES = "genres";
 const TABLE_ORDERS = "retailorders";
+const TABLE_CONSUMERORDERS = "consumerorders";
+const TABLE_KBPORDERS = "kbporders";
 const TABLE_SERVICES = "services";
 const TABLE_SERVICESASSIGNED = "servicesassigned";
 const TABLE_BOOKS_FORMATS = "booksformats";
@@ -39,6 +41,8 @@ const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
 const TABLEQUAL_BOOKS = `"timm2006/athena"."${TABLE_BOOKS}"`;
 const TABLEQUAL_GENRES = `"timm2006/athena"."${TABLE_GENRES}"`;
 const TABLEQUAL_ORDERS = `"timm2006/athena"."${TABLE_ORDERS}"`;
+const TABLEQUAL_CONSUMERORDERS = `"timm2006/athena"."${TABLE_CONSUMERORDERS}"`;
+const TABLEQUAL_KBPORDERS = `"timm2006/athena"."${TABLE_KBPORDERS}"`;
 const TABLEQUAL_SERVICES = `"timm2006/athena"."${TABLE_SERVICES}"`;
 const TABLEQUAL_SERVICESASSIGNED = `"timm2006/athena"."${TABLE_SERVICESASSIGNED}"`;
 const TABLEQUAL_BOOKSFORMATS = `"timm2006/athena"."${TABLE_BOOKS_FORMATS}"`;
@@ -219,7 +223,8 @@ router.get("/royalties", (req, res) => {
 
   query = `WHERE ${Object.keys(req.query)[0]}`;
 
-   let sql = `SELECT * FROM ${TABLEQUAL_ROYALITESHISTORY}
+  let sql = `SELECT rh.*, authors.notax FROM ${TABLEQUAL_ROYALITESHISTORY} rh
+   JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = rh.authorid
      ${query} ORDER BY author`;
 
 
@@ -252,8 +257,9 @@ router.patch("/royaltiess", (req, res) => {
   res.json({ message: "success", result: true });
 })
 
-router.get("/orders", (req, res) => {
-  console.log("GET ORDERS");
+
+const getOrders = (orderTable, req, res) => {
+console.log("GET ORDERS");
   let query = "";
   if (!isEmptyObject(req.query)) {
     console.log(req.query);
@@ -261,12 +267,24 @@ router.get("/orders", (req, res) => {
     console.log(query);
   }
 
-  let sql = `SELECT *, authors.realname as "author" FROM ${TABLEQUAL_ORDERS} orders 
+  let sql = `SELECT *, authors.realname as "author" FROM ${orderTable} orders 
     JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
     JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
     ${query}
     ORDER BY orderdate DESC`;
   return getQueryWithStatus(sql, res);
+}
+
+router.get("/orders/retails", (req, res) => {
+  return getOrders(TABLEQUAL_ORDERS, req, res);
+});
+
+router.get("/orders/consumers", (req, res) => {
+  return getOrders(TABLEQUAL_CONSUMERORDERS, req, res);
+});
+
+router.get("/orders/kbps", (req, res) => {
+  return getOrders(TABLEQUAL_KBPORDERS, req, res);
 });
 
 router.get("/reports/book", (req, res) => {

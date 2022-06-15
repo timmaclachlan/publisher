@@ -186,7 +186,7 @@ const AuthorView = ({
                             >
                               1
                             </Typography>
-                            {displayField(author.email, 150, 20)}
+                            {displayField(author.email, 150, 15)}
                           </Stack>
                           <Stack direction="row" spacing={1}>
                             <EmailIcon color="primary" />

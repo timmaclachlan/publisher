@@ -3,11 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import {
-  List,
   Toolbar,
   AppBar,
   Box,
-  Container,
   Drawer,
   CssBaseline,
   Card,
@@ -25,14 +23,15 @@ import {
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
-import { mainListItems } from "./listItems";
 import Breadcrumb from "./components/Breadcrumb";
 
+import StaffMenu from "./components/StaffMenu";
 import Dashboard from "./components/Dashboard";
 import AuthorsPage from "./components/AuthorsPage";
 import AuthorDetailPage from "./components/AuthorDetailPage";
 import BookDetailPage from "./components/BookDetailPage";
 import RetailOrdersPage from "./components/RetailOrdersPage";
+import ConsumerOrdersPage from "./components/ConsumerOrdersPage";
 import CreateRetailOrder from "./components/CreateRetailOrder";
 import BooksPage from "./components/BooksPage";
 import BookReport from "./components/Reports/BookReport";
@@ -136,7 +135,7 @@ const LoggedIn = () => {
             height="180"
           ></CardMedia>
         </Card>
-        <List component="nav">{mainListItems}</List>
+        <StaffMenu />
       </Drawer>
 
       <Box
@@ -155,7 +154,7 @@ const LoggedIn = () => {
           <Routes>
             <Route index element={<Dashboard />} />
             <Route
-              path="authors"
+              path="/authors"
               element={
                 <AuthorsPage
                   onRecordChange={(record) => setCurrentRecord(record)}
@@ -190,6 +189,7 @@ const LoggedIn = () => {
             <Route path="books/new" element={<BookDetailPage />} />
             <Route path="orders/retail" element={<RetailOrdersPage />} />
             <Route path="orders/retail/new" element={<CreateRetailOrder />} />
+            <Route path="orders/consumer" element={<ConsumerOrdersPage />} />
             <Route path="reports" element={<BookReport />} />
             <Route path="royalties" element={<RoyaltiesPage />} />
             <Route path="*" element={<NotFound />} />

@@ -63,6 +63,7 @@ const RoyaltiesPage = () => {
   const [paymentThreshold, setPaymentThreshold] = React.useState(
     currentPaymentThreshold
   );
+  const [noTax, setNoTax] = React.useState(0);
 
   const handleNextStep = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -78,6 +79,10 @@ const RoyaltiesPage = () => {
 
   const onThresholdChanged = (ev) => {
     setPaymentThreshold(ev.target.value);
+  };
+
+  const onIsUkChanged = (ev) => {
+    setNoTax(ev.target.value);
   };
 
   return (
@@ -133,12 +138,14 @@ const RoyaltiesPage = () => {
                 <Step1
                   onQuarterChanged={onQuarterChanged}
                   onThresholdChanged={onThresholdChanged}
+                  onIsUkChanged={onIsUkChanged}
                 />
               )}
               {activeStep === 1 && (
                 <Step2
                   quarter={selectedQuarter}
                   paymentThreshold={paymentThreshold}
+                  noTax={noTax}
                 />
               )}
 
@@ -166,7 +173,7 @@ const RoyaltiesPage = () => {
 
 export default RoyaltiesPage;
 
-const Step1 = ({ onQuarterChanged, onThresholdChanged }) => {
+const Step1 = ({ onQuarterChanged, onThresholdChanged, onIsUkChanged }) => {
   const renderQuarters = () => {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
@@ -222,13 +229,29 @@ const Step1 = ({ onQuarterChanged, onThresholdChanged }) => {
               onChange={onThresholdChanged}
             />
           </Grid>
+          <Grid item md={1.5}>
+            <FormControl fullWidth>
+              <InputLabel id="select-tax-label">UK/Non-UK</InputLabel>
+              <Select
+                labelId="select-tax-label"
+                label="UK/Non-UK"
+                variant="outlined"
+                defaultValue="0"
+                onChange={onIsUkChanged}
+              >
+                <MenuItem value="0">Both</MenuItem>
+                <MenuItem value="1">UK Only</MenuItem>
+                <MenuItem value="2">Non-UK Only</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
   );
 };
 
-const Step2 = ({ quarter, paymentThreshold }) => {
+const Step2 = ({ quarter, paymentThreshold, noTax }) => {
   const [data, setData] = React.useState([]);
   const gridRef = React.useRef(null);
   const [isSaving, setIsSaving] = React.useState(false);
@@ -271,20 +294,21 @@ const Step2 = ({ quarter, paymentThreshold }) => {
   // https://stackblitz.com/edit/react-hooks-complex-editor?file=src%2FComponents%2FEditors%2FAsyncValidationEditor.jsx
 
   const onGridReady = () => {
-    const retrieveOrders = async (dateQuery, threshold) => {
+    const retrieveOrders = async (dateQuery, threshold, noTax) => {
+      debugger;
       gridRef.current.api.showLoadingOverlay();
+      let query = `grossowed > ${threshold} AND period = '${dateQuery}'`;
+      if (noTax === "1") query = `${query} AND notax=true`;
+      if (noTax === "2") query = `${query} AND notax=false`;
       try {
-        const result = await readAllByQuery(
-          "royalties",
-          `grossowed > ${threshold} AND period = '${dateQuery}'`
-        );
+        const result = await readAllByQuery("royalties", query);
         setData(result.result);
       } catch (error) {
         console.log(error);
       }
     };
     let dateQuery = getQuarterDates(quarter);
-    retrieveOrders(dateQuery, paymentThreshold);
+    retrieveOrders(dateQuery, paymentThreshold, noTax);
   };
 
   const onRowDataChanged = () => {
@@ -354,6 +378,12 @@ const Step2 = ({ quarter, paymentThreshold }) => {
     return <MuiAlert elevation={20} ref={ref} variant="filled" {...props} />;
   });
 
+  const getTaxOption = () => {
+    if (noTax === "0") return "Both";
+    if (noTax === "1") return "UK Only";
+    if (noTax === "2") return "Non-UK Only";
+  };
+
   return (
     <>
       <Snackbar
@@ -377,6 +407,7 @@ const Step2 = ({ quarter, paymentThreshold }) => {
             <Typography variant="h5">
               Threshold: {getFormattedCurrency(paymentThreshold)}
             </Typography>
+            <Typography variant="h5">UK/Non-UK: {getTaxOption()}</Typography>
           </Stack>
         </Grid>
         <Grid item md={4}>

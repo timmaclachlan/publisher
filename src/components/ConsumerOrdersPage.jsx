@@ -12,14 +12,10 @@ import { getFormattedDate, getFormattedCurrency } from "../utils";
 import SalesQuarterFilter from "./Filters/SalesQuarterFilter";
 import LoadingOverlay from "./LoadingOverlay";
 
-const RetailOrdersPage = () => {
+const ConsumerOrdersPage = () => {
   const gridRef = React.useRef(null);
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
-
-  const handleCreateOrderClick = (type) => {
-    navigate("/orders/retail/new");
-  };
 
   const columnDefs = [
     {
@@ -97,7 +93,8 @@ const RetailOrdersPage = () => {
     const retrieveOrders = async () => {
       try {
         gridRef.current.api.showLoadingOverlay();
-        const result = await readAllSubAll("order", "retail");
+        const result = await readAllSubAll("order", "consumer");
+        debugger;
         setOrders(result.result);
       } catch (error) {
         console.log(error);
@@ -114,15 +111,11 @@ const RetailOrdersPage = () => {
         </Grid>
         <Grid item md={3}>
           <Typography variant="h4" sx={{ pt: 1 }}>
-            Retail Orders
+            Consumer Orders
           </Typography>
         </Grid>
         <Grid item md={5} />
-        <Grid item md={3}>
-          <Button variant="contained" onClick={handleCreateOrderClick}>
-            Create Retail Order
-          </Button>
-        </Grid>
+        <Grid item md={3}></Grid>
       </Grid>
       <Box>
         <AgGridReact
@@ -155,4 +148,4 @@ const RetailOrdersPage = () => {
   );
 };
 
-export default RetailOrdersPage;
+export default ConsumerOrdersPage;

@@ -67,6 +67,10 @@ export const readLookupAll = (schema) => {
   return makeRequest(schema, true);
 };
 
+export const readAllSubAll = (schema, subschema) => {
+  return makeRequest(schema, false, undefined, subschema);
+}
+
 export const readAllByQuery = (querypath, query) => {
   return makeRequest(null, false, false, "", "GET", undefined, querypath, encodeURIComponent(query));
 }
