@@ -53,6 +53,12 @@ const StaffMenu = () => {
             icon={<PointOfSale color="success" />}
             sx={{ pl: 3 }}
           />
+          <ListItemLink
+            to="/orders/pagesread"
+            secondary="Pages Read"
+            icon={<PointOfSale color="success" />}
+            sx={{ pl: 3 }}
+          />
         </List>
       </Collapse>
       <ListItemLink

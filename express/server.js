@@ -258,7 +258,7 @@ router.patch("/royaltiess", (req, res) => {
 })
 
 
-const getOrders = (orderTable, req, res) => {
+const getOrders = (orderTable, req) => {
 console.log("GET ORDERS");
   let query = "";
   if (!isEmptyObject(req.query)) {
@@ -267,24 +267,33 @@ console.log("GET ORDERS");
     console.log(query);
   }
 
-  let sql = `SELECT *, authors.realname as "author" FROM ${orderTable} orders 
+  let sql = `SELECT orders.*, books.title, authors.realname as "author" FROM ${orderTable} orders 
     JOIN ${TABLEQUAL_BOOKS} books ON books.id = orders.bookid
     JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
     ${query}
     ORDER BY orderdate DESC`;
-  return getQueryWithStatus(sql, res);
+  return sql;
 }
 
 router.get("/orders/retails", (req, res) => {
-  return getOrders(TABLEQUAL_ORDERS, req, res);
+  let sql = getOrders(TABLEQUAL_ORDERS, req);
+  console.log("GET ORDER RETAILS");
+  console.log(sql);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/orders/consumers", (req, res) => {
-  return getOrders(TABLEQUAL_CONSUMERORDERS, req, res);
+  let sql = getOrders(TABLEQUAL_CONSUMERORDERS, req);
+  console.log("GET ORDER CONSUMER");
+  console.log(sql);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/orders/kbps", (req, res) => {
-  return getOrders(TABLEQUAL_KBPORDERS, req, res);
+  let sql = getOrders(TABLEQUAL_KBPORDERS, req);
+  console.log("GET ORDER KBP");
+  console.log(sql);
+  return getQueryWithStatus(sql, res);
 });
 
 router.get("/reports/book", (req, res) => {

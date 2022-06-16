@@ -32,6 +32,7 @@ import AuthorDetailPage from "./components/AuthorDetailPage";
 import BookDetailPage from "./components/BookDetailPage";
 import RetailOrdersPage from "./components/RetailOrdersPage";
 import ConsumerOrdersPage from "./components/ConsumerOrdersPage";
+import PagesReadOrdersPage from "./components/PagesReadOrdersPage";
 import CreateRetailOrder from "./components/CreateRetailOrder";
 import BooksPage from "./components/BooksPage";
 import BookReport from "./components/Reports/BookReport";
@@ -190,6 +191,7 @@ const LoggedIn = () => {
             <Route path="orders/retail" element={<RetailOrdersPage />} />
             <Route path="orders/retail/new" element={<CreateRetailOrder />} />
             <Route path="orders/consumer" element={<ConsumerOrdersPage />} />
+            <Route path="orders/pagesread" element={<PagesReadOrdersPage />} />
             <Route path="reports" element={<BookReport />} />
             <Route path="royalties" element={<RoyaltiesPage />} />
             <Route path="*" element={<NotFound />} />
