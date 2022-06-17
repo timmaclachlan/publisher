@@ -11,13 +11,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Card,
-  CardHeader,
-  CardContent,
   Stack,
-  Stepper,
-  Step,
-  StepLabel,
   TextField,
   Snackbar,
   Alert as MuiAlert,
@@ -26,8 +20,8 @@ import {
 import { LoadingButton } from "@mui/lab";
 
 import BarChartIcon from "@mui/icons-material/BarChart";
-import BuildIcon from "@mui/icons-material/Build";
 import SaveIcon from "@mui/icons-material/Save";
+import SearchIcon from "@mui/icons-material/Search";
 
 import LoadingOverlay from "./LoadingOverlay";
 
@@ -38,8 +32,6 @@ import {
   getCurrentQuarterYear,
   convertQuarterStringToDisplay,
 } from "../utils";
-
-const steps = ["Choose Parameters", "Step 2", "Step 3"];
 
 const LinkComponent = ({ data }) => {
   return (
@@ -53,25 +45,33 @@ const LinkComponent = ({ data }) => {
   );
 };
 
-const RoyaltiesPage = () => {
+const getCurrentQuarterString = () => {
   let currentQuarter = getCurrentQuarterYear();
+  return `${currentQuarter.quarter}${currentQuarter.year}`;
+};
+
+const RoyaltiesPage = () => {
   let currentPaymentThreshold = 20;
-  const [activeStep, setActiveStep] = React.useState(0);
   const [selectedQuarter, setSelectedQuarter] = React.useState(
-    `${currentQuarter.quarter}${currentQuarter.year}`
+    getCurrentQuarterString()
   );
   const [paymentThreshold, setPaymentThreshold] = React.useState(
     currentPaymentThreshold
   );
-  const [noTax, setNoTax] = React.useState(0);
+  const [noTax, setNoTax] = React.useState("0");
 
-  const handleNextStep = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handlePrevStep = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  const [data, setData] = React.useState([]);
+  const gridRef = React.useRef(null);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [isSearching, setIsSearching] = React.useState(false);
+  const [hasChangedData, setHasChangedData] = React.useState(false);
+  const [notification, setNotification] = React.useState({
+    show: false,
+    severity: "",
+    message: "",
+    autoHide: false,
+  });
+  const [showGrid, setShowGrid] = React.useState(false);
 
   const onQuarterChanged = (ev) => {
     setSelectedQuarter(ev.target.value);
@@ -85,106 +85,36 @@ const RoyaltiesPage = () => {
     setNoTax(ev.target.value);
   };
 
-  return (
-    <>
-      <Box sx={{ width: "100%" }}>
-        <Grid container spacing={2}>
-          <Grid item md={12}>
-            <Grid container>
-              <Grid item md={1}>
-                <BarChartIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
-              </Grid>
-              <Grid item md={3}>
-                <Typography variant="h4" sx={{ pt: 1 }}>
-                  Royalties
-                </Typography>
-              </Grid>
-              <Grid item md={4} />
-              <Grid item md={2}>
-                <Button
-                  variant="contained"
-                  sx={{ width: "120px" }}
-                  color="success"
-                  startIcon={<BuildIcon />}
-                >
-                  Generate
-                </Button>
-              </Grid>
-              <Grid item md={2}>
-                <Button
-                  variant="contained"
-                  sx={{ width: "100px" }}
-                  color="success"
-                >
-                  Payments
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
+  const retrieveOrders = async (dateQuery, threshold, noTax) => {
+    if (showGrid) {
+      gridRef.current.api.showLoadingOverlay();
+    }
+    let query = `grossowed > ${threshold} AND period = '${dateQuery}'`;
+    if (noTax === "1") query = `${query} AND notax=true`;
+    if (noTax === "2") query = `${query} AND notax=false`;
+    try {
+      const result = await readAllByQuery("royalties", query);
+      setData(result.result);
+      setIsSearching(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-          <Grid item md={12}>
-            <Stepper activeStep={activeStep} sx={{ mb: 3 }}>
-              {steps.map((label, index) => {
-                return (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                );
-              })}
-            </Stepper>
+  const onSearchClick = (ev) => {
+    let dateQuery = getQuarterDates(selectedQuarter);
+    setIsSearching(true);
+    setShowGrid(true);
+    retrieveOrders(dateQuery, paymentThreshold, noTax);
+  };
 
-            <>
-              {activeStep === 0 && (
-                <Step1
-                  onQuarterChanged={onQuarterChanged}
-                  onThresholdChanged={onThresholdChanged}
-                  onIsUkChanged={onIsUkChanged}
-                />
-              )}
-              {activeStep === 1 && (
-                <Step2
-                  quarter={selectedQuarter}
-                  paymentThreshold={paymentThreshold}
-                  noTax={noTax}
-                />
-              )}
-
-              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                <Button
-                  color="inherit"
-                  disabled={activeStep === 0}
-                  onClick={handlePrevStep}
-                  sx={{ mr: 1 }}
-                >
-                  Back
-                </Button>
-                <Box sx={{ flex: "1 1 auto" }} />
-                <Button onClick={handleNextStep}>
-                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                </Button>
-              </Box>
-            </>
-          </Grid>
-        </Grid>
-      </Box>
-    </>
-  );
-};
-
-export default RoyaltiesPage;
-
-const Step1 = ({ onQuarterChanged, onThresholdChanged, onIsUkChanged }) => {
   const renderQuarters = () => {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth();
-    const quarter = Math.round(currentMonth / 3);
-
-    let currentQuarter = `${quarter}${currentYear}`;
+    let currentQuarter = getCurrentQuarterYear();
 
     let quarters = [];
-    for (let y = currentYear; y > currentYear - 3; y--) {
+    for (let y = currentQuarter.year; y > currentQuarter.year - 3; y--) {
       for (let q = 4; q >= 1; q--) {
-        if (y === currentYear && q > quarter) continue;
+        if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
         quarters.push(
           <MenuItem key={`${q}${y}`} value={`${q}${y}`}>
             Quarter {q} - {y}
@@ -197,7 +127,7 @@ const Step1 = ({ onQuarterChanged, onThresholdChanged, onIsUkChanged }) => {
       <Select
         labelId="select-quarter-label"
         label="Sales Quarter"
-        defaultValue={currentQuarter}
+        defaultValue={selectedQuarter}
         variant="outlined"
         onChange={onQuarterChanged}
       >
@@ -205,63 +135,6 @@ const Step1 = ({ onQuarterChanged, onThresholdChanged, onIsUkChanged }) => {
       </Select>
     );
   };
-
-  return (
-    <Card>
-      <CardTopHeader title="Choose Parameters" />
-      <CardContent>
-        <Typography variant="subtitle1">
-          Choose the parameters to generate the royalties. Pick a sales quarter,
-          and optional format.
-        </Typography>
-        <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item md={4}>
-            <FormControl fullWidth>
-              <InputLabel id="quarter-label">Sales Quarter</InputLabel>
-              {renderQuarters()}
-            </FormControl>
-          </Grid>
-          <Grid item md={1.5}>
-            <TextField
-              variant="outlined"
-              label="Payment Threshold"
-              defaultValue={20}
-              onChange={onThresholdChanged}
-            />
-          </Grid>
-          <Grid item md={1.5}>
-            <FormControl fullWidth>
-              <InputLabel id="select-tax-label">UK/Non-UK</InputLabel>
-              <Select
-                labelId="select-tax-label"
-                label="UK/Non-UK"
-                variant="outlined"
-                defaultValue="0"
-                onChange={onIsUkChanged}
-              >
-                <MenuItem value="0">Both</MenuItem>
-                <MenuItem value="1">UK Only</MenuItem>
-                <MenuItem value="2">Non-UK Only</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  );
-};
-
-const Step2 = ({ quarter, paymentThreshold, noTax }) => {
-  const [data, setData] = React.useState([]);
-  const gridRef = React.useRef(null);
-  const [isSaving, setIsSaving] = React.useState(false);
-  const [hasChangedData, setHasChangedData] = React.useState(false);
-  const [notification, setNotification] = React.useState({
-    show: false,
-    severity: "",
-    message: "",
-    autoHide: false,
-  });
 
   const columnDefs = [
     {
@@ -292,24 +165,6 @@ const Step2 = ({ quarter, paymentThreshold, noTax }) => {
   ];
 
   // https://stackblitz.com/edit/react-hooks-complex-editor?file=src%2FComponents%2FEditors%2FAsyncValidationEditor.jsx
-
-  const onGridReady = () => {
-    const retrieveOrders = async (dateQuery, threshold, noTax) => {
-      debugger;
-      gridRef.current.api.showLoadingOverlay();
-      let query = `grossowed > ${threshold} AND period = '${dateQuery}'`;
-      if (noTax === "1") query = `${query} AND notax=true`;
-      if (noTax === "2") query = `${query} AND notax=false`;
-      try {
-        const result = await readAllByQuery("royalties", query);
-        setData(result.result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    let dateQuery = getQuarterDates(quarter);
-    retrieveOrders(dateQuery, paymentThreshold, noTax);
-  };
 
   const onRowDataChanged = () => {
     if (data.length > 0) {
@@ -384,6 +239,10 @@ const Step2 = ({ quarter, paymentThreshold, noTax }) => {
     if (noTax === "2") return "Non-UK Only";
   };
 
+  const loadingOverlayComponent = React.useMemo(() => {
+    return LoadingOverlay;
+  }, []);
+
   return (
     <>
       <Snackbar
@@ -398,92 +257,140 @@ const Step2 = ({ quarter, paymentThreshold, noTax }) => {
           {notification.message}
         </Alert>
       </Snackbar>
-      <Grid container>
-        <Grid item md={8}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h5">
-              Selected Quarter: {convertQuarterStringToDisplay(quarter)}
-            </Typography>
-            <Typography variant="h5">
-              Threshold: {getFormattedCurrency(paymentThreshold)}
-            </Typography>
-            <Typography variant="h5">UK/Non-UK: {getTaxOption()}</Typography>
-          </Stack>
-        </Grid>
-        <Grid item md={4}>
-          <LoadingButton
-            variant="contained"
-            sx={{ mb: 2 }}
-            onClick={savePayments}
-            startIcon={<SaveIcon />}
-            loading={isSaving}
-            loadingPosition="start"
-            disabled={!hasChangedData}
-          >
-            Save
-          </LoadingButton>
-        </Grid>
+      <Box sx={{ width: "100%" }}>
+        <Grid container spacing={2}>
+          <Grid item md={12}>
+            <Grid container>
+              <Grid item md={1}>
+                <BarChartIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
+              </Grid>
+              <Grid item md={3}>
+                <Typography variant="h4" sx={{ pt: 1 }}>
+                  Royalties
+                </Typography>
+              </Grid>
+              <Grid item md={4} />
+              <Grid item md={2}></Grid>
+              <Grid item md={2}></Grid>
+            </Grid>
+          </Grid>
 
-        <Grid item md={12}>
-          <Box className="ag-theme-alpine">
-            <AgGridReact
-              ref={gridRef}
-              defaultColDef={{
-                flex: 0.25,
-                filter: "agNumberColumnFilter",
-                cellRenderer: (params) => {
-                  return (
-                    <Typography variant="h6">
-                      {parseInt(params.value) === 0
-                        ? "-"
-                        : getFormattedCurrency(params.value)}
+          <Grid item md={4}>
+            <FormControl fullWidth>
+              <InputLabel id="quarter-label">Sales Quarter</InputLabel>
+              {renderQuarters()}
+            </FormControl>
+          </Grid>
+          <Grid item md={2}>
+            <TextField
+              variant="outlined"
+              label="Payment Threshold"
+              defaultValue={20}
+              onChange={onThresholdChanged}
+            />
+          </Grid>
+          <Grid item md={2}>
+            <FormControl fullWidth>
+              <InputLabel id="select-tax-label">UK/Non-UK</InputLabel>
+              <Select
+                labelId="select-tax-label"
+                label="UK/Non-UK"
+                variant="outlined"
+                defaultValue="0"
+                onChange={onIsUkChanged}
+              >
+                <MenuItem value="0">Both</MenuItem>
+                <MenuItem value="1">UK Only</MenuItem>
+                <MenuItem value="2">Non-UK Only</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item md={2}>
+            <LoadingButton
+              variant="contained"
+              sx={{ mt: 1 }}
+              onClick={onSearchClick}
+              startIcon={<SearchIcon />}
+              loading={isSearching}
+              loadingPosition="start"
+            >
+              Search
+            </LoadingButton>
+          </Grid>
+
+          {showGrid && (
+            <Grid item md={12}>
+              <Grid container>
+                <Grid item md={8}>
+                  <Stack direction="row" spacing={2}>
+                    <Typography variant="h5">
+                      Selected Quarter:{" "}
+                      {convertQuarterStringToDisplay(selectedQuarter)}
                     </Typography>
-                  );
-                },
-              }}
-              containerStyle={{
-                height: 500,
-                width: 1200,
-              }}
-              gridOptions={{
-                loadingOverlayComponent: LoadingOverlay,
-              }}
-              rowData={data}
-              getRowId={getRowId}
-              columnDefs={columnDefs}
-              columnHoverHighlight={true}
-              pagination={true}
-              paginationPageSize={15}
-              onGridReady={onGridReady}
-              onRowDataChanged={onRowDataChanged}
-              onCellValueChanged={onCellValueChanged}
-              onCellKeyDown={onCellKeyDown}
-              suppressNoRowsOverlay={true}
-            ></AgGridReact>
-          </Box>
+                    <Typography variant="h5">
+                      Threshold: {getFormattedCurrency(paymentThreshold)}
+                    </Typography>
+                    <Typography variant="h5">
+                      UK/Non-UK: {getTaxOption()}
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item md={4}>
+                  <LoadingButton
+                    variant="contained"
+                    sx={{ mb: 2 }}
+                    onClick={savePayments}
+                    startIcon={<SaveIcon />}
+                    loading={isSaving}
+                    loadingPosition="start"
+                    disabled={!hasChangedData}
+                  >
+                    Save
+                  </LoadingButton>
+                </Grid>
+
+                <Grid item md={12}>
+                  <Box className="ag-theme-alpine">
+                    <AgGridReact
+                      ref={gridRef}
+                      defaultColDef={{
+                        flex: 0.25,
+                        filter: "agNumberColumnFilter",
+                        cellRenderer: (params) => {
+                          return (
+                            <Typography variant="h6">
+                              {parseInt(params.value) === 0
+                                ? "-"
+                                : getFormattedCurrency(params.value)}
+                            </Typography>
+                          );
+                        },
+                      }}
+                      containerStyle={{
+                        height: 500,
+                        width: 1200,
+                      }}
+                      loadingOverlayComponent={loadingOverlayComponent}
+                      rowData={data}
+                      getRowId={getRowId}
+                      columnDefs={columnDefs}
+                      columnHoverHighlight={true}
+                      pagination={true}
+                      paginationPageSize={15}
+                      onRowDataChanged={onRowDataChanged}
+                      onCellValueChanged={onCellValueChanged}
+                      onCellKeyDown={onCellKeyDown}
+                      suppressNoRowsOverlay={true}
+                    ></AgGridReact>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
-      </Grid>
+      </Box>
     </>
   );
 };
 
-const CardTopHeader = (props) => {
-  return (
-    <CardHeader
-      sx={{ p: 0, m: 0 }}
-      subheader={<CardTop title={props.title} />}
-    />
-  );
-};
-
-const CardTop = (props) => {
-  return (
-    <Box sx={{ backgroundColor: "primary.main" }}>
-      <Stack direction="row" justifyContent="space-between">
-        <Typography variant="h6" color="white" sx={{ pl: 1 }}>
-          {props.title}
-        </Typography>
-      </Stack>
-    </Box>
-  );
-};
+export default RoyaltiesPage;

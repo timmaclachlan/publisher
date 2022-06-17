@@ -236,6 +236,15 @@ router.get("/royalties", (req, res) => {
   })
 });
 
+router.get("/royalties/quarters", (req, res) => {
+  let query = "";
+
+  query = `WHERE ${Object.keys(req.query)[0]}`;
+  console.log(query);
+res.statusCode = 200;
+  res.json({ message: "success", result: true });
+});
+
 router.patch("/royaltiess", (req, res) => {
   console.log("PATCH ROYALTIES");
 
@@ -303,6 +312,8 @@ router.get("/reports/book", (req, res) => {
   ORDER BY authors.realname`;
   return getQueryWithStatus(sql, res);
 });
+
+
 
 function updateQueryWithStatus(sql, data, res) {
   try {
