@@ -53,6 +53,18 @@ export const getCurrentQuarterYear = () => {
   }
 };
 
+export const getNextQuarterYear = () => {
+  const currentQuarterYear = getCurrentQuarterYear();
+  if (currentQuarterYear.quarter < 4)
+    currentQuarterYear.quarter += 1;
+  else {
+    currentQuarterYear.quarter = 1;
+    currentQuarterYear.year += 1;
+  }
+
+  return currentQuarterYear;
+}
+
 export const convertQuarterStringToDisplay = (quarterString) => {
   if (quarterString.includes("-")) {
     const split = quarterString.split("-");

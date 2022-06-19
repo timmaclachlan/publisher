@@ -72,8 +72,9 @@ export const readAllSubAll = (schema, subschema) => {
 }
 
 export const readAllByQuery = (querypath, query) => {
-  return makeRequest(null, false, false, "", "GET", undefined, querypath, encodeURIComponent(query));
+  return makeRequest(null, false, false, "", "GET", undefined, querypath, query);
 }
+
 
 export const readById = (schema, id) => {
   return makeRequest(schema, false, id);

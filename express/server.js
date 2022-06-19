@@ -221,7 +221,9 @@ router.get("/royalties", (req, res) => {
   console.log("GET ROYALTIES");
   let query = "";
 
-  query = `WHERE ${Object.keys(req.query)[0]}`;
+  console.log(req.query.query);
+
+  query = `WHERE ${req.query.query}`;
 
   let sql = `SELECT rh.*, authors.notax FROM ${TABLEQUAL_ROYALITESHISTORY} rh
    JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = rh.authorid
@@ -237,29 +239,27 @@ router.get("/royalties", (req, res) => {
 });
 
 router.get("/royalties/quarters", (req, res) => {
-  let query = "";
+  console.log(req.query.thisperiod);
+  console.log(req.query.nextperiod);
 
-  query = `WHERE ${Object.keys(req.query)[0]}`;
-  console.log(query);
-res.statusCode = 200;
-  res.json({ message: "success", result: true });
+  let sql = `CALL UpdateRoyalties(${req.query.thisperiod}, ${req.query.nextperiod})`;
+  
+  getQueryWithStatus(sql, res);
 });
 
 router.patch("/royaltiess", (req, res) => {
   console.log("PATCH ROYALTIES");
 
   let sql = "";
-  let data = [];
 
   for (let i = 0; i < req.body.length; i++) {
     console.log(req.body[i]);
     sql = `UPDATE ${TABLEQUAL_ROYALITESHISTORY}
-    SET paymentsthisperiod=$1
+    SET paymentsthisperiod=${req.body[i].paymentsthisperiod},
+    paymentstotal = ${req.body[i].paymentstotal} + ${req.body[i].paymentsthisperiod},
+    balance = ROUND(netowed::DECIMAL - ${req.body[i].paymentsthisperiod}, 2)
     WHERE id='${req.body[i].id}'`
-    data = [
-      req.body[i].paymentsthisperiod
-    ]
-    updateQuery(sql, data);
+    updateQuery(sql, undefined);
   }
 
   res.statusCode = 200;
@@ -401,3 +401,40 @@ const isEmptyObject = (value) => {
 app.use("/.netlify/functions/server", router); // path must route to lambda
 module.exports = app;
 module.exports.handler = serverless(app);
+
+
+
+// CREATE OR REPLACE PROCEDURE UpdateRoyalties(thisperiod text, nextperiod text)
+// LANGUAGE SQL
+// AS $$
+// ;
+
+//     DELETE FROM "timm2006/athena"."royaltieshistory" WHERE period=nextperiod;
+
+//     INSERT INTO "timm2006/athena"."royaltieshistory"
+//     (id, authorid, author, period, 
+//     startperiod, endperiod,
+//     royaltiesprevperiod, royaltiesthisperiod, royaltiestotal, 
+//     grossowed, netowed, tax, taxtotal, 
+//     paymentsprevperiod, paymentsthisperiod, paymentstotal,
+//     balance, paidsalesprevperiod, paidsalesthisperiod, paidsalestotal,    
+//     freesalesprevperiod, freesalesthisperiod, freesalestotal,
+//     pagesreadprevperiod, pagesreadthisperiod, pagesreadtotal)
+
+//     SELECT gen_random_uuid(), authorid, author, nextperiod,
+//     TO_CHAR((TO_DATE(startperiod, 'YYYY-MM-DD') + interval '3 months'), 'YYYY-MM-DD'),
+//     TO_CHAR((TO_DATE(endperiod, 'YYYY-MM-DD') + interval '3 months'), 'YYYY-MM-DD'),
+//     royaltiesthisperiod, 0, royaltiestotal, 
+//     grossowed, netowed, tax, taxtotal, 
+//     paymentsthisperiod, 0, paymentstotal,
+//     balance, paidsalesthisperiod, 0, paidsalestotal,
+//     freesalesthisperiod, 0, freesalestotal,
+//     pagesreadthisperiod, 0, pagesreadtotal
+//     FROM "timm2006/athena"."royaltieshistory"
+//     WHERE period = thisperiod
+//     AND NOT EXISTS 
+//         (SELECT authorid FROM "timm2006/athena"."royaltieshistory" 
+//         WHERE period = nextperiod);
+    
+// $$;
+

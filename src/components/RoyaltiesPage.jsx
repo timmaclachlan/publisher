@@ -15,6 +15,11 @@ import {
   TextField,
   Snackbar,
   Alert as MuiAlert,
+  AlertTitle,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 
 import { LoadingButton } from "@mui/lab";
@@ -22,6 +27,7 @@ import { LoadingButton } from "@mui/lab";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
+import BuildIcon from "@mui/icons-material/Build";
 
 import LoadingOverlay from "./LoadingOverlay";
 
@@ -30,6 +36,7 @@ import {
   getQuarterDates,
   getFormattedCurrency,
   getCurrentQuarterYear,
+  getNextQuarterYear,
   convertQuarterStringToDisplay,
 } from "../utils";
 
@@ -45,9 +52,18 @@ const LinkComponent = ({ data }) => {
   );
 };
 
+const getQuarterString = (quarterYear) => {
+  return `${quarterYear.quarter}${quarterYear.year}`;
+};
+
 const getCurrentQuarterString = () => {
   let currentQuarter = getCurrentQuarterYear();
-  return `${currentQuarter.quarter}${currentQuarter.year}`;
+  return getQuarterString(currentQuarter);
+};
+
+const getNextQuarterString = () => {
+  let nextQuarter = getNextQuarterYear();
+  return getQuarterString(nextQuarter);
 };
 
 const RoyaltiesPage = () => {
@@ -63,15 +79,21 @@ const RoyaltiesPage = () => {
   const [data, setData] = React.useState([]);
   const gridRef = React.useRef(null);
   const [isSaving, setIsSaving] = React.useState(false);
+  const [isGenerating, setIsGenerating] = React.useState(false);
   const [isSearching, setIsSearching] = React.useState(false);
+  const [periodHasRoyalties, setPeriodHasRoyalties] = React.useState(false);
   const [hasChangedData, setHasChangedData] = React.useState(false);
   const [notification, setNotification] = React.useState({
     show: false,
-    severity: "",
     message: "",
     autoHide: false,
   });
   const [showGrid, setShowGrid] = React.useState(false);
+  const [showRoyaltyWarning, setShowRoyaltyWarning] = React.useState(false);
+
+  React.useEffect(() => {
+    hasRoyalties(getNextQuarterString());
+  }, []);
 
   const onQuarterChanged = (ev) => {
     setSelectedQuarter(ev.target.value);
@@ -85,6 +107,20 @@ const RoyaltiesPage = () => {
     setNoTax(ev.target.value);
   };
 
+  const hasRoyalties = async (dateQuery) => {
+    let query = `period = '${dateQuery}'`;
+    let urlquery = `query=${query}`;
+    try {
+      const result = await readAllByQuery("royalties", urlquery);
+      debugger;
+      if (result.result && result.result.length > 0) {
+        setPeriodHasRoyalties(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const retrieveOrders = async (dateQuery, threshold, noTax) => {
     if (showGrid) {
       gridRef.current.api.showLoadingOverlay();
@@ -92,10 +128,26 @@ const RoyaltiesPage = () => {
     let query = `grossowed > ${threshold} AND period = '${dateQuery}'`;
     if (noTax === "1") query = `${query} AND notax=true`;
     if (noTax === "2") query = `${query} AND notax=false`;
+    let urlquery = `query=${query}`;
     try {
-      const result = await readAllByQuery("royalties", query);
+      const result = await readAllByQuery("royalties", urlquery);
       setData(result.result);
       setIsSearching(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const generateNextPeriod = async (
+    currentQuarterString,
+    nextQuarterString
+  ) => {
+    let query = `thisperiod='${currentQuarterString}'&nextperiod='${nextQuarterString}'`;
+
+    try {
+      await readAllByQuery("royalties/quarters", query);
+      setIsGenerating(false);
+      setPeriodHasRoyalties(true);
     } catch (error) {
       console.log(error);
     }
@@ -108,16 +160,39 @@ const RoyaltiesPage = () => {
     retrieveOrders(dateQuery, paymentThreshold, noTax);
   };
 
+  const generateRoyalties = () => {
+    setShowRoyaltyWarning(false);
+
+    let currentQuarterString = getCurrentQuarterString();
+    let nextQuarterString = getNextQuarterString();
+    setIsGenerating(true);
+    generateNextPeriod(currentQuarterString, nextQuarterString);
+    setNotification((prevState) => ({
+      ...prevState,
+      show: true,
+      autoHide: true,
+      message: "Author royalties have been generated",
+    }));
+  };
+
   const renderQuarters = () => {
     let currentQuarter = getCurrentQuarterYear();
 
     let quarters = [];
-    for (let y = currentQuarter.year; y > currentQuarter.year - 3; y--) {
-      for (let q = 4; q >= 1; q--) {
-        if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
+    for (let y = currentQuarter.year; y >= currentQuarter.year - 2; y--) {
+      if (y > currentQuarter.year - 2) {
+        for (let q = 4; q >= 1; q--) {
+          if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
+          quarters.push(
+            <MenuItem key={`${q}${y}`} value={`${q}${y}`}>
+              Quarter {q} - {y}
+            </MenuItem>
+          );
+        }
+      } else {
         quarters.push(
-          <MenuItem key={`${q}${y}`} value={`${q}${y}`}>
-            Quarter {q} - {y}
+          <MenuItem key={`0${y}`} value={`0${y}`}>
+            {y}
           </MenuItem>
         );
       }
@@ -159,7 +234,8 @@ const RoyaltiesPage = () => {
     {
       headerName: "Payment",
       field: "paymentsthisperiod",
-      editable: true,
+      editable:
+        selectedQuarter === getCurrentQuarterString() && !periodHasRoyalties,
       valueParser: (params) => Number(params.newValue),
     },
   ];
@@ -180,13 +256,15 @@ const RoyaltiesPage = () => {
   const savePayments = (ev) => {
     const updatePayments = async () => {
       setIsSaving(true);
+      debugger;
+      let paymentsOnly = data.filter((item) => item.paymentsthisperiod > 0);
+
       try {
-        await updateAll(data, "royalties");
+        await updateAll(paymentsOnly, "royalties");
         setIsSaving(false);
         setNotification((prevState) => ({
           ...prevState,
           show: true,
-          severity: "success",
           autoHide: true,
           message: "Payments saved successfully",
         }));
@@ -250,13 +328,26 @@ const RoyaltiesPage = () => {
         autoHideDuration={notification.autoHide ? 5000 : null}
         onClose={() => setNotification(false)}
       >
-        <Alert
-          severity={notification.severity}
-          onClose={() => setNotification(false)}
-        >
+        <Alert severity="success" onClose={() => setNotification(false)}>
           {notification.message}
         </Alert>
       </Snackbar>
+
+      <Dialog
+        open={showRoyaltyWarning}
+        onClose={() => setShowRoyaltyWarning(false)}
+      >
+        <DialogTitle>{"Are you sure?"}</DialogTitle>
+        <DialogContent>
+          Have you confirmed all payments to authors? Once royalties are
+          generated, payments are locked.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowRoyaltyWarning(false)}>Cancel</Button>
+          <Button onClick={generateRoyalties}>Continue</Button>
+        </DialogActions>
+      </Dialog>
+
       <Box sx={{ width: "100%" }}>
         <Grid container spacing={2}>
           <Grid item md={12}>
@@ -271,8 +362,38 @@ const RoyaltiesPage = () => {
               </Grid>
               <Grid item md={4} />
               <Grid item md={2}></Grid>
-              <Grid item md={2}></Grid>
+              <Grid item md={2}>
+                <LoadingButton
+                  variant="contained"
+                  sx={{ width: "120px" }}
+                  onClick={() => setShowRoyaltyWarning(true)}
+                  startIcon={<BuildIcon />}
+                  loading={isGenerating}
+                  loadingPosition="start"
+                  disabled={periodHasRoyalties}
+                >
+                  Generate
+                </LoadingButton>
+              </Grid>
             </Grid>
+          </Grid>
+
+          <Grid item md={12}>
+            <MuiAlert severity="warning">
+              <AlertTitle>Warning</AlertTitle>
+              {periodHasRoyalties && (
+                <Typography variant="h6">
+                  Royalties for the period has already been generated
+                </Typography>
+              )}
+              {!periodHasRoyalties && (
+                <Typography variant="h6">
+                  Ensure that all payments are entered and correct for the
+                  quarter before pressing Generate. No amendments can be made
+                  after royalties have been generated!
+                </Typography>
+              )}
+            </MuiAlert>
           </Grid>
 
           <Grid item md={4}>
@@ -281,10 +402,10 @@ const RoyaltiesPage = () => {
               {renderQuarters()}
             </FormControl>
           </Grid>
-          <Grid item md={2}>
+          <Grid item md={1}>
             <TextField
               variant="outlined"
-              label="Payment Threshold"
+              label="Threshold"
               defaultValue={20}
               onChange={onThresholdChanged}
             />
@@ -305,16 +426,30 @@ const RoyaltiesPage = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item md={2}>
+          <Grid item md={3}>
             <LoadingButton
               variant="contained"
               sx={{ mt: 1 }}
               onClick={onSearchClick}
+              color="secondary"
               startIcon={<SearchIcon />}
               loading={isSearching}
               loadingPosition="start"
             >
               Search
+            </LoadingButton>
+          </Grid>
+          <Grid item md={2}>
+            <LoadingButton
+              variant="contained"
+              sx={{ width: "120px", ml: -2 }}
+              onClick={savePayments}
+              startIcon={<SaveIcon />}
+              loading={isSaving}
+              loadingPosition="start"
+              disabled={!hasChangedData}
+            >
+              Save
             </LoadingButton>
           </Grid>
 
@@ -335,19 +470,7 @@ const RoyaltiesPage = () => {
                     </Typography>
                   </Stack>
                 </Grid>
-                <Grid item md={4}>
-                  <LoadingButton
-                    variant="contained"
-                    sx={{ mb: 2 }}
-                    onClick={savePayments}
-                    startIcon={<SaveIcon />}
-                    loading={isSaving}
-                    loadingPosition="start"
-                    disabled={!hasChangedData}
-                  >
-                    Save
-                  </LoadingButton>
-                </Grid>
+                <Grid item md={4}></Grid>
 
                 <Grid item md={12}>
                   <Box className="ag-theme-alpine">
@@ -380,7 +503,6 @@ const RoyaltiesPage = () => {
                       onRowDataChanged={onRowDataChanged}
                       onCellValueChanged={onCellValueChanged}
                       onCellKeyDown={onCellKeyDown}
-                      suppressNoRowsOverlay={true}
                     ></AgGridReact>
                   </Box>
                 </Grid>
