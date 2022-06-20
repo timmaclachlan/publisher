@@ -32,7 +32,7 @@ const TABLE_SERVICES = "services";
 const TABLE_SERVICESASSIGNED = "servicesassigned";
 const TABLE_BOOKS_FORMATS = "booksformats";
 const TABLE_BOOKS_EDITORIAL = "bookseditorial";
-const TABLE_BOOKS_ROYALTIESHISTORY = "royaltieshistory";
+const TABLE_ROYALTIESHISTORY = "royaltieshistory";
 
 //const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
 //const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
@@ -47,7 +47,7 @@ const TABLEQUAL_SERVICES = `"timm2006/athena"."${TABLE_SERVICES}"`;
 const TABLEQUAL_SERVICESASSIGNED = `"timm2006/athena"."${TABLE_SERVICESASSIGNED}"`;
 const TABLEQUAL_BOOKSFORMATS = `"timm2006/athena"."${TABLE_BOOKS_FORMATS}"`;
 const TABLEQUAL_BOOKSEDITORIAL = `"timm2006/athena"."${TABLE_BOOKS_EDITORIAL}"`;
-const TABLEQUAL_ROYALITESHISTORY = `"timm2006/athena"."${TABLE_BOOKS_ROYALTIESHISTORY}"`;
+const TABLEQUAL_ROYALITESHISTORY = `"timm2006/athena"."${TABLE_ROYALTIESHISTORY}"`;
 
 router.get("/authors/:id/books", (req, res) => {
   console.log("get books for authors");
