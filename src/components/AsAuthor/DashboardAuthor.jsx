@@ -6,11 +6,12 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import { styled } from "@mui/material/styles";
 
 import {
@@ -26,7 +27,6 @@ import {
   TableContainer,
   TableHead,
   TableBody,
-  Paper,
 } from "@mui/material";
 
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -51,6 +51,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -122,6 +123,33 @@ const Dashboard = () => {
     return myData;
   };
 
+  const getEarningsData = () => {
+    // reverse oldest first for chart
+    let chartHistory = dataHistory.slice().reverse();
+    let labels = chartHistory.map((item) =>
+      convertQuarterStringToDisplay(item.period)
+    );
+
+    let myData = {
+      labels: labels,
+      datasets: [
+        {
+          label: "Total Earnings",
+          data: chartHistory.map((item) => item.royaltiestotal),
+          borderColor: "pink",
+          backgroundColor: "#329644",
+        },
+        {
+          label: "Earnings",
+          data: chartHistory.map((item) => item.royaltiesthisperiod),
+          borderColor: "darkgreen",
+          backgroundColor: "#ea4e82",
+        },
+      ],
+    };
+    return myData;
+  };
+
   const getAccountStatement = () => {
     return (
       <TableContainer>
@@ -148,7 +176,7 @@ const Dashboard = () => {
                     {convertQuarterStringToDisplay(row.period)}
                   </StyledTableCell>
                   <StyledTableCell padding="none" align="right">
-                    {getFormattedCurrency(row.netowed)}
+                    {getFormattedCurrency(row.royaltiesthisperiod)}
                   </StyledTableCell>
                   <StyledTableCell padding="none" align="right">
                     {getFormattedCurrency(row.paymentsthisperiod)}
@@ -384,6 +412,15 @@ const Dashboard = () => {
                     icon={<AccessTimeIcon />}
                   />
                   <CardContent>None as yet</CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item md={5}>
+                <Card>
+                  <CardTopHeader title="Earnings" icon={<ShowChartIcon />} />
+                  <CardContent>
+                    {dataHistoryReady && <Bar data={getEarningsData()} />}
+                  </CardContent>
                 </Card>
               </Grid>
             </Grid>
