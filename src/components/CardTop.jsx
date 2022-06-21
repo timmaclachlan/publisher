@@ -6,7 +6,11 @@ import { Box, Stack, Typography, Button, IconButton } from "@mui/material";
 
 const CardTop = (props) => {
   return (
-    <Box sx={{ backgroundColor: "primary.main" }}>
+    <Box
+      sx={{
+        backgroundColor: props.themeColor ? props.themeColor : "primary.main",
+      }}
+    >
       <Stack direction="row" justifyContent="space-between">
         <Stack direction="row" alignItems="center">
           {props.icon && (

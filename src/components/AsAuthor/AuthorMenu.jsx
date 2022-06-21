@@ -12,6 +12,8 @@ import {
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
 const AuthorMenu = () => {
   return (
@@ -25,7 +27,13 @@ const AuthorMenu = () => {
       <ListItemLink
         to="/"
         primary="My Details"
-        icon={<DashboardIcon color="success" />}
+        icon={<ManageAccountsIcon color="success" />}
+      />
+
+      <ListItemLink
+        to="/"
+        primary="My Projects"
+        icon={<LibraryBooksIcon color="success" />}
       />
 
       <ListItemLink

@@ -12,6 +12,7 @@ const CardTopHeader = (props) => {
         <CardTop
           title={props.title}
           icon={props.icon}
+          themeColor={props.themeColor}
           allowEdit={props.allowEdit}
           editMode={props.editMode}
           onEditClick={props.onEditClick}

@@ -8,6 +8,11 @@ import LoggedIn from "./LoggedIn";
 import LoggedInAuthor from "./components/AsAuthor/LoggedInAuthor";
 import NotLoggedIn from "./NotLoggedIn";
 
+<style>
+  @import
+  url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap');
+</style>;
+
 function App() {
   const { isAuthenticated, user } = useAuth0();
 
