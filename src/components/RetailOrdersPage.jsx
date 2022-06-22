@@ -49,7 +49,7 @@ const RetailOrdersPage = () => {
           field: "isfree",
           headerName: "Is Free",
           valueGetter: (params) => {
-            return params.data.isfree ? "Yes" : "No";
+            return params.data.isfree === "1" ? "Yes" : "No";
           },
         },
         {

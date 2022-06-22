@@ -18,6 +18,7 @@ import LayersIcon from "@mui/icons-material/Layers";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import PointOfSale from "@mui/icons-material/PointOfSale";
 import StoreIcon from "@mui/icons-material/Store";
+import AutoStories from "@mui/icons-material/AutoStories";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 
@@ -56,7 +57,7 @@ const StaffMenu = () => {
           <ListItemLink
             to="/orders/pagesread"
             secondary="Pages Read"
-            icon={<PointOfSale color="success" />}
+            icon={<AutoStories color="success" />}
             sx={{ pl: 3 }}
           />
         </List>

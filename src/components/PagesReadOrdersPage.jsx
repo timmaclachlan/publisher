@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useNavigate } from "react-router-dom";
 
-import { Typography, Box, Grid, Button } from "@mui/material";
+import { Typography, Box, Grid } from "@mui/material";
 
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 import { readAllSubAll } from "../fetcher";
 import { getFormattedDate, getFormattedCurrency } from "../utils";
@@ -81,7 +81,7 @@ const PagesReadOrdersPage = () => {
     <React.Fragment>
       <Grid container sx={{ width: 1400 }}>
         <Grid item>
-          <ShoppingCartIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
+          <AutoStoriesIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
         </Grid>
         <Grid item md={3}>
           <Typography variant="h4" sx={{ pt: 1 }}>

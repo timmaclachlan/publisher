@@ -22,6 +22,7 @@ import {
 import AuthorMenu from "./AuthorMenu";
 import Dashboard from "./DashboardAuthor";
 import RoyaltiesPage from "./RoyaltiesPage";
+import MyDetails from "./MyDetails";
 import NotFound from "../NotFound";
 
 const LoggedInAuthor = () => {
@@ -115,6 +116,7 @@ const LoggedInAuthor = () => {
         >
           <Routes>
             <Route index element={<Dashboard />} />
+            <Route path="mydetails" element={<MyDetails />} />
             <Route path="royalties" element={<RoyaltiesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

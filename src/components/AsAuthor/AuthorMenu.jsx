@@ -25,7 +25,7 @@ const AuthorMenu = () => {
       />
 
       <ListItemLink
-        to="/"
+        to="/mydetails"
         primary="My Details"
         icon={<ManageAccountsIcon color="success" />}
       />
