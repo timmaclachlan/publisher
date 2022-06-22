@@ -82,7 +82,6 @@ const RoyaltiesPage = () => {
   const [isGenerating, setIsGenerating] = React.useState(false);
   const [isSearching, setIsSearching] = React.useState(false);
   const [periodHasRoyalties, setPeriodHasRoyalties] = React.useState(false);
-  const [hasChangedData, setHasChangedData] = React.useState(false);
   const [notification, setNotification] = React.useState({
     show: false,
     message: "",
@@ -90,6 +89,7 @@ const RoyaltiesPage = () => {
   });
   const [showGrid, setShowGrid] = React.useState(false);
   const [showRoyaltyWarning, setShowRoyaltyWarning] = React.useState(false);
+  const [changedRecords, setChangedRecords] = React.useState([]);
 
   React.useEffect(() => {
     hasRoyalties(getNextQuarterString());
@@ -112,7 +112,6 @@ const RoyaltiesPage = () => {
     let urlquery = `query=${query}`;
     try {
       const result = await readAllByQuery("royalties", urlquery);
-      debugger;
       if (result.result && result.result.length > 0) {
         setPeriodHasRoyalties(true);
       }
@@ -256,8 +255,9 @@ const RoyaltiesPage = () => {
   const savePayments = (ev) => {
     const updatePayments = async () => {
       setIsSaving(true);
-      debugger;
-      let paymentsOnly = data.filter((item) => item.paymentsthisperiod > 0);
+      let paymentsOnly = data.filter((item) =>
+        changedRecords.includes(item.id)
+      );
 
       try {
         await updateAll(paymentsOnly, "royalties");
@@ -268,7 +268,7 @@ const RoyaltiesPage = () => {
           autoHide: true,
           message: "Payments saved successfully",
         }));
-        setHasChangedData(false);
+        setChangedRecords([]);
       } catch (error) {
         console.log(error);
       }
@@ -276,8 +276,14 @@ const RoyaltiesPage = () => {
     updatePayments();
   };
 
-  const onCellValueChanged = () => {
-    setHasChangedData(true);
+  const onCellValueChanged = (ev) => {
+    let newItems = [...changedRecords];
+    let index = -1;
+    index = changedRecords.findIndex((x) => x === ev.data.id);
+    if (index === -1) {
+      newItems.push(ev.data.id);
+    }
+    setChangedRecords(newItems);
   };
 
   const onCellKeyDown = (ev) => {
@@ -447,7 +453,7 @@ const RoyaltiesPage = () => {
               startIcon={<SaveIcon />}
               loading={isSaving}
               loadingPosition="start"
-              disabled={!hasChangedData}
+              disabled={changedRecords.length === 0}
             >
               Save
             </LoadingButton>

@@ -11,7 +11,10 @@ const Pool = require("pg").Pool;
 require("dotenv").config();
 
 var authorRoutes = require("./authors");
+var bookRoutes = require("./books");
+
 router.use(authorRoutes("/authors"));
+router.use(bookRoutes("/books"));
 
 app.use(
   cors({
@@ -30,12 +33,9 @@ const TABLE_CONSUMERORDERS = "consumerorders";
 const TABLE_KBPORDERS = "kbporders";
 const TABLE_SERVICES = "services";
 const TABLE_SERVICESASSIGNED = "servicesassigned";
-const TABLE_BOOKS_FORMATS = "booksformats";
-const TABLE_BOOKS_EDITORIAL = "bookseditorial";
 const TABLE_ROYALTIESHISTORY = "royaltieshistory";
+const TABLE_PAYMENTS = "payments";
 
-//const TABLEQUAL_AUTHORS = `"${process.env.DBPATH}"."${TABLE_AUTHORS}"`;
-//const TABLEQUAL_BOOKS = `"${process.env.DBPATH}"."${TABLE_BOOKS}"`;
 
 const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
 const TABLEQUAL_BOOKS = `"timm2006/athena"."${TABLE_BOOKS}"`;
@@ -45,9 +45,8 @@ const TABLEQUAL_CONSUMERORDERS = `"timm2006/athena"."${TABLE_CONSUMERORDERS}"`;
 const TABLEQUAL_KBPORDERS = `"timm2006/athena"."${TABLE_KBPORDERS}"`;
 const TABLEQUAL_SERVICES = `"timm2006/athena"."${TABLE_SERVICES}"`;
 const TABLEQUAL_SERVICESASSIGNED = `"timm2006/athena"."${TABLE_SERVICESASSIGNED}"`;
-const TABLEQUAL_BOOKSFORMATS = `"timm2006/athena"."${TABLE_BOOKS_FORMATS}"`;
-const TABLEQUAL_BOOKSEDITORIAL = `"timm2006/athena"."${TABLE_BOOKS_EDITORIAL}"`;
 const TABLEQUAL_ROYALITESHISTORY = `"timm2006/athena"."${TABLE_ROYALTIESHISTORY}"`;
+const TABLEQUAL_PAYMENTS = `"timm2006/athena"."${TABLE_PAYMENTS}"`;
 
 router.get("/authors/:id/books", (req, res) => {
   console.log("get books for authors");
@@ -71,150 +70,14 @@ router.get("/genres/:id", (req, res) => {
   return getQueryWithStatus(sql, res);
 });
 
-router.get("/books", (req, res) => {
-  console.log("calling books");
-  console.log("DBPATH from env:" + process.env.DBPATH);
+router.get("/dashboardstats", (req, res) => {
+  let sql = `SELECT ROUND(SUM(amountreceived)::DECIMAL, 2) AS "totalsales", 
+  ROUND(SUM(royaltypublisher)::DECIMAL, 2) AS "totalincome",
+  SUM(quantity) AS "totalpaidsales"
+  FROM ${TABLEQUAL_ORDERS}
+  WHERE isfree = 0`;
 
-  let sql = `SELECT books.*, authors.realname AS "authorname",
-  (SELECT array_to_string(array_agg(services.service), ',') 
-  FROM ${TABLEQUAL_SERVICESASSIGNED} assigned
-  JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid
-  WHERE bookid = books.id) AS "service"
-  FROM ${TABLEQUAL_BOOKS} books 
-  JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
-  ORDER BY publicationdate DESC, title`;
-
-  console.log(sql);
-  return getQueryWithStatus(sql, res);
-});
-
-router.get("/books/:id", (req, res) => {
-  let sql = `SELECT books.*, authors.realname AS "author_name", authors.penname AS "author_penname" 
-  FROM ${TABLEQUAL_BOOKS} books JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid 
-  WHERE books.id='${req.params.id}'`;
-  return getQueryWithStatus(sql, res);
-});
-
-router.get("/books/:id/services", (req, res) => {
-  let sql = `SELECT assigned.id, services.service, stage FROM ${TABLEQUAL_SERVICESASSIGNED} assigned 
-  JOIN ${TABLEQUAL_SERVICES} services ON services.id = assigned.serviceid WHERE bookid='${req.params.id}'`;
-  return getQueryWithStatus(sql, res);
-});
-
-router.get("/books/:id/formats", (req, res) => {
-  let sql = `SELECT * FROM ${TABLEQUAL_BOOKSFORMATS} WHERE bookid='${req.params.id}'`;
-  return getQueryWithStatus(sql, res);
-});
-
-router.get("/books/:id/editorials", (req, res) => {
-  let sql = `SELECT * FROM ${TABLEQUAL_BOOKSEDITORIAL} WHERE bookid='${req.params.id}'`;
-  return getQueryWithStatus(sql, res);
-});
-
-router.patch("/books/:id", (req, res) => {
-  console.log("in Patch for Books");
-  console.log(req.body);
-
-  let formats = req.body.formats;
-  console.log(formats);
-
-  let sql = "";
-  let data = [];
-  Object.entries(formats).forEach(([k, v]) => {
-    if (v.id === null) {
-      sql = `INSERT INTO ${TABLEQUAL_BOOKSFORMATS}
-      (id, bookid, format, price, isbn, width, height, 
-        pagecount, estpagecount, unitcost, estunitcost, paperstock, coverlaminate, distributor)
-      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`;
-      data = [
-        v4(),
-        v.bookid,
-        v.format,
-        v.price,
-        v.isbn,
-        v.width,
-        v.height,
-        v.pagecount,
-        v.estpagecount,
-        v.unitcost,
-        v.estunitcost,
-        v.paperstock,
-        v.coverlaminate,
-        v.distributor,
-      ];
-      updateQuery(sql, data);
-    } else {
-      if (v.enabled === false) {
-        sql = `DELETE FROM ${TABLEQUAL_BOOKSFORMATS} WHERE id='${v.id}'`;
-        deleteQuery(sql);
-      } else {
-        sql = `UPDATE ${TABLEQUAL_BOOKSFORMATS} 
-      SET price=$1,isbn=$2,width=$3,height=$4,pagecount=$5,estpagecount=$6,
-      unitcost=$7,estunitcost=$8,paperstock=$9,coverlaminate=$10,distributor=$11
-      WHERE id='${v.id}'`;
-        data = [
-          v.price,
-          v.isbn,
-          v.width,
-          v.height,
-          v.pagecount,
-          v.estpagecount,
-          v.unitcost,
-          v.estunitcost,
-          v.paperstock,
-          v.coverlaminate,
-          v.distributor,
-        ];
-        updateQuery(sql, data);
-      }
-    }
-  });
-
-  if (req.body.editorial.isnew === true) {
-    sql = `INSERT INTO ${TABLEQUAL_BOOKSEDITORIAL}
-    (id,bookid,editlevel,wordcount,blurblevel)
-    VALUES($1,$2,$3,$4,$5)`;
-    data = [
-      v4(),
-      req.body.editorial.bookid,
-      req.body.editorial.editlevel,
-      req.body.editorial.wordcount,
-      req.body.editorial.blurblevel,
-    ];
-    updateQuery(sql, data);
-  } else {
-    sql = `UPDATE ${TABLEQUAL_BOOKSEDITORIAL} SET
-    editlevel = $1, wordcount = $2, blurblevel = $3
-    WHERE bookid='${req.params.id}'`;
-    data = [
-      req.body.editorial.editlevel,
-      req.body.editorial.wordcount,
-      req.body.editorial.blurblevel,
-    ];
-    updateQuery(sql, data);
-  }
-
-  sql = `UPDATE ${TABLEQUAL_BOOKS} SET 
-    title = $1, publicationdate = $2, authorid = $3,
-    genreid = $4,
-    stillselling = $5, terminated = $6,
-    maturecontent = $7, onhold = $8,
-    published = $9, royalty=$10
-    WHERE id='${req.params.id}'`;
-  data = [
-    req.body.title,
-    req.body.publicationdate,
-    req.body.author.id,
-    req.body.genreid,
-    req.body.stillselling,
-    req.body.terminated,
-    req.body.maturecontent,
-    req.body.onhold,
-    req.body.published,
-    req.body.royalty,
-  ];
-
-  updateQueryWithStatus(sql, data, res);
+  getQueryWithStatus(sql, res);
 });
 
 router.get("/royalties", (req, res) => {
@@ -260,11 +123,29 @@ router.patch("/royaltiess", (req, res) => {
     balance = ROUND(netowed::DECIMAL - ${req.body[i].paymentsthisperiod}, 2)
     WHERE id='${req.body[i].id}'`
     updateQuery(sql, undefined);
+
+    sql = `INSERT INTO ${TABLEQUAL_PAYMENTS}
+    (id, authorid, author, paymentdate, amount)
+    SELECT '${v4()}', '${req.body[i].authorid}', '${req.body[i].author}',
+    TO_DATE('${req.body[i].endperiod}', 'YYYY-MM-DD'),
+    ${req.body[i].paymentsthisperiod}
+    WHERE NOT EXISTS (SELECT 1 FROM ${TABLEQUAL_PAYMENTS}
+      WHERE TO_DATE(paymentdate, 'YYYY-MM-DD') = TO_DATE('${req.body[i].endperiod}', 'YYYY-MM-DD'))`;
+    console.log(sql);
+    updateQuery(sql, undefined);
+    
+    sql = `UPDATE ${TABLEQUAL_PAYMENTS}
+    SET amount=${req.body[i].paymentsthisperiod}
+    WHERE TO_DATE(paymentdate, 'YYYY-MM-DD') = TO_DATE('${req.body[i].endperiod}', 'YYYY-MM-DD')`;
+       
+    console.log(sql);
+    updateQuery(sql, undefined);
   }
 
   res.statusCode = 200;
   res.json({ message: "success", result: true });
 })
+
 
 
 const getOrders = (orderTable, req) => {
@@ -315,33 +196,13 @@ router.get("/reports/book", (req, res) => {
 
 
 
-function updateQueryWithStatus(sql, data, res) {
-  try {
-    updateQuery(sql, data);
-  } catch (error) {
-    res.statusCode = 500;
-    return res.json({ errors: ["Failed to create/update record:" + error] });
-  }
-  res.statusCode = 200;
-  res.json({ message: "success" });
-}
+
 
 function updateQuery(sql, data) {
   const pool = new Pool();
   console.log("UPDATE QUERY:" + sql);
   console.log(data);
   pool.query(sql, data, (error, results) => {
-    if (error) {
-      console.error(error);
-      throw error;
-    }
-  });
-}
-
-function deleteQuery(sql) {
-  const pool = new Pool();
-  console.log("DELETE QUERY:" + sql);
-  pool.query(sql, (error, results) => {
     if (error) {
       console.error(error);
       throw error;

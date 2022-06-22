@@ -1,6 +1,20 @@
 import React from "react";
 
 import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line, Bar } from "react-chartjs-2";
+import { styled } from "@mui/material/styles";
+
+import {
   Card,
   CardHeader,
   CardContent,
@@ -8,16 +22,47 @@ import {
   Grid,
   Box,
   Typography,
+  Skeleton,
 } from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
 import LayersIcon from "@mui/icons-material/Layers";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
 
-import { getFavorites } from "../utils";
+import { readAll } from "../fetcher";
+import { getFavorites, getFormattedCurrency } from "../utils";
 
 import Link from "./Link";
 
+import CardTopHeader from "./CardTopHeader";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 const Dashboard = () => {
+  const [dashboardStats, setDashboardStats] = React.useState([]);
+  const loading = dashboardStats.length === 0;
+
+  React.useEffect(() => {
+    const getDashboardStats = async () => {
+      const result = await readAll("dashboardstat");
+      debugger;
+      if (result.result && result.result.length === 1) {
+        setDashboardStats(result.result[0]);
+      }
+    };
+    getDashboardStats();
+  }, []);
+
   const renderFavorites = () => {
     let favorites = getFavorites();
     if (favorites.length > 0) {
@@ -57,14 +102,102 @@ const Dashboard = () => {
     );
   };
 
+  const displayField = (
+    field,
+    width,
+    height,
+    variant = "h4",
+    isCurrency = true
+  ) => {
+    return loading ? (
+      <Skeleton
+        variant="rectangular"
+        width={width}
+        height={height}
+        animation="wave"
+      />
+    ) : (
+      <Typography variant={variant} align="center" color="primary.light">
+        {isCurrency ? getFormattedCurrency(field) : field}
+      </Typography>
+    );
+  };
+
   return (
     <>
       <div>
-        <Grid container>
+        <Grid container spacing={2}>
+          <Grid item md={2}>
+            <Card sx={{ height: "128px" }}>
+              <CardTopHeader
+                title="Total Revenue"
+                icon={<ShowChartIcon />}
+                themeColor="primary.light"
+              />
+              <CardContent>
+                <Stack spacing={1}>
+                  {displayField(dashboardStats.totalsales, 220, 40, "h4")}
+                  <Typography variant="caption" align="center">
+                    From all time
+                  </Typography>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item md={2}>
+            <Card sx={{ height: "128px" }}>
+              <CardTopHeader
+                title="Total Income"
+                icon={<ShowChartIcon />}
+                themeColor="primary.light"
+              />
+              <CardContent>
+                <Stack spacing={1}>
+                  {displayField(dashboardStats.totalincome, 220, 40, "h4")}
+                  <Typography variant="caption" align="center">
+                    From all time
+                  </Typography>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item md={2}>
+            <Card sx={{ height: "128px" }}>
+              <CardTopHeader
+                title="Total Paid Sales"
+                icon={<ShowChartIcon />}
+                themeColor="primary.light"
+              />
+              <CardContent>
+                <Stack spacing={1}>
+                  {displayField(
+                    dashboardStats.totalpaidsales,
+                    220,
+                    40,
+                    "h4",
+                    false
+                  )}
+                  <Typography variant="caption" align="center">
+                    From all time
+                  </Typography>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+
           <Grid item md={3}>
             <Card>
               <CardHeader sx={{ p: 0, m: 0 }} subheader={<CardTop />} />
               <CardContent>{renderFavorites()}</CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item md={3}>
+            <Card>
+              <CardTopHeader title="My Deadlines" icon={<AccessTimeIcon />} />
+              <CardContent>None as yet</CardContent>
             </Card>
           </Grid>
         </Grid>

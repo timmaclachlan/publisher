@@ -27,6 +27,7 @@ import {
   TableContainer,
   TableHead,
   TableBody,
+  Skeleton,
 } from "@mui/material";
 
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -44,6 +45,7 @@ import { readById, readByIdAll } from "../../fetcher";
 import {
   getFormattedCurrency,
   convertQuarterStringToDisplay,
+  isEmptyObject,
 } from "../../utils";
 
 ChartJS.register(
@@ -62,6 +64,7 @@ const Dashboard = () => {
   const [authorRoyalties, setAuthorRoyalties] = React.useState({});
   const [dataHistoryReady, setDataHistoryReady] = React.useState(false);
   const [dataHistory, setDataHistory] = React.useState([]);
+  const loading = isEmptyObject(authorRoyalties);
 
   React.useEffect(() => {
     let authorId = user["https://rowanvale-athena/authorId"];
@@ -150,7 +153,64 @@ const Dashboard = () => {
     return myData;
   };
 
+  const displayField = (
+    field,
+    variant = "h4",
+    isCurrency = true,
+    color = "primary.dark"
+  ) => {
+    return (
+      <Typography variant={variant} align="center" color={color}>
+        {loading ? (
+          <Skeleton variant="rectangular" animation="wave" />
+        ) : isCurrency ? (
+          getFormattedCurrency(field)
+        ) : (
+          field
+        )}
+      </Typography>
+    );
+  };
+
+  const getBarChart = () => {
+    if (!dataHistoryReady) {
+      return (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width={550}
+          height={300}
+        />
+      );
+    }
+    return <Bar data={getEarningsData()} />;
+  };
+
+  const getLineChart = () => {
+    if (!dataHistoryReady) {
+      return (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width={550}
+          height={300}
+        />
+      );
+    }
+    return <Line data={getSalesData()} />;
+  };
+
   const getAccountStatement = () => {
+    if (!dataHistoryReady) {
+      return (
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width={350}
+          height={300}
+        />
+      );
+    }
     return (
       <TableContainer>
         <Table>
@@ -216,13 +276,12 @@ const Dashboard = () => {
                     themeColor="primary.light"
                   />
                   <CardContent>
-                    <Typography
-                      variant="h4"
-                      align="center"
-                      color="primary.light"
-                    >
-                      {getFormattedCurrency(authorRoyalties.balance)}
-                    </Typography>
+                    {displayField(
+                      authorRoyalties.balance,
+                      "h4",
+                      true,
+                      "primary.light"
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
@@ -235,13 +294,12 @@ const Dashboard = () => {
                     themeColor="primary.light"
                   />
                   <CardContent>
-                    <Typography
-                      variant="h4"
-                      align="center"
-                      color="primary.light"
-                    >
-                      {getFormattedCurrency(authorRoyalties.netowed)}
-                    </Typography>
+                    {displayField(
+                      authorRoyalties.netowed,
+                      "h4",
+                      true,
+                      "primary.light"
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
@@ -260,11 +318,10 @@ const Dashboard = () => {
                           <Typography variant="subtitle2" align="center">
                             This Quarter
                           </Typography>
-                          <Typography variant="h5" align="center">
-                            {getFormattedCurrency(
-                              authorRoyalties.royaltiesthisperiod
-                            )}
-                          </Typography>
+                          {displayField(
+                            authorRoyalties.royaltiesthisperiod,
+                            "h5"
+                          )}
                         </>
                       </Stack>
                       <Divider orientation="vertical" flexItem />
@@ -273,11 +330,7 @@ const Dashboard = () => {
                           <Typography variant="subtitle2" align="center">
                             In Total
                           </Typography>
-                          <Typography variant="h5" align="center">
-                            {getFormattedCurrency(
-                              authorRoyalties.royaltiestotal
-                            )}
-                          </Typography>
+                          {displayField(authorRoyalties.royaltiestotal, "h5")}
                         </>
                       </Stack>
                     </Stack>
@@ -299,11 +352,10 @@ const Dashboard = () => {
                           <Typography variant="subtitle2" align="center">
                             This Quarter
                           </Typography>
-                          <Typography variant="h5" align="center">
-                            {getFormattedCurrency(
-                              authorRoyalties.paymentsthisperiod
-                            )}
-                          </Typography>
+                          {displayField(
+                            authorRoyalties.paymentsthisperiod,
+                            "h5"
+                          )}
                         </>
                       </Stack>
                       <Divider orientation="vertical" flexItem />
@@ -312,11 +364,7 @@ const Dashboard = () => {
                           <Typography variant="subtitle2" align="center">
                             In Total
                           </Typography>
-                          <Typography variant="h5" align="center">
-                            {getFormattedCurrency(
-                              authorRoyalties.paymentstotal
-                            )}
-                          </Typography>
+                          {displayField(authorRoyalties.paymentstotal, "h5")}
                         </>
                       </Stack>
                     </Stack>
@@ -335,7 +383,7 @@ const Dashboard = () => {
                             This Quarter
                           </Typography>
                           <Typography variant="h5" align="center">
-                            {getFormattedCurrency(authorRoyalties.tax)}
+                            {displayField(authorRoyalties.tax, "h5")}
                           </Typography>
                         </>
                       </Stack>
@@ -346,7 +394,7 @@ const Dashboard = () => {
                             In Total
                           </Typography>
                           <Typography variant="h5" align="center">
-                            {getFormattedCurrency(authorRoyalties.taxtotal)}
+                            {displayField(authorRoyalties.taxtotal, "h5")}
                           </Typography>
                         </>
                       </Stack>
@@ -366,7 +414,11 @@ const Dashboard = () => {
                             This Quarter
                           </Typography>
                           <Typography variant="h5" align="center">
-                            {authorRoyalties.paidsalesthisperiod}
+                            {displayField(
+                              authorRoyalties.paidsalesthisperiod,
+                              "h5",
+                              false
+                            )}
                           </Typography>
                         </>
                       </Stack>
@@ -377,7 +429,11 @@ const Dashboard = () => {
                             In Total
                           </Typography>
                           <Typography variant="h5" align="center">
-                            {authorRoyalties.paidsalestotal}
+                            {displayField(
+                              authorRoyalties.paidsalestotal,
+                              "h5",
+                              false
+                            )}
                           </Typography>
                         </>
                       </Stack>
@@ -389,9 +445,7 @@ const Dashboard = () => {
               <Grid item md={5}>
                 <Card>
                   <CardTopHeader title="Sales" icon={<ShowChartIcon />} />
-                  <CardContent>
-                    {dataHistoryReady && <Line data={getSalesData()} />}
-                  </CardContent>
+                  <CardContent>{getLineChart()}</CardContent>
                 </Card>
               </Grid>
 
@@ -418,9 +472,7 @@ const Dashboard = () => {
               <Grid item md={5}>
                 <Card>
                   <CardTopHeader title="Earnings" icon={<ShowChartIcon />} />
-                  <CardContent>
-                    {dataHistoryReady && <Bar data={getEarningsData()} />}
-                  </CardContent>
+                  <CardContent>{getBarChart()}</CardContent>
                 </Card>
               </Grid>
             </Grid>
