@@ -268,11 +268,11 @@ const AuthorView = ({
                       />
                       <ViewChip
                         label="In UK"
-                        value={author.taxuk}
+                        value={author.notax}
                         color="success"
                         tooltipTrue="In UK so we don't deduct tax from author royalties"
                         tooltipFalse="Not in UK so we deduct tax from author royalties"
-                        mykey="chip-taxuk"
+                        mykey="chip-notax"
                         width={100}
                       />
                     </Stack>

@@ -172,10 +172,10 @@ const AuthorEdit = ({
           <Grid item md={2}>
             <ViewChip
               label="In UK"
-              value={author.taxuk}
+              value={author.notax}
               color="success"
               width={100}
-              onClick={() => toggleChange("taxuk")}
+              onClick={() => toggleChange("notax")}
             />
           </Grid>
 

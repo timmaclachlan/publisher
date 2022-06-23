@@ -49,22 +49,42 @@ export const getCurrentQuarterYear = () => {
 
   return {
     quarter,
-    year: currentYear
-  }
+    year: currentYear,
+  };
 };
 
 export const getNextQuarterYear = () => {
   const currentQuarterYear = getCurrentQuarterYear();
-  if (currentQuarterYear.quarter < 4)
-    currentQuarterYear.quarter += 1;
+  if (currentQuarterYear.quarter < 4) currentQuarterYear.quarter += 1;
   else {
     currentQuarterYear.quarter = 1;
     currentQuarterYear.year += 1;
   }
 
   return currentQuarterYear;
-}
+};
 
+export const getQuarterListForDisplay = () => {
+  let currentQuarter = getCurrentQuarterYear();
+
+  let quarters = [];
+  for (let y = currentQuarter.year; y >= currentQuarter.year - 2; y--) {
+    if (y > currentQuarter.year - 2) {
+      for (let q = 4; q >= 1; q--) {
+        if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
+        quarters.push({
+          value: `${q}${y}`,
+          label: `Quarter ${q} - ${y}`,
+        });
+      }
+    } else {
+      quarters.push({
+        value: `0${y}`,
+        label: `${y}`,
+      });
+    }
+  }
+};
 
 export const convertQuarterStringToDisplay = (quarterString) => {
   if (quarterString.includes("-")) {

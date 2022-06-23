@@ -93,11 +93,11 @@ const Authors = ({ onRecordChange }) => {
     },
     { field: "location", flex: 1 },
     {
-      field: "taxuk",
+      field: "notax",
       flex: 0.5,
       headerName: "In uk",
       valueGetter: (params) => {
-        return params.data.taxuk ? "Yes" : "No";
+        return params.data.notax ? "Yes" : "No";
       },
     },
   ];

@@ -155,7 +155,6 @@ const BookDetail = ({ onRecordChange }) => {
   };
 
   const onEnableChangeFormats = (format, enabled) => {
-    debugger;
     let newFormats = [...formats];
     let selectedFormat = getFormatData(format);
     if (selectedFormat !== null) {
@@ -194,7 +193,7 @@ const BookDetail = ({ onRecordChange }) => {
         console.log(error);
       }
     };
-    if (id.length === 36) {
+    if (id && id.length === 36) {
       retrieveBook();
     }
     if (id === undefined) {
