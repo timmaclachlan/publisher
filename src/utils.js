@@ -68,7 +68,7 @@ export const getQuarterListForDisplay = () => {
   let currentQuarter = getCurrentQuarterYear();
 
   let quarters = [];
-  for (let y = currentQuarter.year; y >= currentQuarter.year - 2; y--) {
+  for (let y = currentQuarter.year; y >= currentQuarter.year - 3; y--) {
     if (y > currentQuarter.year - 2) {
       for (let q = 4; q >= 1; q--) {
         if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
@@ -84,6 +84,8 @@ export const getQuarterListForDisplay = () => {
       });
     }
   }
+  quarters.push({ value: '02012-2018', label: '2012 - 2018' });
+  return quarters;
 };
 
 export const convertQuarterStringToDisplay = (quarterString) => {

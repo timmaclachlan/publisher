@@ -101,6 +101,26 @@ router.get("/royalties", (req, res) => {
   })
 });
 
+router.get("/royaltiess/:id", (req, res) => {
+  console.log("ROYALTIES BY ID");
+
+  let sql = `SELECT rh.*, authors.notax FROM ${TABLEQUAL_ROYALITESHISTORY} rh
+   JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = rh.authorid
+     WHERE rh.authorid = '${req.params.id}' ORDER BY startperiod`;
+
+  getQueryWithStatus(sql, res);
+});
+
+router.get("/saless/:id", (req, res) => {
+  let sql = `SELECT books.title, ro.amountreceived, ro.royaltyauthor,
+  ro.dateamountreceived, ro.quantity, ro.isfree, books.royalty
+  FROM ${TABLEQUAL_ORDERS} ro
+  JOIN ${TABLEQUAL_BOOKS} books ON books.id = ro.bookid
+  WHERE books.authorid = '${req.params.id}'`;
+
+  getQueryWithStatus(sql, res);
+});
+
 router.get("/royalties/quarters", (req, res) => {
   console.log(req.query.thisperiod);
   console.log(req.query.nextperiod);

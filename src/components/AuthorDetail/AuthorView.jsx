@@ -332,8 +332,6 @@ const AuthorView = ({
                     title="Notes"
                     icon={<SpeakerNotesIcon />}
                     allowEdit
-                    editMode
-                    onEditClick={() => setNotesEditMode(!notesEditMode)}
                   ></CardTopHeader>
                   <CardContent>
                     {!notesEditMode &&
