@@ -128,7 +128,7 @@ const BookDetailHeader = ({
         <LayersIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
       </Grid>
       {(editMode || createMode) && RenderEditMode()}
-      {!editMode && RenderViewMode()}
+      {!editMode && !createMode && RenderViewMode()}
     </Grid>
   );
 };

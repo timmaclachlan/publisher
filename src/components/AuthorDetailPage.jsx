@@ -60,12 +60,11 @@ const AuthorDetail = ({ onRecordChange }) => {
         console.log(error);
       }
     };
+    if (id && id.length === 36) {
+      retrieveAuthor();
+    }
     if (id === undefined) {
       setCreateMode(true);
-      return;
-    }
-    if (id.length === 36) {
-      retrieveAuthor();
     }
   }, [id, navigate, onRecordChange]);
 
@@ -85,7 +84,7 @@ const AuthorDetail = ({ onRecordChange }) => {
 
   const saveAuthor = (ev) => {
     ev.preventDefault();
-    debugger;
+
     if (createMode) {
       makeChange(create.bind(null, author));
     } else {

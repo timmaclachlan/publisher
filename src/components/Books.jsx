@@ -1,6 +1,6 @@
 import React from "react";
 import { AgGridReact } from "ag-grid-react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button } from "@mui/material";
 
@@ -30,11 +30,7 @@ const LinkComponentAuthor = ({ data }) => {
 };
 
 const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
-  const navigate = useNavigate();
   const gridRef = React.useRef(null);
-  const createClick = (event) => {
-    navigate("/books/new");
-  };
 
   const columnDefs = [
     {
@@ -84,17 +80,6 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
 
   return (
     <>
-      <Box sx={{ mt: 3 }}>
-        <Button
-          color="primary"
-          variant="contained"
-          aria-label="add"
-          onClick={createClick}
-        >
-          Create
-        </Button>
-      </Box>
-
       <Box
         className="ag-theme-alpine"
         style={{

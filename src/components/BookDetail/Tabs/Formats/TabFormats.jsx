@@ -10,7 +10,13 @@ import { isEmptyObject } from "../../../../utils";
 
 import { PAPERBACK, HARDBACK, EBOOK } from "./FormatsHelper";
 
-const TabFormats = ({ formats, editMode, onChange, onEnableChange }) => {
+const TabFormats = ({
+  formats,
+  editMode,
+  createMode,
+  onChange,
+  onEnableChange,
+}) => {
   const loading = isEmptyObject(formats);
 
   const onPaperbackCheckChange = (ev) => {

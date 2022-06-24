@@ -30,7 +30,6 @@ const BookEdit = ({ book, authors, onUpdateBook, getAuthors, genres }) => {
 
   const valueChange = (event) => {
     const { name, value } = event.target;
-    debugger;
     handleChange(name, value);
   };
 
@@ -57,12 +56,23 @@ const BookEdit = ({ book, authors, onUpdateBook, getAuthors, genres }) => {
         <Grid container spacing={2}>
           <Grid item md={9}>
             <Grid container spacing={2}>
-              <Grid item md={9}>
+              <Grid item md={7}>
                 <TextField
                   label="Title"
                   name="title"
                   variant="outlined"
                   value={book.title}
+                  fullWidth
+                  onChange={valueChange}
+                />
+              </Grid>
+
+              <Grid item md={2}>
+                <TextField
+                  label="Office Abb"
+                  name="officeabb"
+                  variant="outlined"
+                  value={book.officeabb}
                   fullWidth
                   onChange={valueChange}
                 />
@@ -99,6 +109,9 @@ const BookEdit = ({ book, authors, onUpdateBook, getAuthors, genres }) => {
                   fullWidth
                   onChange={valueChange}
                 >
+                  <MenuItem value={undefined}>
+                    <em>[Not Set]</em>
+                  </MenuItem>
                   {renderGenres()}
                 </Select>
               </Grid>
@@ -106,7 +119,6 @@ const BookEdit = ({ book, authors, onUpdateBook, getAuthors, genres }) => {
               <Grid item md={2}>
                 <InputLabel id="service-label">Service</InputLabel>
                 <FormControl fullWidth>
-                  <InputLabel id="service-label">Service</InputLabel>
                   <Select
                     label="Service"
                     name="service"
@@ -114,6 +126,9 @@ const BookEdit = ({ book, authors, onUpdateBook, getAuthors, genres }) => {
                     labelId="service-label"
                     onChange={valueChange}
                   >
+                    <MenuItem value={undefined}>
+                      <em>[Not Set]</em>
+                    </MenuItem>
                     <MenuItem value="EPS">EPS</MenuItem>
                     <MenuItem value="EPPS">EPPS</MenuItem>
                     <MenuItem value="PPS">PPS</MenuItem>

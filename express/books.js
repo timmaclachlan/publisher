@@ -58,6 +58,30 @@ let routeBuilder = (path) => {
     return getQueryWithStatus(sql, res);
   });
 
+   router.post("/books", (req, res) => {
+    let sql = `INSERT INTO ${TABLEQUAL_BOOKS} 
+  (id, title,authorid,genreid,royalty,published,
+    officeabb,publicationdate,stillselling,maturecontent,
+    onhold,terminated
+  )
+  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`;
+    let data = [
+      v4(),
+      req.body.title,
+      req.body.author.id,
+      req.body.genreid,
+      req.body.royalty,
+      req.body.published,
+      req.body.officeabb,
+      req.body.publicationdate,
+      req.body.stillselling,
+      req.body.maturecontent,
+      req.body.onhold,
+      req.body.terminated
+    ];
+    return updateQuery(sql, data, res);
+  });
+
   router.patch("/books/:id", (req, res) => {
     console.log("in Patch for Books");
     console.log(req.body);

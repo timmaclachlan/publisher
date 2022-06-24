@@ -30,6 +30,7 @@ import TabPanel from "./TabPanel";
 import BookDetailHeader from "./BookDetail/BookDetailHeader";
 
 import {
+  create,
   readLookupAll,
   readById,
   updateById,
@@ -184,15 +185,19 @@ const BookDetail = ({ onRecordChange }) => {
         };
         setBook(bookRecord);
 
-        response = await readAll("genre");
-        setGenres(response.result);
-
         response = await readByIdAll("book", "service", id);
         setBookServices(response.result);
       } catch (error) {
         console.log(error);
       }
     };
+
+    const retrieveGenres = async () => {
+      let response = await readAll("genre");
+      setGenres(response.result);
+    };
+    retrieveGenres();
+
     if (id && id.length === 36) {
       retrieveBook();
     }
@@ -220,12 +225,31 @@ const BookDetail = ({ onRecordChange }) => {
     callApi();
   };
 
+  const makeCreate = () => {
+    const callApi = async () => {
+      await create(book, "book");
+    };
+    callApi();
+  };
+
+  const makeUpdate = () => {
+    const callApi = async () => {
+      await updateById(book, id, "book");
+    };
+    callApi();
+  };
+
   const saveBook = (ev) => {
     ev.preventDefault();
-
     book.formats = formats;
     book.editorial = editorial;
-    makeChange(updateById.bind(null, book, id));
+    if (createMode) {
+      debugger;
+      makeCreate();
+      //makeChange(create.bind(null, book));
+    } else {
+      makeUpdate();
+    }
     setNotification((prevState) => ({
       ...prevState,
       show: true,
@@ -381,6 +405,7 @@ const BookDetail = ({ onRecordChange }) => {
               <TabPanel value={currentTab} index={1}>
                 <TabEditorial
                   editorial={editorial}
+                  createMode={createMode}
                   editMode={editMode}
                   onChange={onChangeEditorial}
                 />
@@ -397,6 +422,7 @@ const BookDetail = ({ onRecordChange }) => {
               <TabPanel value={currentTab} index={TAB_FORMATS}>
                 <TabFormats
                   book={book}
+                  createMode={createMode}
                   editMode={editMode}
                   formats={formats}
                   onChange={onChangeFormats}

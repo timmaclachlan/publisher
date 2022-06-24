@@ -98,5 +98,6 @@ export const deleteById = (id, schema) => {
 };
 
 export const create = (model, schema) => {
+  debugger;
   return makeRequest(schema, false, 0, null, "POST", model);
 };

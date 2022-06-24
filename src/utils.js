@@ -107,7 +107,9 @@ export const getFormattedCurrency = (amount) => {
 };
 
 export const getRemainingPercentage = (amount) => {
-  return 100 - amount;
+  if (amount)
+    return 100 - amount;
+  return 35;
 };
 
 export const toggleFavorite = (id, type, title) => {

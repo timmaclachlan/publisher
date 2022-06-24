@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid, Button } from "@mui/material";
 import LayersIcon from "@mui/icons-material/Layers";
 
 import Books from "./Books";
@@ -8,6 +9,7 @@ import Books from "./Books";
 import { readAll } from "../fetcher";
 
 const BooksPage = ({ onRecordChange }) => {
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
@@ -23,6 +25,10 @@ const BooksPage = ({ onRecordChange }) => {
     retrieveBooks();
   }, [onRecordChange]);
 
+  const createClick = (event) => {
+    navigate("/books/new");
+  };
+
   return (
     <>
       <Grid container>
@@ -35,6 +41,17 @@ const BooksPage = ({ onRecordChange }) => {
           </Typography>
         </Grid>
         <Grid item md={3} />
+        <Grid item md={2}>
+          <Button
+            color="primary"
+            variant="contained"
+            sx={{ mt: 1 }}
+            aria-label="add"
+            onClick={createClick}
+          >
+            Create
+          </Button>
+        </Grid>
       </Grid>
       <Books books={books} gridWidth={1400} />
     </>
