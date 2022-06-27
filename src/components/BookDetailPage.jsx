@@ -56,14 +56,14 @@ const blankFormat = (bookid, format) => {
     bookid,
     enabled: false,
     format,
-    price: 0,
+    price: null,
     isbn: "",
-    width: 0,
-    height: 0,
-    pagecount: 0,
-    estpagecount: 0,
-    unitcost: 0,
-    estunitcost: 0,
+    width: null,
+    height: null,
+    pagecount: null,
+    estpagecount: null,
+    unitcost: null,
+    estunitcost: null,
     paperstock: "",
     coverlaminate: "",
   };
@@ -74,15 +74,15 @@ const blankEditorial = (bookid) => {
     id: null,
     isnew: true,
     bookid,
-    editlevel: "0",
-    blurblevel: "",
-    wordcount: "0",
+    editlevel: null,
+    blurblevel: null,
+    wordcount: null,
   };
 };
 
 const BookDetail = ({ onRecordChange }) => {
   const { id } = useParams();
-  const [book, setBook] = useState({});
+  const [book, setBook] = useState({ publicationdate: null });
   const [genres, setGenres] = useState([]);
   const [formats, setFormats] = useState({});
   const [editorial, setEditorial] = useState({});
@@ -158,7 +158,12 @@ const BookDetail = ({ onRecordChange }) => {
   const onEnableChangeFormats = (format, enabled) => {
     let newFormats = [...formats];
     let selectedFormat = getFormatData(format);
-    if (selectedFormat !== null) {
+    if (selectedFormat === null) {
+      debugger;
+      selectedFormat = blankFormat(id, format);
+      selectedFormat.enabled = enabled;
+      newFormats.push(selectedFormat);
+    } else {
       selectedFormat.enabled = enabled;
     }
     setFormats(newFormats);

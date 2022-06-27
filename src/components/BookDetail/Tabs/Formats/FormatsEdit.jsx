@@ -26,7 +26,6 @@ import {
   FIELD_PRICE,
   FIELD_ISBN,
   FIELD_DISTRIBUTOR,
-  getFormatEnabled,
   getFormatDetails,
   getDistributorPairs,
   getPaperStockPairs,
@@ -39,13 +38,10 @@ const FormatsEdit = ({
   onPaperbackCheckChange,
   onHardbackCheckChange,
   onEbookCheckChange,
+  paperbackEnabled,
+  hardbackEnabled,
+  ebookEnabled,
 }) => {
-  let paperbackEnabled = getFormatEnabled(formats, PAPERBACK);
-  let hardbackEnabled = getFormatEnabled(formats, HARDBACK);
-  let ebookEnabled = getFormatEnabled(formats, EBOOK);
-
-  debugger;
-
   const distributorPairs = getDistributorPairs();
   const distributorValues = Object.keys(distributorPairs);
   const paperstockPairs = getPaperStockPairs();

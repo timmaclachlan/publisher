@@ -58,17 +58,60 @@ let routeBuilder = (path) => {
     return getQueryWithStatus(sql, res);
   });
 
-   router.post("/books", (req, res) => {
-    let sql = `INSERT INTO ${TABLEQUAL_BOOKS} 
+  router.post("/books", (req, res) => {
+    let bookid = v4();
+    let sql = '';
+    let data = [];
+
+    if (req.body.editorial) {
+      sql = `INSERT INTO ${TABLEQUAL_BOOKSEDITORIAL}
+    (id,bookid,editlevel,wordcount,blurblevel)
+    VALUES($1,$2,$3,$4,$5)`;
+      data = [
+        v4(),
+        bookid,
+        req.body.editorial.editlevel,
+        req.body.editorial.wordcount,
+        req.body.editorial.blurblevel,
+      ];
+      updateQuery(sql, data);
+    }
+
+    let formats = req.body.formats;
+    Object.entries(formats).forEach(([k, v]) => {
+      sql = `INSERT INTO ${TABLEQUAL_BOOKSFORMATS}
+      (id, bookid, format, price, isbn, width, height, 
+        pagecount, estpagecount, unitcost, estunitcost, paperstock, coverlaminate, distributor)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`;
+      data = [
+        v4(),
+        bookid,
+        v.format,
+        v.price,
+        v.isbn,
+        v.width,
+        v.height,
+        v.pagecount,
+        v.estpagecount,
+        v.unitcost,
+        v.estunitcost,
+        v.paperstock,
+        v.coverlaminate,
+        v.distributor,
+      ];
+      updateQuery(sql, data);
+    });
+
+    sql = `INSERT INTO ${TABLEQUAL_BOOKS} 
   (id, title,authorid,genreid,royalty,published,
     officeabb,publicationdate,stillselling,maturecontent,
     onhold,terminated
   )
-  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`;
-    let data = [
-      v4(),
+  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`;
+    data = [
+      bookid,
       req.body.title,
-      req.body.author.id,
+      req.body.author?.id,
       req.body.genreid,
       req.body.royalty,
       req.body.published,
@@ -77,7 +120,7 @@ let routeBuilder = (path) => {
       req.body.stillselling,
       req.body.maturecontent,
       req.body.onhold,
-      req.body.terminated
+      req.body.terminated,
     ];
     return updateQuery(sql, data, res);
   });
@@ -212,7 +255,7 @@ function updateQuery(sql, data) {
       throw error;
     }
   });
-};
+}
 
 function deleteQuery(sql) {
   const pool = new Pool();
@@ -223,7 +266,7 @@ function deleteQuery(sql) {
       throw error;
     }
   });
-};
+}
 
 function getQueryWithStatus(sql, res) {
   console.log(sql);

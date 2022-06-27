@@ -47,7 +47,7 @@ const EditorialEdit = ({ editorial, onChange }) => {
             value={editorial.blurblevel}
             onChange={handleChange}
           >
-            <MenuItem value="">
+            <MenuItem value={undefined}>
               <em>[Not Set]</em>
             </MenuItem>
             <MenuItem value={1}>Level 1</MenuItem>
