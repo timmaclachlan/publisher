@@ -1,4 +1,5 @@
 import React from "react";
+import { useForm, Controller } from "react-hook-form";
 
 import {
   Grid,
@@ -16,6 +17,7 @@ import {
   CardHeader,
   CardContent,
   Box,
+  Chip,
 } from "@mui/material";
 
 import PeopleIcon from "@mui/icons-material/People";
@@ -26,32 +28,31 @@ import WarningIcon from "@mui/icons-material/Warning";
 
 import ViewChip from "../ViewChip";
 
+const myHelper = {
+  realname: {
+    required: "Real name is required",
+  },
+  email: {
+    required: "Email address is required",
+  },
+};
+
 const AuthorEdit = ({
   author,
   isNew,
-  onUpdateAuthor,
   onUpdateEditMode,
   onDeleteAuthor,
   onSaveAuthor,
 }) => {
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
+
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
     React.useState(false);
   const [booksWarning, setBooksWarning] = React.useState(false);
-
-  const handleChange = (name, value) => {
-    if (onUpdateAuthor) {
-      onUpdateAuthor(name, value);
-    }
-  };
-
-  const valueChange = (event) => {
-    const { name, value } = event.target;
-    handleChange(name, value);
-  };
-
-  const toggleChange = (name) => {
-    handleChange(name, !author[name]);
-  };
 
   const handleCloseDeleteConfirmation = () => setShowDeleteConfirmation(false);
 
@@ -62,13 +63,39 @@ const AuthorEdit = ({
     }
   };
 
-  // const handleDeleteClick = () => {
-  //   if (author.books.length > 0) {
-  //     setBooksWarning(true);
-  //     return;
-  //   }
-  //   setShowDeleteConfirmation(true);
-  // };
+  const onSuccess = (evt) => {
+    const newAuthor = {
+      ...author,
+      realname: evt.realname,
+      penname: evt.penname,
+      email: evt.email,
+      email2: evt.email2,
+      phonenumber: evt.phonenumber,
+      phonenumber2: evt.phonenumber2,
+      website: evt.website,
+      sortcode: evt.sortcode,
+      accountno: evt.accountno,
+      paypal: evt.paypal,
+      address1: evt.address1,
+      address2: evt.address2,
+      address3: evt.address3,
+      address4: evt.address4,
+      location: evt.location,
+      notes: evt.notes,
+      notax: evt.notax,
+      active: evt.active,
+      retained: evt.retained,
+    };
+
+    debugger;
+    if (onSaveAuthor) {
+      onSaveAuthor(newAuthor);
+    }
+  };
+
+  const onFailure = (evt) => {
+    debugger;
+  };
 
   return (
     <>
@@ -112,7 +139,8 @@ const AuthorEdit = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <form>
+
+      <form onSubmit={handleSubmit(onSuccess, onFailure)}>
         <Grid container spacing={2}>
           <Grid item md={1}>
             <PeopleIcon color="primary" sx={{ fontSize: 60, mr: 2 }} />
@@ -131,7 +159,7 @@ const AuthorEdit = ({
                 startIcon={<SaveIcon />}
                 color="success"
                 sx={{ width: "100px" }}
-                onClick={onSaveAuthor}
+                type="submit"
               >
                 Save
               </Button>
@@ -158,42 +186,74 @@ const AuthorEdit = ({
           </Grid>
 
           <Grid item md={7}>
-            <TextField
-              label="Real Name"
+            <Controller
               name="realname"
-              variant="outlined"
-              value={author.realname}
-              onChange={valueChange}
-              fullWidth
-              required
+              control={control}
+              defaultValue={author.realname}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  label="Author Real Name"
+                  error={error !== undefined}
+                  placeholder="Enter author name"
+                  required
+                  fullWidth
+                  helperText={error ? myHelper.realname[error.type] : ""}
+                />
+              )}
+              rules={{ required: true }}
             />
           </Grid>
 
           <Grid item md={2}>
-            <ViewChip
-              label="In UK"
-              value={author.notax}
-              color="success"
-              width={100}
-              onClick={() => toggleChange("notax")}
+            <Controller
+              name="notax"
+              control={control}
+              defaultValue={author.notax}
+              render={({ field: { onChange, value, ...field } }) => (
+                <ViewChip
+                  {...field}
+                  label="In Uk"
+                  color="success"
+                  value={value}
+                  onClick={() => onChange(!value)}
+                />
+              )}
             />
           </Grid>
 
           <Grid item md={3}>
             <Stack spacing={2} direction="row">
-              <ViewChip
-                label="Active"
-                value={author.active}
-                color="primary"
-                width={100}
-                onClick={() => toggleChange("active")}
+              <Controller
+                name="active"
+                control={control}
+                defaultValue={author.active}
+                render={({ field: { onChange, value, ...field } }) => (
+                  <ViewChip
+                    {...field}
+                    label="Active"
+                    color="primary"
+                    value={value}
+                    onClick={() => onChange(!value)}
+                    width={100}
+                  />
+                )}
               />
-              <ViewChip
-                label="Retained"
-                value={author.retained}
-                color="primary"
-                width={100}
-                onClick={() => toggleChange("retained")}
+              <Controller
+                name="retained"
+                control={control}
+                defaultValue={author.retained}
+                render={({ field: { onChange, value, ...field } }) => (
+                  <ViewChip
+                    {...field}
+                    label="Retained"
+                    color="primary"
+                    value={value}
+                    onClick={() => onChange(!value)}
+                    width={100}
+                  />
+                )}
               />
             </Stack>
           </Grid>
@@ -205,64 +265,104 @@ const AuthorEdit = ({
                 <Grid container columnSpacing={2}>
                   <Grid item md={4}>
                     <Stack spacing={2}>
-                      <TextField
-                        label="Pen Name"
+                      <Controller
                         name="penname"
-                        variant="outlined"
-                        value={author.penname}
-                        onChange={valueChange}
-                        fullWidth
+                        control={control}
+                        defaultValue={author.penname}
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            variant="outlined"
+                            label="Pen Name"
+                            placeholder="Enter pen name"
+                            fullWidth
+                          />
+                        )}
                       />
-                      <TextField
-                        label="Website"
+                      <Controller
                         name="website"
-                        variant="outlined"
-                        value={author.website}
-                        onChange={valueChange}
-                        fullWidth
+                        control={control}
+                        defaultValue={author.website}
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            variant="outlined"
+                            label="Website"
+                            placeholder="Enter author's website"
+                            fullWidth
+                          />
+                        )}
                       />
                     </Stack>
                   </Grid>
 
                   <Grid item md={5}>
                     <Stack spacing={2}>
-                      <TextField
-                        label="Email 1"
+                      <Controller
                         name="email"
-                        variant="outlined"
-                        value={author.email}
-                        onChange={valueChange}
-                        fullWidth
-                        required
+                        control={control}
+                        defaultValue={author.email}
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            variant="outlined"
+                            label="Email 1"
+                            error={error !== undefined}
+                            placeholder="Enter email address"
+                            fullWidth
+                            required
+                            helperText={error ? myHelper.email[error.type] : ""}
+                          />
+                        )}
+                        rules={{ required: true }}
                       />
-                      <TextField
-                        label="Email 2"
+
+                      <Controller
                         name="email2"
-                        variant="outlined"
-                        value={author.email2}
-                        onChange={valueChange}
-                        fullWidth
+                        control={control}
+                        defaultValue={author.email2}
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            variant="outlined"
+                            label="Email 2"
+                            placeholder="Enter any other email if any"
+                            fullWidth
+                          />
+                        )}
                       />
                     </Stack>
                   </Grid>
 
                   <Grid item md={3}>
                     <Stack spacing={2}>
-                      <TextField
-                        label="Phone 1"
+                      <Controller
                         name="phonenumber"
-                        variant="outlined"
-                        value={author.phonenumber}
-                        onChange={valueChange}
-                        fullWidth
+                        control={control}
+                        defaultValue={author.phonenumber}
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            variant="outlined"
+                            label="Phone 1"
+                            placeholder="Enter main phone number"
+                            fullWidth
+                          />
+                        )}
                       />
-                      <TextField
-                        label="Phone 2"
+                      <Controller
                         name="phonenumber2"
-                        variant="outlined"
-                        value={author.phonenumber2}
-                        onChange={valueChange}
-                        fullWidth
+                        control={control}
+                        defaultValue={author.phonenumber2}
+                        render={({ field, fieldState: { error } }) => (
+                          <TextField
+                            {...field}
+                            variant="outlined"
+                            label="Phone 2"
+                            placeholder="Enter 2nd phone number"
+                            fullWidth
+                          />
+                        )}
                       />
                     </Stack>
                   </Grid>
@@ -277,30 +377,48 @@ const AuthorEdit = ({
               <CardContent>
                 <Stack spacing={2}>
                   <Stack spacing={1} direction="row">
-                    <TextField
-                      label="Sort Code"
+                    <Controller
                       name="sortcode"
-                      variant="outlined"
-                      value={author.sortcode}
-                      onChange={valueChange}
-                      fullWidth
+                      control={control}
+                      defaultValue={author.sortcode}
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          {...field}
+                          variant="outlined"
+                          label="Sort Code"
+                          placeholder="Enter sort code"
+                          fullWidth
+                        />
+                      )}
                     />
-                    <TextField
-                      label="Account"
+                    <Controller
                       name="accountno"
-                      variant="outlined"
-                      value={author.accountno}
-                      onChange={valueChange}
-                      fullWidth
+                      control={control}
+                      defaultValue={author.accountno}
+                      render={({ field, fieldState: { error } }) => (
+                        <TextField
+                          {...field}
+                          variant="outlined"
+                          label="Account"
+                          placeholder="Enter account number"
+                          fullWidth
+                        />
+                      )}
                     />
                   </Stack>
-                  <TextField
-                    label="Paypal"
+                  <Controller
                     name="paypal"
-                    variant="outlined"
-                    value={author.paypal}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.paypal}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="Paypal"
+                        placeholder="Enter paypal address"
+                        fullWidth
+                      />
+                    )}
                   />
                 </Stack>
               </CardContent>
@@ -312,53 +430,89 @@ const AuthorEdit = ({
               <CardTopHeader title="Address Details" />
               <CardContent>
                 <Stack spacing={1}>
-                  <TextField
-                    label="Building/Apartment"
+                  <Controller
                     name="address1"
-                    variant="outlined"
-                    value={author.address1}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.address1}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="Building/Apartment"
+                        placeholder="Enter first address line"
+                        fullWidth
+                      />
+                    )}
                   />
-                  <TextField
-                    label="Street"
+                  <Controller
                     name="address2"
-                    variant="outlined"
-                    value={author.address2}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.address2}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="Street"
+                        placeholder="Enter second address line"
+                        fullWidth
+                      />
+                    )}
                   />
-                  <TextField
-                    label="Town/City"
+                  <Controller
                     name="address3"
-                    variant="outlined"
-                    value={author.address3}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.address3}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="Town/City"
+                        placeholder="Enter town/city"
+                        fullWidth
+                      />
+                    )}
                   />
-                  <TextField
-                    label="County/State"
+                  <Controller
                     name="address4"
-                    variant="outlined"
-                    value={author.address4}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.address4}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="County/State"
+                        placeholder="Enter county/state"
+                        fullWidth
+                      />
+                    )}
                   />
-                  <TextField
-                    label="Post/Zip Code"
+                  <Controller
                     name="postcode"
-                    variant="outlined"
-                    value={author.postcode}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.postcode}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="Post/Zip Code"
+                        placeholder="Enter post/zip code"
+                        fullWidth
+                      />
+                    )}
                   />
-                  <TextField
-                    label="Location"
+                  <Controller
                     name="location"
-                    variant="outlined"
-                    value={author.location}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.location}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="Location"
+                        placeholder="Enter location"
+                        fullWidth
+                      />
+                    )}
                   />
                 </Stack>
               </CardContent>
@@ -370,15 +524,21 @@ const AuthorEdit = ({
               <Card sx={{ height: 470 }}>
                 <CardTopHeader title="Notes" />
                 <CardContent>
-                  <TextField
-                    label="Notes"
+                  <Controller
                     name="notes"
-                    variant="outlined"
-                    multiline
-                    rows={14}
-                    value={author.notes}
-                    onChange={valueChange}
-                    fullWidth
+                    control={control}
+                    defaultValue={author.notes}
+                    render={({ field, fieldState: { error } }) => (
+                      <TextField
+                        {...field}
+                        variant="outlined"
+                        label="Notes"
+                        multiline
+                        rows={14}
+                        placeholder="Enter any notes"
+                        fullWidth
+                      />
+                    )}
                   />
                 </CardContent>
               </Card>

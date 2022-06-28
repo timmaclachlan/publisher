@@ -30,36 +30,24 @@ const RetailOrdersPage = () => {
       ],
     },
     {
-      headerName: "Dates",
-      children: [
-        {
-          field: "orderdate",
-          headerName: "Order",
-          filter: SalesQuarterFilter,
-          valueFormatter: (params) => getFormattedDate(params.value),
-        },
-        {
-          field: "dispatcheddate",
-          headerName: "Dispatched",
-          //columnGroupShow: "open",
-          filter: SalesQuarterFilter,
-          valueFormatter: (params) => getFormattedDate(params.value),
-        },
-        {
-          field: "isfree",
-          headerName: "Is Free",
-          valueGetter: (params) => {
-            return params.data.isfree === "1" ? "Yes" : "No";
-          },
-        },
-        {
-          field: "amountreceiveddate",
-          headerName: "Received",
-          columnGroupShow: "open",
-          filter: SalesQuarterFilter,
-          valueFormatter: (params) => getFormattedDate(params.value),
-        },
-      ],
+      field: "orderdate",
+      headerName: "Order",
+      filter: SalesQuarterFilter,
+      valueFormatter: (params) => getFormattedDate(params.value),
+    },
+    {
+      field: "dateamountreceived",
+      headerName: "Received",
+      columnGroupShow: "open",
+      filter: SalesQuarterFilter,
+      valueFormatter: (params) => getFormattedDate(params.value),
+    },
+    {
+      field: "isfree",
+      headerName: "Is Free",
+      valueGetter: (params) => {
+        return params.data.isfree === "1" ? "Yes" : "No";
+      },
     },
     { field: "salessource", headerName: "Source" },
     {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { useNavigate } from "react-router-dom";
 
 import { Typography, Box, Grid } from "@mui/material";
 
@@ -9,13 +8,11 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import { readAllSubAll } from "../fetcher";
 import { getFormattedDate, getFormattedCurrency } from "../utils";
 
-import SalesQuarterFilter from "./Filters/SalesQuarterFilter";
 import LoadingOverlay from "./LoadingOverlay";
 
 const PagesReadOrdersPage = () => {
   const gridRef = React.useRef(null);
   const [orders, setOrders] = useState([]);
-  const navigate = useNavigate();
 
   const columnDefs = [
     {
@@ -26,13 +23,6 @@ const PagesReadOrdersPage = () => {
       ],
     },
     {
-      field: "dispatcheddate",
-      headerName: "Date Read",
-      //columnGroupShow: "open",
-      filter: SalesQuarterFilter,
-      valueFormatter: (params) => getFormattedDate(params.value),
-    },
-    {
       field: "quantity",
       headerName: "Pages Read",
       flex: 0.75,
@@ -40,7 +30,7 @@ const PagesReadOrdersPage = () => {
     },
     {
       field: "amountreceived",
-      headerName: "Received",
+      headerName: "Date Amount Received",
       filter: "agNumberColumnFilter",
       valueFormatter: (params) => getFormattedCurrency(params.value),
     },
@@ -115,6 +105,7 @@ const PagesReadOrdersPage = () => {
           frameworkComponents={{}}
           pagination={true}
           paginationPageSize={15}
+          enableCellTextSelection={true}
           onGridReady={onGridReady}
         ></AgGridReact>
       </Box>

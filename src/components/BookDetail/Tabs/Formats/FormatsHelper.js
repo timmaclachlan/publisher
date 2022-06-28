@@ -41,6 +41,7 @@ const getFormatData = (formats, format) => {
 };
 
 export const getFormatEnabled = (formats, format) => {
+  debugger;
   let selectedFormat = getFormatData(formats, format);
   if (selectedFormat) {
     if (selectedFormat.enabled === undefined) return true;

@@ -75,20 +75,18 @@ const AuthorDetail = ({ onRecordChange }) => {
     callApi();
   };
 
-  const makeUpdate = () => {
+  const makeUpdate = (author) => {
     const callApi = async () => {
       await updateById(author, id, "author");
     };
     callApi();
   };
 
-  const saveAuthor = (ev) => {
-    ev.preventDefault();
-
+  const saveAuthor = (author) => {
     if (createMode) {
       makeChange(create.bind(null, author));
     } else {
-      makeUpdate();
+      makeUpdate(author);
       //makeChange(updateById.bind(null, author, id));
     }
     setNotification((prevState) => ({
@@ -101,15 +99,6 @@ const AuthorDetail = ({ onRecordChange }) => {
     if (onRecordChange) {
       onRecordChange(author.realname);
     }
-  };
-
-  const updateAuthor = (field, value) => {
-    setAuthor((prevState) => {
-      return {
-        ...prevState,
-        [field]: value,
-      };
-    });
   };
 
   const deleteAuthor = () => {
@@ -171,7 +160,6 @@ const AuthorDetail = ({ onRecordChange }) => {
               <AuthorView
                 author={author}
                 onUpdateEditMode={setEditMode}
-                onUpdateAuthor={updateAuthor}
                 onFavoriteToggle={favoriteToggle}
                 isFavorite={favorite}
                 isOneBookPublished={isOneBookPublished()}
@@ -182,7 +170,6 @@ const AuthorDetail = ({ onRecordChange }) => {
               <AuthorEdit
                 author={author}
                 isNew={createMode}
-                onUpdateAuthor={updateAuthor}
                 onUpdateEditMode={setEditMode}
                 onDeleteAuthor={deleteAuthor}
                 onSaveAuthor={saveAuthor}

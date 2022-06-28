@@ -173,6 +173,7 @@ const Authors = ({ onRecordChange }) => {
           paginationPageSize={15}
           onGridReady={onGridReady}
           suppressNoRowsOverlay={true}
+          enableCellTextSelection={true}
         ></AgGridReact>
       </Box>
     </>

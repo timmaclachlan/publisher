@@ -44,7 +44,6 @@ import { isEmptyObject } from "../../utils";
 const AuthorView = ({
   author,
   onUpdateEditMode,
-  onUpdateAuthor,
   isFavorite,
   isOneBookPublished,
   onFavoriteToggle,
@@ -53,17 +52,6 @@ const AuthorView = ({
   const navigate = useNavigate();
 
   const [notesEditMode, setNotesEditMode] = React.useState(false);
-
-  const handleChange = (name, value) => {
-    if (onUpdateAuthor) {
-      onUpdateAuthor(name, value);
-    }
-  };
-
-  const valueChange = (event) => {
-    const { name, value } = event.target;
-    handleChange(name, value);
-  };
 
   const displayField = (
     field,
@@ -344,7 +332,6 @@ const AuthorView = ({
                         multiline
                         rows={6}
                         value={author.notes}
-                        onChange={valueChange}
                         fullWidth
                       />
                     )}

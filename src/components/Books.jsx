@@ -2,7 +2,7 @@ import React from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Link as RouterLink } from "react-router-dom";
 
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 import { getFormattedDate } from "../utils";
 
@@ -87,25 +87,30 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
           width: gridWidth ? gridWidth : 900,
         }}
       >
-        <AgGridReact
-          ref={gridRef}
-          defaultColDef={{
-            resizable: true,
-            sortable: true,
-            floatingFilter: true,
-            filter: "agTextColumnFilter",
-            flex: 1,
-          }}
-          rowData={books}
-          columnDefs={columnDefs}
-          columnHoverHighlight={true}
-          pagination={true}
-          paginationPageSize={15}
-          onGridReady={onGridReady}
-          gridOptions={{
-            loadingOverlayComponent: LoadingOverlay,
-          }}
-        ></AgGridReact>
+        {books.length > 0 && (
+          <AgGridReact
+            ref={gridRef}
+            defaultColDef={{
+              resizable: true,
+              sortable: true,
+              floatingFilter: true,
+              filter: "agTextColumnFilter",
+              flex: 1,
+            }}
+            rowData={books}
+            columnDefs={columnDefs}
+            columnHoverHighlight={true}
+            pagination={true}
+            paginationPageSize={15}
+            onGridReady={onGridReady}
+            gridOptions={{
+              loadingOverlayComponent: LoadingOverlay,
+            }}
+          ></AgGridReact>
+        )}
+        {books.length === 0 && (
+          <Typography variant="subtitle1">Currently no books</Typography>
+        )}
       </Box>
     </>
   );
