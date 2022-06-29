@@ -73,9 +73,21 @@ router.get("/genres/:id", (req, res) => {
 router.get("/dashboardstats", (req, res) => {
   let sql = `SELECT ROUND(SUM(amountreceived)::DECIMAL, 2) AS "totalsales", 
   ROUND(SUM(royaltypublisher)::DECIMAL, 2) AS "totalincome",
+  ROUND(SUM(royaltyauthor)::DECIMAL, 2) AS "totalroyalties",
   SUM(quantity) AS "totalpaidsales"
   FROM ${TABLEQUAL_ORDERS}
-  WHERE isfree = 0`;
+  UNION
+  SELECT ROUND(SUM(amountreceived)::DECIMAL, 2) AS "totalsales", 
+  ROUND(SUM(royaltypublisher)::DECIMAL, 2) AS "totalincome",
+  ROUND(SUM(royaltyauthor)::DECIMAL, 2) AS "totalroyalties",
+  SUM(quantity) AS "totalpaidsales"
+  FROM ${TABLEQUAL_CONSUMERORDERS}
+  UNION
+  SELECT ROUND(SUM(amountreceived)::DECIMAL, 2) AS "totalsales", 
+  ROUND(SUM(royaltypublisher)::DECIMAL, 2) AS "totalincome",
+  ROUND(SUM(royaltyauthor)::DECIMAL, 2) AS "totalroyalties",
+  SUM(quantity) AS "totalpaidsales"
+  FROM ${TABLEQUAL_KBPORDERS}`;
 
   getQueryWithStatus(sql, res);
 });
