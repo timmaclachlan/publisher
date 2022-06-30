@@ -36,7 +36,7 @@ const AvatarComponent = ({ data }) => {
       sx={{
         width: 38,
         height: 38,
-        ml: -1,
+        ml: 0,
       }}
     >
       {namemap}
@@ -56,7 +56,7 @@ const Authors = ({ onRecordChange }) => {
   const columnDefs = [
     {
       cellRenderer: AvatarComponent,
-      flex: 0.25,
+      flex: 0.4,
       filter: false,
     },
     {
@@ -95,7 +95,7 @@ const Authors = ({ onRecordChange }) => {
     {
       field: "notax",
       flex: 0.5,
-      headerName: "In uk",
+      headerName: "In UK",
       valueGetter: (params) => {
         return params.data.notax ? "Yes" : "No";
       },

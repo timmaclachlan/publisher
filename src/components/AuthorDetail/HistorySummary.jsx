@@ -130,7 +130,12 @@ const HistorySummary = ({
     },
     {
       field: "balance",
-      cellStyle: { color: "darkgreen" },
+      cellStyle: { color: "darkgreen", fontWeight: "bold" },
+      cellRenderer: (params) => (
+        <Typography variant="h6">
+          {getFormattedCurrency(params.value)}
+        </Typography>
+      ),
     },
   ];
 
@@ -145,7 +150,7 @@ const HistorySummary = ({
             cellRenderer: (params) => {
               return (
                 <Typography variant="h6">
-                  {parseInt(params.value) === 0
+                  {parseFloat(params.value) === 0
                     ? "-"
                     : getFormattedCurrency(params.value)}
                 </Typography>

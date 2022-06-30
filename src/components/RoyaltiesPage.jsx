@@ -31,6 +31,10 @@ import BuildIcon from "@mui/icons-material/Build";
 
 import LoadingOverlay from "./LoadingOverlay";
 
+import CardTopHeader from "./CardTopHeader";
+import CardTop from "./CardTop";
+import ValidateDialog from "./Royalties/ValidateDialog";
+
 import { readAllByQuery, updateAll } from "../fetcher";
 import {
   getQuarterDates,
@@ -90,6 +94,9 @@ const RoyaltiesPage = () => {
   const [showGrid, setShowGrid] = React.useState(false);
   const [showRoyaltyWarning, setShowRoyaltyWarning] = React.useState(false);
   const [changedRecords, setChangedRecords] = React.useState([]);
+  const [validateDialog, setValidateDialog] = React.useState({
+    visible: false,
+  });
 
   React.useEffect(() => {
     hasRoyalties(getNextQuarterString());
@@ -210,6 +217,10 @@ const RoyaltiesPage = () => {
     );
   };
 
+  const onValidateClick = (authorid, authorname) => {
+    setValidateDialog({ visible: true, authorid, authorname });
+  };
+
   const columnDefs = [
     {
       field: "author",
@@ -236,6 +247,21 @@ const RoyaltiesPage = () => {
       editable:
         selectedQuarter === getCurrentQuarterString() && !periodHasRoyalties,
       valueParser: (params) => Number(params.newValue),
+    },
+    {
+      headerName: "Validate",
+      cellRenderer: (params) => {
+        return (
+          <Button
+            variant="text"
+            onClick={() =>
+              onValidateClick(params.data.authorid, params.data.author)
+            }
+          >
+            Validate
+          </Button>
+        );
+      },
     },
   ];
 
@@ -353,6 +379,13 @@ const RoyaltiesPage = () => {
           <Button onClick={generateRoyalties}>Continue</Button>
         </DialogActions>
       </Dialog>
+
+      <ValidateDialog
+        visible={validateDialog.visible}
+        authorid={validateDialog.authorid}
+        authorname={validateDialog.authorname}
+        onCloseDialog={() => setValidateDialog({ visible: false })}
+      />
 
       <Box sx={{ width: "100%" }}>
         <Grid container spacing={2}>
@@ -488,7 +521,7 @@ const RoyaltiesPage = () => {
                         cellRenderer: (params) => {
                           return (
                             <Typography variant="h6">
-                              {parseInt(params.value) === 0
+                              {parseFloat(params.value) === 0
                                 ? "-"
                                 : getFormattedCurrency(params.value)}
                             </Typography>

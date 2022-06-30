@@ -133,6 +133,41 @@ router.get("/saless/:id", (req, res) => {
   getQueryWithStatus(sql, res);
 });
 
+  router.get("/sales/byquery", (req, res) => {
+    console.log("GET ORDERS BY QUERY");
+    console.log(req.query.authorid);
+    console.log(req.query.startperiod);
+    console.log(req.query.endperiod);
+
+    let sql = `
+      SELECT books.title, 
+      ro.orderdate, ro.dateamountreceived,
+      ro.amountreceived,ro.origcurrency,ro.amountgross,ro.amountnet,ro.royaltyauthor,
+      ro.quantity,ro.fxrate,ro.salessource,ro.salesmethod, 'RETAIL' as ordertype
+      FROM ${TABLEQUAL_ORDERS} ro
+      JOIN ${TABLEQUAL_BOOKS} books ON books.id = ro.bookid
+      JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
+      WHERE dateamountreceived >= ${req.query.startperiod}
+      AND dateamountreceived <= ${req.query.endperiod}
+      AND authors.id = '${req.query.authorid}'
+
+      UNION
+
+      SELECT books.title, 
+      ro.orderdate, ro.dateamountreceived,
+      ro.amountreceived,ro.origcurrency,ro.amountgross,ro.amountnet,ro.royaltyauthor,
+      ro.quantity,ro.fxrate,ro.salessource,ro.salesmethod, 'CONSUMER' as ordertype
+      FROM ${TABLEQUAL_CONSUMERORDERS} ro
+      JOIN ${TABLEQUAL_BOOKS} books ON books.id = ro.bookid
+      JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = books.authorid
+      WHERE dateamountreceived >= ${req.query.startperiod}
+      AND dateamountreceived <= ${req.query.endperiod}
+      AND authors.id = '${req.query.authorid}'
+    `;
+
+    return getQueryWithStatus(sql, res);
+  });
+
 router.get("/royalties/quarters", (req, res) => {
   console.log(req.query.thisperiod);
   console.log(req.query.nextperiod);
