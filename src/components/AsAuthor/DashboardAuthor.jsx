@@ -289,13 +289,13 @@ const Dashboard = () => {
               <Grid item md={1.5}>
                 <Card sx={{ height: "128px" }}>
                   <CardTopHeader
-                    title="Earnings Due"
+                    title="Royalties Due"
                     icon={<BalanceIcon />}
                     themeColor="primary.light"
                   />
                   <CardContent>
                     {displayField(
-                      authorRoyalties.netowed,
+                      authorRoyalties.netroyalties,
                       "h4",
                       true,
                       "primary.light"

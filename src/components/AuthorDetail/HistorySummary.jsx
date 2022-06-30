@@ -109,20 +109,16 @@ const HistorySummary = ({
       },
     },
     {
-      headerName: "Royalties",
+      headerName: "Royalties (Gross)",
       field: "royaltiesthisperiod",
       cellStyle: { color: "darkgreen" },
-    },
-    {
-      headerName: "Owed (Gross)",
-      field: "grossowed",
     },
     {
       field: "tax",
     },
     {
-      headerName: "Owed (Net)",
-      field: "netowed",
+      headerName: "Royalties (Net)",
+      field: "netroyalties",
     },
     {
       headerName: "Payments",

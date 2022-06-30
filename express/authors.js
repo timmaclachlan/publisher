@@ -24,7 +24,7 @@ let routeBuilder = (path) => {
     console.log(quarterString);
 
     let sql = `SELECT authors.*, 
-    rh.balance,rh.grossowed,rh.netowed,rh.tax,
+    rh.balance,rh.netroyalties,rh.tax,
     rh.royaltiesthisperiod,rh.royaltiesprevperiod,rh.royaltiestotal,
     rh.paymentsthisperiod,rh.paymentsprevperiod,rh.paymentstotal,
     rh.paidsalesthisperiod,rh.paidsalesprevperiod,rh.paidsalestotal,

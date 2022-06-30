@@ -71,7 +71,7 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
           }}
           containerStyle={{
             height: 480,
-            width: 1100,
+            width: 1600,
           }}
           rowData={dataHistory}
           columnDefs={columnDefsRoyaltiesHistory}
@@ -151,26 +151,33 @@ const columnDefsRoyaltiesHistory = [
     },
   },
   {
-    headerName: "Royalties",
+    headerName: "Royalties (Gross)",
     field: "royaltiesthisperiod",
     cellStyle: { color: "darkgreen", fontWeight: "bold" },
-  },
-  {
-    headerName: "Owed (Gross)",
-    field: "grossowed",
   },
   {
     field: "tax",
   },
   {
-    headerName: "Owed (Net)",
-    field: "netowed",
+    headerName: "Royalties (Net)",
+    field: "netroyalties",
   },
   {
-    headerName: "Payments",
+    headerName: "Tax Payments",
+    field: "taxpaymentsthisperiod",
+  },
+  {
+    headerName: "Author Payments",
     field: "paymentsthisperiod",
   },
   {
+    headerName: "Tax Due",
+    field: "taxbalance",
+    cellStyle: { color: "darkgreen", fontWeight: "bold" },
+    cellRenderer: (params) => getFormattedCurrency(params.value),
+  },
+  {
+    headerName: "Author Due",
     field: "balance",
     cellStyle: { color: "darkgreen", fontWeight: "bold" },
     cellRenderer: (params) => getFormattedCurrency(params.value),

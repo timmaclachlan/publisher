@@ -131,7 +131,7 @@ const RoyaltiesPage = () => {
     if (showGrid) {
       gridRef.current.api.showLoadingOverlay();
     }
-    let query = `grossowed > ${threshold} AND period = '${dateQuery}'`;
+    let query = `balance > ${threshold} AND period = '${dateQuery}'`;
     if (noTax === "1") query = `${query} AND notax=true`;
     if (noTax === "2") query = `${query} AND notax=false`;
     let urlquery = `query=${query}`;
@@ -230,20 +230,25 @@ const RoyaltiesPage = () => {
     },
 
     {
-      headerName: "Owed (Gross)",
-      field: "grossowed",
-    },
-    {
-      field: "tax",
-    },
-    {
-      headerName: "Owed (Net)",
-      field: "netowed",
+      headerName: "Tax Due",
+      field: "taxbalance",
       cellStyle: { color: "darkgreen" },
     },
     {
-      headerName: "Payment",
+      headerName: "Author Due",
+      field: "balance",
+      cellStyle: { color: "darkgreen" },
+    },
+    {
+      headerName: "Author Payment",
       field: "paymentsthisperiod",
+      editable:
+        selectedQuarter === getCurrentQuarterString() && !periodHasRoyalties,
+      valueParser: (params) => Number(params.newValue),
+    },
+    {
+      headerName: "Tax Payment",
+      field: "taxpaymentsthisperiod",
       editable:
         selectedQuarter === getCurrentQuarterString() && !periodHasRoyalties,
       valueParser: (params) => Number(params.newValue),

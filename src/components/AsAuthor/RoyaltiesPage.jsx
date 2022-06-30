@@ -179,31 +179,20 @@ const RoyaltiesPage = () => {
 
                     <Grid item md={3}>
                       <Typography variant="subtitle1">
-                        Dues Owed (Net)
+                        Royalties (Net)
                       </Typography>
                     </Grid>
 
                     <Grid item md={3}>
                       <Typography variant="h6">
                         {getFormattedCurrency(
-                          royalties[selectedPeriodIndex].netowed
+                          royalties[selectedPeriodIndex].netroyalties
                         )}
                       </Typography>
                     </Grid>
 
                     <Grid item md={3}>
                       <Stack direction="row">
-                        <Stack spacing={1} sx={{ flex: 0.5 }}>
-                          <Typography variant="subtitle2" align="center">
-                            Dues Owed (Gross)
-                          </Typography>
-                          <Typography variant="h6" align="center">
-                            {getFormattedCurrency(
-                              royalties[selectedPeriodIndex].grossowed
-                            )}
-                          </Typography>
-                        </Stack>
-                        <Divider orientation="vertical" flexItem />
                         <Stack spacing={1} sx={{ flex: 0.5 }}>
                           <Typography variant="subtitle2" align="center">
                             Tax Withheld
