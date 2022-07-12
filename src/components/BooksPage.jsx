@@ -11,11 +11,14 @@ import { readAll } from "../fetcher";
 const BooksPage = ({ onRecordChange }) => {
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
+  const [isLoadingBooks, setIsLoadingBooks] = useState(false);
 
   useEffect(() => {
     const retrieveBooks = async () => {
       try {
+        setIsLoadingBooks(true);
         const response = await readAll("book");
+        setIsLoadingBooks(false);
         setBooks(response.result);
         onRecordChange("");
       } catch (error) {
@@ -53,7 +56,7 @@ const BooksPage = ({ onRecordChange }) => {
           </Button>
         </Grid>
       </Grid>
-      <Books books={books} gridWidth={1400} />
+      <Books books={books} gridWidth={1400} isLoadingBooks={isLoadingBooks} />
     </>
   );
 };

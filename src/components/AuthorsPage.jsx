@@ -18,10 +18,10 @@ const LinkComponent = ({ data }) => {
 };
 
 const AvatarComponent = ({ data }) => {
-  const nameSplit = data.realname.trim().split(" ");
+  const nameSplit = data.realname?.trim().split(" ");
   let namemap = data.realname;
 
-  if (nameSplit.length > 1) {
+  if (nameSplit?.length > 1) {
     namemap = nameSplit
       .map((word) => {
         return word[0].toUpperCase();

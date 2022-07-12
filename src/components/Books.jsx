@@ -29,7 +29,13 @@ const LinkComponentAuthor = ({ data }) => {
   );
 };
 
-const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
+const Books = ({
+  books,
+  isLoadingBooks,
+  hideAuthorColumn,
+  gridHeight,
+  gridWidth,
+}) => {
   const gridRef = React.useRef(null);
 
   const columnDefs = [
@@ -83,7 +89,12 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
           width: gridWidth ? gridWidth : 900,
         }}
       >
-        {books.length > 0 && (
+        {!isLoadingBooks && books.length === 0 && (
+          <Typography variant="subtitle1">
+            Currently, no books by this author
+          </Typography>
+        )}
+        {!isLoadingBooks && books.length > 0 && (
           <AgGridReact
             ref={gridRef}
             defaultColDef={{
@@ -100,7 +111,7 @@ const Books = ({ books, hideAuthorColumn, gridHeight, gridWidth }) => {
             paginationPageSize={15}
           ></AgGridReact>
         )}
-        {books.length === 0 && (
+        {isLoadingBooks && (
           <>
             <LoadingOverlay left={400} />
             <Skeleton

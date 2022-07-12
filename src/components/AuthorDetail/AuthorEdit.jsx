@@ -30,10 +30,14 @@ import ViewChip from "../ViewChip";
 
 const myHelper = {
   realname: {
-    required: "Real name is required",
+    required: "Author must have a name!",
+    minLength: "Author real name must be more than 3 characters!",
+    alphanumeric: "Author name should only have letters and numbers",
+    nospaces: "Author name should not just contain spaces",
   },
   email: {
     required: "Email address is required",
+    pattern: "Email address must be in valid format",
   },
 };
 
@@ -87,7 +91,6 @@ const AuthorEdit = ({
       retained: evt.retained,
     };
 
-    debugger;
     if (onSaveAuthor) {
       onSaveAuthor(newAuthor);
     }
@@ -197,12 +200,26 @@ const AuthorEdit = ({
                   label="Author Real Name"
                   error={error !== undefined}
                   placeholder="Enter author name"
-                  required
                   fullWidth
+                  autoFocus
+                  required
                   helperText={error ? myHelper.realname[error.type] : ""}
                 />
               )}
-              rules={{ required: true }}
+              rules={{
+                required: true,
+                minLength: 3,
+                validate: {
+                  nospaces: (value) => {
+                    const spacesOnlyPattern = /^[^\s]+(?:$|.*[^\s]+$)/;
+                    return spacesOnlyPattern.test(value);
+                  },
+                  alphanumeric: (value) => {
+                    const alphanumeric = /^[\w\s]+$/;
+                    return alphanumeric.test(value);
+                  },
+                },
+              }}
             />
           </Grid>
 
@@ -314,7 +331,11 @@ const AuthorEdit = ({
                             helperText={error ? myHelper.email[error.type] : ""}
                           />
                         )}
-                        rules={{ required: true }}
+                        rules={{
+                          required: true,
+                          pattern:
+                            /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+                        }}
                       />
 
                       <Controller
@@ -326,10 +347,16 @@ const AuthorEdit = ({
                             {...field}
                             variant="outlined"
                             label="Email 2"
+                            error={error !== undefined}
                             placeholder="Enter any other email if any"
                             fullWidth
+                            helperText={error ? myHelper.email[error.type] : ""}
                           />
                         )}
+                        rules={{
+                          pattern:
+                            /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+                        }}
                       />
                     </Stack>
                   </Grid>

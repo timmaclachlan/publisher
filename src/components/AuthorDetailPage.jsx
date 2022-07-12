@@ -38,6 +38,7 @@ const AuthorDetail = ({ onRecordChange }) => {
     autoHide: false,
   });
   const [favorite, setFavorite] = useState(isFavorite(id));
+  const [isLoadingBooks, setIsLoadingBooks] = useState(false);
 
   useEffect(() => {
     const retrieveAuthor = async () => {
@@ -54,7 +55,9 @@ const AuthorDetail = ({ onRecordChange }) => {
         setAuthor(authorRecord);
         onRecordChange(authorRecord.realname);
 
+        setIsLoadingBooks(true);
         response = await readByIdAll("author", "book", id);
+        setIsLoadingBooks(false);
         setBooks(response.result);
       } catch (error) {
         console.log(error);
@@ -181,7 +184,12 @@ const AuthorDetail = ({ onRecordChange }) => {
 
           <Grid item md={10}>
             <Typography variant="h5">Books</Typography>
-            <Books books={books} hideAuthorColumn={true} gridHeight={400} />
+            <Books
+              books={books}
+              isLoadingBooks={isLoadingBooks}
+              hideAuthorColumn={true}
+              gridHeight={400}
+            />
           </Grid>
         </Grid>
       </Box>

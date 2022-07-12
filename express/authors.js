@@ -17,8 +17,10 @@ let routeBuilder = (path) => {
   router.get("/authors/:id", (req, res) => {
     // calculate current quarter
     const now = new Date();
-    const month = now.getMonth() + 1;
-    const quarter = month / 3;
+    const month = now.getMonth();
+    console.log('month:' + month);
+    console.log(`quarter: $(month / 3 + 1)`);
+    const quarter = Math.floor((month / 3 + 1));
     const quarterString = `${quarter}${now.getFullYear()}`
  
     console.log(quarterString);
