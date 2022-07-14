@@ -28,6 +28,7 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
       try {
         setIsLoading(true);
         setSalesHistory([]);
+        
         const result = await readByIdAll(
           "author",
           "royaltieshistory",
