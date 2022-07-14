@@ -43,6 +43,7 @@ import { isEmptyObject } from "../../utils";
 
 const AuthorView = ({
   author,
+  financials,
   onUpdateEditMode,
   isFavorite,
   isOneBookPublished,
@@ -404,7 +405,11 @@ const AuthorView = ({
               </Grid>
 
               {isOneBookPublished && (
-                <AuthorRoyalties author={author} loading={loading} />
+                <AuthorRoyalties
+                  author={author}
+                  financials={financials}
+                  loading={loading}
+                />
               )}
             </Grid>
           </Stack>

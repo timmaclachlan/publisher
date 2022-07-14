@@ -15,27 +15,23 @@ let routeBuilder = (path) => {
   });
 
   router.get("/authors/:id", (req, res) => {
-    // calculate current quarter
-    const now = new Date();
-    const month = now.getMonth();
-    console.log('month:' + month);
-    console.log(`quarter: $(month / 3 + 1)`);
-    const quarter = Math.floor((month / 3 + 1));
-    const quarterString = `${quarter}${now.getFullYear()}`
- 
-    console.log(quarterString);
-
-    let sql = `SELECT authors.*, 
-    rh.balance,rh.netroyalties,rh.tax,
-    rh.royaltiesthisperiod,rh.royaltiesprevperiod,rh.royaltiestotal,
-    rh.paymentsthisperiod,rh.paymentsprevperiod,rh.paymentstotal,
-    rh.paidsalesthisperiod,rh.paidsalesprevperiod,rh.paidsalestotal,
-    rh.freesalesthisperiod,rh.freesalesprevperiod,rh.freesalestotal,
-    rh.tax, rh.taxtotal
+    let sql = `SELECT authors.*   
     FROM ${TABLEQUAL_AUTHORS} authors
-    LEFT JOIN ${TABLEQUAL_ROYALITESHISTORY} rh ON rh.authorid = authors.id
-    AND period='${quarterString}'
     WHERE authors.id='${req.params.id}'`;
+    return getQuery(sql, res);
+  });
+
+  router.get("/authors/:id/financials", (req, res) => {
+    let sql = `SELECT  
+    period, startperiod, balance,netroyalties,tax,
+    royaltiesthisperiod,royaltiesprevperiod,royaltiestotal,
+    paymentsthisperiod,paymentsprevperiod,paymentstotal,
+    paidsalesthisperiod,paidsalesprevperiod,paidsalestotal,
+    freesalesthisperiod,freesalesprevperiod,freesalestotal,
+    tax, taxtotal
+    FROM ${TABLEQUAL_ROYALITESHISTORY} 
+    WHERE authorid='${req.params.id}' 
+    ORDER BY startperiod DESC LIMIT 1`;
     return getQuery(sql, res);
   });
 

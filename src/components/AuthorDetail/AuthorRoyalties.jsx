@@ -9,7 +9,7 @@ import ShowChartIcon from "@mui/icons-material/ShowChart";
 
 import HistorySummary from "./HistorySummary";
 
-const AuthorRoyalties = ({ author, loading }) => {
+const AuthorRoyalties = ({ author, financials, loading }) => {
   const renderHistorySummary = (
     title,
     icon,
@@ -24,8 +24,8 @@ const AuthorRoyalties = ({ author, loading }) => {
   ) => {
     return (
       <HistorySummary
-        authorId={author.id}
-        authorName={author.realname}
+        authorId={author?.id}
+        authorName={author?.realname}
         loading={loading}
         width={100}
         height={30}
@@ -52,9 +52,9 @@ const AuthorRoyalties = ({ author, loading }) => {
           "Balance",
           "Gross Royalties",
           "Net Royalties",
-          author.balance,
-          author.royaltiesthisperiod,
-          author.netroyalties,
+          financials.balance,
+          financials.royaltiesthisperiod,
+          financials.netroyalties,
           true,
           true
         )}
@@ -67,9 +67,9 @@ const AuthorRoyalties = ({ author, loading }) => {
           "This Quarter",
           "Previous Quarter",
           "Total Royalties",
-          author.royaltiesthisperiod,
-          author.royaltiesprevperiod,
-          author.royaltiestotal
+          financials.royaltiesthisperiod,
+          financials.royaltiesprevperiod,
+          financials.royaltiestotal
         )}
       </Grid>
 
@@ -80,9 +80,9 @@ const AuthorRoyalties = ({ author, loading }) => {
           "This Period",
           "",
           "Total Tax",
-          author.tax,
+          financials.tax,
           undefined,
-          author.taxtotal
+          financials.taxtotal
         )}
       </Grid>
 
@@ -93,9 +93,9 @@ const AuthorRoyalties = ({ author, loading }) => {
           "This Quarter",
           "Previous Quarter",
           "Total Payments",
-          author.paymentsthisperiod,
-          author.paymentsprevperiod,
-          author.paymentstotal
+          financials.paymentsthisperiod,
+          financials.paymentsprevperiod,
+          financials.paymentstotal
         )}
       </Grid>
 
@@ -106,9 +106,9 @@ const AuthorRoyalties = ({ author, loading }) => {
           "This Quarter",
           "Previous Quarter",
           "Total Sales",
-          author.paidsalesthisperiod,
-          author.paidsalesprevperiod,
-          author.paidsalestotal,
+          financials.paidsalesthisperiod,
+          financials.paidsalesprevperiod,
+          financials.paidsalestotal,
           false
         )}
       </Grid>
@@ -120,9 +120,9 @@ const AuthorRoyalties = ({ author, loading }) => {
           "This Quarter",
           "Previous Quarter",
           "Total Sales",
-          author.freesalesthisperiod,
-          author.freesalesprevperiod,
-          author.freesalestotal,
+          financials.freesalesthisperiod,
+          financials.freesalesprevperiod,
+          financials.freesalestotal,
           false
         )}
       </Grid>

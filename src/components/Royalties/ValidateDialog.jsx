@@ -1,7 +1,7 @@
 import React from "react";
 import { AgGridReact } from "ag-grid-react";
 
-import { Typography, Box, Dialog, DialogTitle } from "@mui/material";
+import { Typography, Box, Dialog, DialogTitle, Skeleton } from "@mui/material";
 
 import LoadingOverlay from "../LoadingOverlay";
 import CardTop from "../CardTop";
@@ -17,33 +17,44 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
   const [dataHistory, setDataHistory] = React.useState([]);
   const [salesHistory, setSalesHistory] = React.useState([]);
   const [salesPeriod, setSalesPeriod] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [visibleHistory, setVisibleHistory] = React.useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = React.useState(false);
+
   const gridRef = React.useRef(null);
 
   React.useEffect(() => {
     const retrieveHistory = async () => {
       try {
+        setIsLoading(true);
+        setSalesHistory([]);
         const result = await readByIdAll(
           "author",
           "royaltieshistory",
           authorid
         );
         setDataHistory(result.result);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
     if (authorid) {
+      setVisibleHistory(false);
       retrieveHistory();
     }
   }, [authorid]);
 
   const getOrdersForPeriod = (ev) => {
+    setVisibleHistory(true);
     const retrieveOrders = async (authorid, startperiod, endperiod, period) => {
       let query = `authorid=${authorid}&startperiod='${startperiod}'&endperiod='${endperiod}'`;
       try {
+        setIsLoadingHistory(true);
         const result = await readAllByQuery("sales/byquery", query);
         setSalesHistory(result.result);
         setSalesPeriod(convertQuarterStringToDisplay(period));
+        setIsLoadingHistory(false);
       } catch (error) {
         console.log(error);
       }
@@ -57,7 +68,10 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
   };
 
   const renderGrid = () => {
-    if (visible)
+    if (visible) {
+      if (isLoading)
+        return <Skeleton variant="rectangular" width={1600} height={400} />;
+
       return (
         <AgGridReact
           ref={gridRef}
@@ -84,10 +98,14 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
           }}
         ></AgGridReact>
       );
+    }
     return null;
   };
 
   const renderSalesHistory = () => {
+    if (isLoadingHistory)
+      return <Skeleton variant="rectangular" width={1400} height={250} />;
+
     if (salesHistory.length > 0) {
       return (
         <AgGridReact
@@ -103,7 +121,11 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
         ></AgGridReact>
       );
     }
-    return null;
+    return (
+      <Typography variant="subtitle1" sx={{ pl: 2 }}>
+        No sales history found
+      </Typography>
+    );
   };
 
   return (
@@ -118,12 +140,15 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
       <Box className="ag-theme-alpine" sx={{ width: "fit-content" }}>
         {renderGrid()}
       </Box>
-      <Box className="ag-theme-alpine" sx={{ width: "fit-content" }}>
-        <Typography variant="h6" sx={{ pl: 2, pt: 1 }}>
-          Sales History for quarter/period {salesPeriod}
-        </Typography>
-        {renderSalesHistory()}
-      </Box>
+
+      {visibleHistory && (
+        <Box className="ag-theme-alpine" sx={{ width: "fit-content" }}>
+          <Typography variant="h6" sx={{ pl: 2, pt: 1 }}>
+            Sales History for quarter/period {salesPeriod}
+          </Typography>
+          {renderSalesHistory()}
+        </Box>
+      )}
     </Dialog>
   );
 };

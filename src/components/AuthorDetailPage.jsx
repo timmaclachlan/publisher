@@ -29,6 +29,7 @@ const AuthorDetail = ({ onRecordChange }) => {
   const { id } = useParams();
   const [author, setAuthor] = useState({});
   const [books, setBooks] = useState([]);
+  const [financials, setFinancials] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [createMode, setCreateMode] = useState(false);
   const [notification, setNotification] = useState({
@@ -59,6 +60,11 @@ const AuthorDetail = ({ onRecordChange }) => {
         response = await readByIdAll("author", "book", id);
         setIsLoadingBooks(false);
         setBooks(response.result);
+
+        response = await readByIdAll("author", "financial", id);
+        if (Array.isArray(response.result) && response.result.length > 0) {
+          setFinancials(response.result[0]);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -162,6 +168,7 @@ const AuthorDetail = ({ onRecordChange }) => {
             {!editMode && !createMode && (
               <AuthorView
                 author={author}
+                financials={financials}
                 onUpdateEditMode={setEditMode}
                 onFavoriteToggle={favoriteToggle}
                 isFavorite={favorite}
