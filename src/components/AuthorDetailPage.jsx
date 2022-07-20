@@ -77,9 +77,13 @@ const AuthorDetail = ({ onRecordChange }) => {
     }
   }, [id, navigate, onRecordChange]);
 
-  const makeChange = (method) => {
+  const makeCreate = (method, newauthor) => {
     const callApi = async () => {
-      await method("author");
+      let results = await method("author");
+      newauthor.id = results
+      setAuthor(newauthor);
+      setCreateMode(false);
+      setEditMode(true);
     };
     callApi();
   };
@@ -91,9 +95,16 @@ const AuthorDetail = ({ onRecordChange }) => {
     callApi();
   };
 
+  const makeDelete = (method) => {
+    const callApi = async () => {
+      await method("author");
+    };
+    callApi();
+  }
+
   const saveAuthor = (author) => {
     if (createMode) {
-      makeChange(create.bind(null, author));
+      makeCreate(create.bind(null, author), author);
     } else {
       makeUpdate(author);
       //makeChange(updateById.bind(null, author, id));
@@ -111,7 +122,7 @@ const AuthorDetail = ({ onRecordChange }) => {
   };
 
   const deleteAuthor = () => {
-    makeChange(deleteById.bind(null, id));
+    makeDelete(deleteById.bind(null, id));
     setNotification((prevState) => ({
       ...prevState,
       show: true,

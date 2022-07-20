@@ -157,7 +157,7 @@ function updateQuery(sql, data, res) {
       return res.json({ errors: ["Failed to create/update record:" + error] });
     }
     res.statusCode = 200;
-    res.json({ message: "success" });
+    res.json({ message: "success", id: results?.rows[0]?.id });
   });
 }
 

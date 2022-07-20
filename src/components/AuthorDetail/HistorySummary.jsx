@@ -113,16 +113,21 @@ const HistorySummary = ({
       field: "royaltiesthisperiod",
       cellStyle: { color: "darkgreen" },
     },
-    {
-      field: "tax",
-    },
+    
     {
       headerName: "Royalties (Net)",
       field: "netroyalties",
     },
     {
+      field: "tax",
+    },
+    {
       headerName: "Payments",
       field: "paymentsthisperiod",
+    },
+    {
+      headerName: "Tax Payments",
+      field: "taxpaymentsthisperiod"
     },
     {
       field: "balance",
@@ -133,15 +138,24 @@ const HistorySummary = ({
         </Typography>
       ),
     },
+    {
+      field: "taxbalance",
+      cellStyle: { color: "darkgreen", fontWeight: "bold" },
+      cellRenderer: (params) => (
+        <Typography variant="h6">
+          {getFormattedCurrency(params.value)}
+        </Typography>
+      ),
+    },
   ];
 
   const renderGrid = () => {
-    if (openDialog)
+    if (openDialog )
       return (
         <AgGridReact
           ref={gridRef}
           defaultColDef={{
-            flex: 0.1,
+            flex: 0.15,
             filter: "agNumberColumnFilter",
             cellRenderer: (params) => {
               return (
@@ -155,7 +169,7 @@ const HistorySummary = ({
           }}
           containerStyle={{
             height: 500,
-            width: 1200,
+            width: 1400,
           }}
           rowData={dataHistory}
           columnDefs={columnDefs}

@@ -89,7 +89,6 @@ export const updateById = (model, id, schema) => {
 };
 
 export const updateAll = (model, schema) => {
-  debugger;
   return makeRequest(schema, false, undefined, null, "PATCH", model);
 }
 
@@ -98,6 +97,5 @@ export const deleteById = (id, schema) => {
 };
 
 export const create = (model, schema) => {
-  debugger;
   return makeRequest(schema, false, 0, null, "POST", model);
 };
