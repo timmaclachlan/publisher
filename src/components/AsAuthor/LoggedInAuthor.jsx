@@ -59,7 +59,7 @@ const LoggedInAuthor = () => {
                     sx={{ width: 40, height: 40 }}
                   />
                   <Typography variant="caption" color="white">
-                    {user.nickname}
+                    {user.nickname}2
                   </Typography>
                 </Stack>
               </IconButton>
