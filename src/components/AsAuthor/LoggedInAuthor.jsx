@@ -117,6 +117,7 @@ const LoggedInAuthor = () => {
           <Routes>
             <Route index element={<Dashboard />} />
             <Route path="mydetails" element={<MyDetails />} />
+            <Route path="myprojects" element={<MyProjects />} />
             <Route path="royalties" element={<RoyaltiesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -125,5 +126,9 @@ const LoggedInAuthor = () => {
     </Box>
   );
 };
+
+export const MyProjects = () => {
+  return <Typography variant="h3">Coming soon</Typography>
+}
 
 export default LoggedInAuthor;

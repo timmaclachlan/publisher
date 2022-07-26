@@ -1,4 +1,4 @@
-import { format, endOfQuarter } from "date-fns";
+import { format, parse, endOfQuarter, intervalToDuration } from "date-fns";
 
 export const isEmptyObject = (value) => {
   return (
@@ -20,7 +20,11 @@ export const selectProps = (...props) => {
 export const getFormattedDate = (dateString) => {
   if (dateString !== null) {
     try {
-      let date = Date.parse(dateString);
+      debugger;
+      if (dateString.indexOf(' ') > -1) {
+        dateString = dateString.substr(0, 10);
+      }
+      let date = parse(dateString, 'yyyy-MM-dd', new Date());
       return new Intl.DateTimeFormat("en-GB").format(date);
     } catch (error) {
       console.log("ERROR: DateString not convertable:" + dateString);
@@ -89,14 +93,12 @@ export const getQuarterListForDisplay = () => {
 };
 
 export const convertQuarterStringToDisplay = (quarterString) => {
+  debugger;
   if (quarterString.includes("-")) {
     const split = quarterString.split("-");
     return `${split[0].substr(1)} to ${split[1]}`;
   }
-  if (quarterString.substr(0, 1) === "0") {
-    return quarterString.substr(1);
-  }
-  return `${quarterString.substr(1)} Q${quarterString.substr(0, 1)}`;
+  return `${quarterString.substr(1)} Q${parseInt(quarterString.substr(0, 1)) + 1}`;
 };
 
 export const getFormattedCurrency = (amount) => {

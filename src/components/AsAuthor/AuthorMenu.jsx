@@ -41,11 +41,6 @@ const AuthorMenu = () => {
         primary="Royalties"
         icon={<BarChartIcon color="success" />}
       />
-      <ListItemLink
-        to="/reports"
-        primary="Reports"
-        icon={<AssessmentIcon color="success" />}
-      />
     </List>
   );
 };

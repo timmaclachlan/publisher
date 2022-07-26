@@ -33,27 +33,20 @@ const ConsumerOrdersPage = () => {
           valueFormatter: (params) => getFormattedDate(params.value),
         },
         {
-          field: "dispatcheddate",
-          headerName: "Dispatched",
-          //columnGroupShow: "open",
-          filter: SalesQuarterFilter,
-          valueFormatter: (params) => getFormattedDate(params.value),
-        },
-        {
-          field: "isfree",
-          headerName: "Is Free",
-          valueGetter: (params) => {
-            return params.data.isfree ? "Yes" : "No";
-          },
-        },
-        {
-          field: "amountreceiveddate",
+          field: "dateamountreceived",
           headerName: "Received",
           columnGroupShow: "open",
           filter: SalesQuarterFilter,
           valueFormatter: (params) => getFormattedDate(params.value),
         },
       ],
+    },
+    {
+      field: "isfree",
+      headerName: "Is Free",
+      valueGetter: (params) => {
+        return params.data.isfree ? "Yes" : "No";
+      },
     },
     { field: "salessource", headerName: "Source" },
     {
@@ -92,7 +85,6 @@ const ConsumerOrdersPage = () => {
       try {
         gridRef.current.api.showLoadingOverlay();
         const result = await readAllSubAll("order", "consumer");
-        debugger;
         setOrders(result.result);
       } catch (error) {
         console.log(error);

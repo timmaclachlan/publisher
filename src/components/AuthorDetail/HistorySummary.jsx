@@ -23,6 +23,7 @@ import { readByIdAll } from "../../fetcher";
 import {
   getFormattedCurrency,
   convertQuarterStringToDisplay,
+  getFormattedDate,
 } from "../../utils";
 
 const HistorySummary = ({
@@ -127,7 +128,16 @@ const HistorySummary = ({
     },
     {
       headerName: "Tax Payments",
-      field: "taxpaymentsthisperiod"
+      field: "taxpaymentsthisperiod",
+      cellRenderer: (params) => {
+        debugger;
+        return  (
+        <Typography variant="caption1">
+         ert (e)
+        </Typography>
+      )
+      }
+      
     },
     {
       field: "balance",
@@ -139,6 +149,7 @@ const HistorySummary = ({
       ),
     },
     {
+      headerName: "Tax Balance",
       field: "taxbalance",
       cellStyle: { color: "darkgreen", fontWeight: "bold" },
       cellRenderer: (params) => (
