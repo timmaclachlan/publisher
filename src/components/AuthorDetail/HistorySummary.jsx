@@ -114,7 +114,7 @@ const HistorySummary = ({
       field: "royaltiesthisperiod",
       cellStyle: { color: "darkgreen" },
     },
-    
+
     {
       headerName: "Royalties (Net)",
       field: "netroyalties",
@@ -129,15 +129,6 @@ const HistorySummary = ({
     {
       headerName: "Tax Payments",
       field: "taxpaymentsthisperiod",
-      cellRenderer: (params) => {
-        debugger;
-        return  (
-        <Typography variant="caption1">
-         ert (e)
-        </Typography>
-      )
-      }
-      
     },
     {
       field: "balance",
@@ -161,7 +152,7 @@ const HistorySummary = ({
   ];
 
   const renderGrid = () => {
-    if (openDialog )
+    if (openDialog)
       return (
         <AgGridReact
           ref={gridRef}
