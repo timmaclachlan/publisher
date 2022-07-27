@@ -100,7 +100,7 @@ router.get("/royalties", (req, res) => {
 
   query = `WHERE ${req.query.query}`;
 
-  let sql = `SELECT rh.*, authors.notax FROM ${TABLEQUAL_ROYALITESHISTORY} rh
+  let sql = `SELECT rh.*, authors.notax, authors.terminated FROM ${TABLEQUAL_ROYALITESHISTORY} rh
    JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = rh.authorid
      ${query} ORDER BY author`;
 

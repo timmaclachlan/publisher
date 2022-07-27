@@ -20,7 +20,6 @@ export const selectProps = (...props) => {
 export const getFormattedDate = (dateString) => {
   if (dateString !== null) {
     try {
-      debugger;
       if (dateString.indexOf(' ') > -1) {
         dateString = dateString.substr(0, 10);
       }
@@ -93,7 +92,6 @@ export const getQuarterListForDisplay = () => {
 };
 
 export const convertQuarterStringToDisplay = (quarterString) => {
-  debugger;
   if (quarterString.includes("-")) {
     const split = quarterString.split("-");
     return `${split[0].substr(1)} to ${split[1]}`;

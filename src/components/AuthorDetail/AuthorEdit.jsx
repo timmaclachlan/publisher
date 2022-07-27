@@ -89,6 +89,7 @@ const AuthorEdit = ({
       notax: evt.notax,
       active: evt.active,
       retained: evt.retained,
+      terminated: evt.terminated
     };
 
     if (onSaveAuthor) {
@@ -223,7 +224,7 @@ const AuthorEdit = ({
             />
           </Grid>
 
-          <Grid item md={2}>
+          <Grid item md={1}>
             <Controller
               name="notax"
               control={control}
@@ -240,7 +241,7 @@ const AuthorEdit = ({
             />
           </Grid>
 
-          <Grid item md={3}>
+          <Grid item md={4}>
             <Stack spacing={2} direction="row">
               <Controller
                 name="active"
@@ -269,6 +270,21 @@ const AuthorEdit = ({
                     value={value}
                     onClick={() => onChange(!value)}
                     width={100}
+                  />
+                )}
+              />
+              <Controller
+                name="terminated"
+                control={control}
+                defaultValue={author.terminated}
+                render={({ field: { onChange, value, ...field } }) => (
+                  <ViewChip
+                    {...field}
+                    label="Terminated"
+                    color="primary"
+                    value={value}
+                    onClick={() => onChange(!value)}
+                    width={120}
                   />
                 )}
               />

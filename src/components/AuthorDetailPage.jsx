@@ -21,6 +21,7 @@ import {
   updateById,
   deleteById,
   readByIdAll,
+  requestAuth
 } from "../fetcher";
 import { isEmptyObject, isFavorite, toggleFavorite } from "../utils";
 
@@ -80,7 +81,7 @@ const AuthorDetail = ({ onRecordChange }) => {
   const makeCreate = (method, newauthor) => {
     const callApi = async () => {
       let results = await method("author");
-      newauthor.id = results
+      newauthor.id = results.id;
       setAuthor(newauthor);
       setCreateMode(false);
       setEditMode(true);
@@ -148,6 +149,20 @@ const AuthorDetail = ({ onRecordChange }) => {
     setFavorite(!favorite);
   };
 
+  const onCreateLogin = () => {
+    const callApi = async () => {
+      const body = {
+        email: "peterdhull2@talktalk.net",
+        connection: "Username-Password-Authentication",
+        password: "OmNsaWVudF",
+      };
+      let results = await requestAuth(body);
+    };
+    debugger;
+    callApi();
+  };
+
+
   const isOneBookPublished = () => {
     return books.some((book) => book.published);
   };
@@ -182,6 +197,7 @@ const AuthorDetail = ({ onRecordChange }) => {
                 financials={financials}
                 onUpdateEditMode={setEditMode}
                 onFavoriteToggle={favoriteToggle}
+                onCreeateLogin={onCreateLogin}
                 isFavorite={favorite}
                 isOneBookPublished={isOneBookPublished()}
               />

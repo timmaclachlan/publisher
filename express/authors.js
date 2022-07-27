@@ -98,7 +98,8 @@ let routeBuilder = (path) => {
     retained = $13, sortcode = $14,
     accountno = $15, paypal = $16,
     active = $17, email2 = $18,
-    phonenumber2 = $19, notax = $20
+    phonenumber2 = $19, notax = $20,
+    terminated = $21
     WHERE id='${req.params.id}'`;
     let data = [
       req.body.realname,
@@ -120,7 +121,8 @@ let routeBuilder = (path) => {
       req.body.active,
       req.body.email2,
       req.body.phonenumber2,
-      req.body.notax
+      req.body.notax,
+      req.body.terminated
     ];
 
     return updateQuery(sql, data, res);

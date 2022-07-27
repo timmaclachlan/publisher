@@ -48,6 +48,7 @@ const AuthorView = ({
   isFavorite,
   isOneBookPublished,
   onFavoriteToggle,
+  onCreateLogin
 }) => {
   const loading = isEmptyObject(author);
   const navigate = useNavigate();
@@ -99,7 +100,18 @@ const AuthorView = ({
                   View Author
                 </Typography>
               </Grid>
-              <Grid item md={3} />
+              <Grid item md={2} />
+              <Grid item md={1}>
+                <Button
+                  variant="contained"
+                  sx={{ width: "100px" }}
+                  color="success"
+                  startIcon={<EditIcon />}
+                  onClick={() => onCreateLogin()}
+                >
+                  Edit
+                </Button>
+              </Grid>
               <Grid item md={1}>
                 <Tooltip title="Mark author as a favorite">
                   <IconButton
@@ -232,42 +244,57 @@ const AuthorView = ({
                 </Card>
               </Grid>
 
-              <Grid item md={2}>
+              <Grid item md={4}>
                 <Card sx={{ height: "180px" }}>
                   <CardTopHeader title="Options" icon={<SettingsIcon />} />
                   <CardContent>
-                    <Stack spacing={1} alignItems="center">
-                      <ViewChip
-                        label="Active"
-                        value={author.active}
-                        color="primary"
-                        mykey="chip-active"
-                        tooltipTrue="Author is active"
-                        tooltipFalse="Author is not active"
-                        width={100}
-                      />
-                      <ViewChip
-                        label="Retained"
-                        value={author.retained}
-                        color="primary"
-                        mykey="chip-retained"
-                        width={100}
-                        tooltipTrue="Author is retained"
-                        tooltipFalse="Author is not retained"
-                      />
-                      <ViewChip
-                        label="In UK"
-                        value={author.notax}
-                        color="success"
-                        tooltipTrue="In UK so we don't deduct tax from author royalties"
-                        tooltipFalse="Not in UK so we deduct tax from author royalties"
-                        mykey="chip-notax"
-                        width={100}
-                      />
+                    <Stack direction="horizontal">
+                      <Stack spacing={1} alignItems="center">
+                        <ViewChip
+                          label="Active"
+                          value={author.active}
+                          color="primary"
+                          mykey="chip-active"
+                          tooltipTrue="Author is active"
+                          tooltipFalse="Author is not active"
+                          width={100}
+                        />
+                        <ViewChip
+                          label="Retained"
+                          value={author.retained}
+                          color="primary"
+                          mykey="chip-retained"
+                          width={100}
+                          tooltipTrue="Author is retained"
+                          tooltipFalse="Author is not retained"
+                        />
+                      </Stack>
+                      
+                      <Stack spacing={1} alignItems="center">
+                        <ViewChip
+                          label="Terminated"
+                          value={author.terminated}
+                          color="success"
+                          mykey="chip-terminated"
+                          width={120}
+                          tooltipTrue="Author is terminated"
+                          tooltipFalse="Author is not terminated"
+                        />
+                        <ViewChip
+                          label="In UK"
+                          value={author.notax}
+                          color="success"
+                          tooltipTrue="In UK so we don't deduct tax from author royalties"
+                          tooltipFalse="Not in UK so we deduct tax from author royalties"
+                          mykey="chip-notax"
+                          width={100}
+                        />
+                      </Stack>
                     </Stack>
                   </CardContent>
                 </Card>
               </Grid>
+
 
               <Grid item md={2}>
                 <Avatar
@@ -294,8 +321,6 @@ const AuthorView = ({
                 </Avatar>
               </Grid>
 
-              <Grid item md={2}></Grid>
-
               {/* Row 4 - Address details */}
               <Grid item md={3}>
                 <Card sx={{ height: 250 }}>
@@ -320,7 +345,6 @@ const AuthorView = ({
                   <CardTopHeader
                     title="Notes"
                     icon={<SpeakerNotesIcon />}
-                    allowEdit
                   ></CardTopHeader>
                   <CardContent>
                     {!notesEditMode &&
