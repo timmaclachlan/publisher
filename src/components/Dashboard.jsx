@@ -57,7 +57,6 @@ const Dashboard = () => {
   React.useEffect(() => {
     const getDashboardStats = async () => {
       const result = await readAll("dashboardstat");
-      debugger;
       if (result.result && result.result.length === 3) {
         const combined = {
           retail: {

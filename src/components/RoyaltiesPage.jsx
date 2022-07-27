@@ -137,8 +137,9 @@ const RoyaltiesPage = () => {
     let urlquery = `query=${query}`;
     try {
       const result = await readAllByQuery("royalties", urlquery);
-      const filteredResult = result.result.filter(x => x.terminated === false);
-debugger;
+      const filteredResult = result.result.filter(
+        (x) => x.terminated === false
+      );
       setData(filteredResult);
       setIsSearching(false);
     } catch (error) {
