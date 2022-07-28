@@ -28,7 +28,7 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
       try {
         setIsLoading(true);
         setSalesHistory([]);
-        
+
         const result = await readByIdAll(
           "author",
           "royaltieshistory",
@@ -77,7 +77,7 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
         <AgGridReact
           ref={gridRef}
           defaultColDef={{
-            flex: 0.1,
+            flex: 1,
             filter: "agNumberColumnFilter",
             cellRenderer: (params) =>
               parseFloat(params.value) === 0
@@ -85,8 +85,8 @@ const ValidateDialog = ({ visible, authorid, authorname, onCloseDialog }) => {
                 : getFormattedCurrency(params.value),
           }}
           containerStyle={{
-            height: 480,
-            width: 1600,
+            height: 380,
+            width: 1500,
           }}
           rowData={dataHistory}
           columnDefs={columnDefsRoyaltiesHistory}
@@ -163,50 +163,111 @@ const columnDefsRoyaltiesHistory = [
     cellStyle: { color: "darkgreen", fontWeight: "bold" },
   },
   {
-    field: "paidsalesthisperiod",
-    headerName: "Sold/Free",
-    cellRenderer: (params) => {
-      return (
-        <span>
-          {parseFloat(params.value) === 0 ? "-" : params.value} /
-          {parseFloat(params.data.freesalesthisperiod) === 0
-            ? "-"
-            : params.data.freesalesthisperiod}
-        </span>
-      );
-    },
+    headerName: "Quantities",
+    children: [
+      {
+        field: "paidsalesthisperiod",
+        headerName: "Paid",
+        flex: 0.75,
+        cellRenderer: (params) => {
+          return (
+            <span>{parseFloat(params.value) === 0 ? "-" : params.value}</span>
+          );
+        },
+      },
+      {
+        field: "freesalesthisperiod",
+        headerName: "Free Sales",
+        columnGroupShow: "open",
+        flex: 0.75,
+        cellRenderer: (params) => {
+          return (
+            <span>{parseFloat(params.value) === 0 ? "-" : params.value}</span>
+          );
+        },
+      },
+      {
+        field: "pagesreadthisperiod",
+        headerName: "Pages Read",
+        columnGroupShow: "open",
+        flex: 0.75,
+        cellRenderer: (params) => {
+          return (
+            <span>{parseFloat(params.value) === 0 ? "-" : params.value}</span>
+          );
+        },
+      },
+    ],
   },
   {
-    headerName: "Royalties (Gross)",
-    field: "royaltiesthisperiod",
-    cellStyle: { color: "darkgreen", fontWeight: "bold" },
+    headerName: "Gross Royalties",
+    children: [
+      {
+        headerName: "Total",
+        columnGroupShow: "open",
+        flex: 0.75,
+        field: "royaltiesthisperiod",
+        cellStyle: { color: "darkgreen", fontWeight: "bold" },
+      },
+      {
+        headerName: "Sold",
+        columnGroupShow: "open",
+        flex: 0.75,
+        field: "royaltiesthisperiod",
+        cellRenderer: (params) =>
+          getFormattedCurrency(params.value - params.data.kenproyalties),
+      },
+      {
+        headerName: "KENP",
+        columnGroupShow: "open",
+        flex: 0.75,
+        field: "kenproyalties",
+      },
+    ],
   },
   {
     field: "tax",
+    flex: 0.75,
   },
   {
-    headerName: "Royalties (Net)",
+    headerName: "Net",
     field: "netroyalties",
-  },
-  {
-    headerName: "Tax Payments",
-    field: "taxpaymentsthisperiod",
-  },
-  {
-    headerName: "Author Payments",
-    field: "paymentsthisperiod",
-  },
-  {
-    headerName: "Tax Due",
-    field: "taxbalance",
+    flex: 0.75,
     cellStyle: { color: "darkgreen", fontWeight: "bold" },
-    cellRenderer: (params) => getFormattedCurrency(params.value),
   },
   {
-    headerName: "Author Due",
-    field: "balance",
-    cellStyle: { color: "darkgreen", fontWeight: "bold" },
-    cellRenderer: (params) => getFormattedCurrency(params.value),
+    headerName: "Payments",
+    children: [
+      {
+        headerName: "Tax",
+        flex: 0.75,
+        field: "taxpaymentsthisperiod",
+      },
+      {
+        headerName: "Author",
+        flex: 0.75,
+        field: "paymentsthisperiod",
+      },
+    ],
+  },
+  {
+    headerName: "Balances",
+    children: [
+      {
+        headerName: "Tax",
+        field: "taxbalance",
+        cellStyle: { color: "darkgreen", fontWeight: "bold" },
+        flex: 0.75,
+        cellRenderer: (params) => getFormattedCurrency(params.value),
+      },
+      {
+        headerName: "Author",
+        field: "balance",
+        cellStyle: { color: "darkgreen", fontWeight: "bold" },
+        flex: 0.75,
+        cellRenderer: (params) => getFormattedCurrency(params.value),
+      },
+    ],
   },
 ];
 

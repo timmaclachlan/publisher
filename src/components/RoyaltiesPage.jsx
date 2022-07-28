@@ -31,8 +31,6 @@ import BuildIcon from "@mui/icons-material/Build";
 
 import LoadingOverlay from "./LoadingOverlay";
 
-import CardTopHeader from "./CardTopHeader";
-import CardTop from "./CardTop";
 import ValidateDialog from "./Royalties/ValidateDialog";
 
 import { readAllByQuery, updateAll } from "../fetcher";
@@ -41,6 +39,7 @@ import {
   getFormattedCurrency,
   getCurrentQuarterYear,
   getNextQuarterYear,
+  getQuarterListForDisplay,
   convertQuarterStringToDisplay,
 } from "../utils";
 
@@ -185,27 +184,15 @@ const RoyaltiesPage = () => {
   };
 
   const renderQuarters = () => {
-    let currentQuarter = getCurrentQuarterYear();
+    const qtrs = getQuarterListForDisplay();
 
-    let quarters = [];
-    for (let y = currentQuarter.year; y >= currentQuarter.year - 2; y--) {
-      if (y > currentQuarter.year - 2) {
-        for (let q = 4; q >= 1; q--) {
-          if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
-          quarters.push(
-            <MenuItem key={`${q}${y}`} value={`${q}${y}`}>
-              Quarter {q} - {y}
-            </MenuItem>
-          );
-        }
-      } else {
-        quarters.push(
-          <MenuItem key={`0${y}`} value={`0${y}`}>
-            {y}
-          </MenuItem>
-        );
-      }
-    }
+    let quarters = qtrs.map(function (item, index) {
+      return (
+        <MenuItem key={item.value} value={item.value}>
+          {item.label}
+        </MenuItem>
+      );
+    });
 
     return (
       <Select

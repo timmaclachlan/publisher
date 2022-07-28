@@ -29,10 +29,10 @@ const PagesReadOrdersPage = () => {
       filter: "agNumberColumnFilter",
     },
     {
-      field: "amountreceived",
+      field: "dateamountreceived",
       headerName: "Date Amount Received",
       filter: "agNumberColumnFilter",
-      valueFormatter: (params) => getFormattedCurrency(params.value),
+      valueFormatter: (params) => getFormattedDate(params.value),
     },
     {
       headerName: "Royalties",

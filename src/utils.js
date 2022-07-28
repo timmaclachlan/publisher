@@ -20,10 +20,10 @@ export const selectProps = (...props) => {
 export const getFormattedDate = (dateString) => {
   if (dateString !== null) {
     try {
-      if (dateString.indexOf(' ') > -1) {
+      if (dateString.indexOf(" ") > -1) {
         dateString = dateString.substr(0, 10);
       }
-      let date = parse(dateString, 'yyyy-MM-dd', new Date());
+      let date = parse(dateString, "yyyy-MM-dd", new Date());
       return new Intl.DateTimeFormat("en-GB").format(date);
     } catch (error) {
       console.log("ERROR: DateString not convertable:" + dateString);
@@ -71,23 +71,16 @@ export const getQuarterListForDisplay = () => {
   let currentQuarter = getCurrentQuarterYear();
 
   let quarters = [];
-  for (let y = currentQuarter.year; y >= currentQuarter.year - 3; y--) {
-    if (y > currentQuarter.year - 2) {
-      for (let q = 4; q >= 1; q--) {
-        if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
-        quarters.push({
-          value: `${q}${y}`,
-          label: `Quarter ${q} - ${y}`,
-        });
-      }
-    } else {
+  for (let y = currentQuarter.year; y >= 2015; y--) {
+    for (let q = 3; q >= 1; q--) {
+      if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
       quarters.push({
-        value: `0${y}`,
-        label: `${y}`,
+        value: `${q}${y}`,
+        label: `Quarter ${q + 1} - ${y}`,
       });
     }
   }
-  quarters.push({ value: '02012-2018', label: '2012 - 2018' });
+  quarters.push({ value: "02012-2014", label: "2012 - 2014" });
   return quarters;
 };
 
@@ -96,7 +89,9 @@ export const convertQuarterStringToDisplay = (quarterString) => {
     const split = quarterString.split("-");
     return `${split[0].substr(1)} to ${split[1]}`;
   }
-  return `${quarterString.substr(1)} Q${parseInt(quarterString.substr(0, 1)) + 1}`;
+  return `${quarterString.substr(1)} Q${
+    parseInt(quarterString.substr(0, 1)) + 1
+  }`;
 };
 
 export const getFormattedCurrency = (amount) => {
@@ -107,8 +102,7 @@ export const getFormattedCurrency = (amount) => {
 };
 
 export const getRemainingPercentage = (amount) => {
-  if (amount)
-    return 100 - amount;
+  if (amount) return 100 - amount;
   return 35;
 };
 
