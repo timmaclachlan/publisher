@@ -72,7 +72,7 @@ export const getQuarterListForDisplay = () => {
 
   let quarters = [];
   for (let y = currentQuarter.year; y >= 2015; y--) {
-    for (let q = 3; q >= 1; q--) {
+    for (let q = 3; q >= 0; q--) {
       if (y === currentQuarter.year && q > currentQuarter.quarter) continue;
       quarters.push({
         value: `${q}${y}`,
@@ -89,7 +89,7 @@ export const convertQuarterStringToDisplay = (quarterString) => {
     const split = quarterString.split("-");
     return `${split[0].substr(1)} to ${split[1]}`;
   }
-  return `${quarterString.substr(1)} Q${
+  return `${quarterString.substr(1)} Quarter ${
     parseInt(quarterString.substr(0, 1)) + 1
   }`;
 };

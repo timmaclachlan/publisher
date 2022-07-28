@@ -36,7 +36,6 @@ const TABLE_SERVICESASSIGNED = "servicesassigned";
 const TABLE_ROYALTIESHISTORY = "royaltieshistory";
 const TABLE_PAYMENTS = "payments";
 
-
 const TABLEQUAL_AUTHORS = `"timm2006/athena"."${TABLE_AUTHORS}"`;
 const TABLEQUAL_BOOKS = `"timm2006/athena"."${TABLE_BOOKS}"`;
 const TABLEQUAL_GENRES = `"timm2006/athena"."${TABLE_GENRES}"`;
@@ -104,13 +103,14 @@ router.get("/royalties", (req, res) => {
    JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = rh.authorid
      ${query} ORDER BY author`;
 
-
-  getQueryWithPromise(sql).then(function (result) {
-  res.statusCode = 200;
-  res.json({ message: "success", result: result });
-  }).catch(function (err) {
-    console.log(err);
-  })
+  getQueryWithPromise(sql)
+    .then(function (result) {
+      res.statusCode = 200;
+      res.json({ message: "success", result: result });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 });
 
 router.get("/royaltiess/:id", (req, res) => {
@@ -118,7 +118,7 @@ router.get("/royaltiess/:id", (req, res) => {
 
   let sql = `SELECT rh.*, authors.notax FROM ${TABLEQUAL_ROYALITESHISTORY} rh
    JOIN ${TABLEQUAL_AUTHORS} authors ON authors.id = rh.authorid
-     WHERE rh.authorid = '${req.params.id}' ORDER BY startperiod`;
+     WHERE rh.authorid = '${req.params.id}' ORDER BY startperiod DESC`;
 
   getQueryWithStatus(sql, res);
 });
@@ -133,13 +133,13 @@ router.get("/saless/:id", (req, res) => {
   getQueryWithStatus(sql, res);
 });
 
-  router.get("/sales/byquery", (req, res) => {
-    console.log("GET ORDERS BY QUERY");
-    console.log(req.query.authorid);
-    console.log(req.query.startperiod);
-    console.log(req.query.endperiod);
+router.get("/sales/byquery", (req, res) => {
+  console.log("GET ORDERS BY QUERY");
+  console.log(req.query.authorid);
+  console.log(req.query.startperiod);
+  console.log(req.query.endperiod);
 
-    let sql = `
+  let sql = `
       SELECT books.title, 
       ro.orderdate, ro.dateamountreceived,
       ro.amountreceived,ro.origcurrency,ro.amountgross,ro.amountnet,ro.royaltyauthor,
@@ -165,15 +165,15 @@ router.get("/saless/:id", (req, res) => {
       AND authors.id = '${req.query.authorid}'
     `;
 
-    return getQueryWithStatus(sql, res);
-  });
+  return getQueryWithStatus(sql, res);
+});
 
 router.get("/royalties/quarters", (req, res) => {
   console.log(req.query.thisperiod);
   console.log(req.query.nextperiod);
 
   let sql = `CALL UpdateRoyalties(${req.query.thisperiod}, ${req.query.nextperiod})`;
-  
+
   getQueryWithStatus(sql, res);
 });
 
@@ -188,7 +188,7 @@ router.patch("/royaltiess", (req, res) => {
     SET paymentsthisperiod=${req.body[i].paymentsthisperiod},
     paymentstotal = ${req.body[i].paymentstotal} + ${req.body[i].paymentsthisperiod},
     balance = ROUND(netowed::DECIMAL - ${req.body[i].paymentsthisperiod}, 2)
-    WHERE id='${req.body[i].id}'`
+    WHERE id='${req.body[i].id}'`;
     updateQuery(sql, undefined);
 
     sql = `INSERT INTO ${TABLEQUAL_PAYMENTS}
@@ -197,26 +197,26 @@ router.patch("/royaltiess", (req, res) => {
     TO_DATE('${req.body[i].endperiod}', 'YYYY-MM-DD'),
     ${req.body[i].paymentsthisperiod}
     WHERE NOT EXISTS (SELECT 1 FROM ${TABLEQUAL_PAYMENTS}
-      WHERE TO_DATE(paymentdate, 'YYYY-MM-DD') = TO_DATE('${req.body[i].endperiod}', 'YYYY-MM-DD'))`;
+      WHERE TO_DATE(paymentdate, 'YYYY-MM-DD') = TO_DATE('${
+        req.body[i].endperiod
+      }', 'YYYY-MM-DD'))`;
     console.log(sql);
     updateQuery(sql, undefined);
-    
+
     sql = `UPDATE ${TABLEQUAL_PAYMENTS}
     SET amount=${req.body[i].paymentsthisperiod}
     WHERE TO_DATE(paymentdate, 'YYYY-MM-DD') = TO_DATE('${req.body[i].endperiod}', 'YYYY-MM-DD')`;
-       
+
     console.log(sql);
     updateQuery(sql, undefined);
   }
 
   res.statusCode = 200;
   res.json({ message: "success", result: true });
-})
-
-
+});
 
 const getOrders = (orderTable, req) => {
-console.log("GET ORDERS");
+  console.log("GET ORDERS");
   let query = "";
   if (!isEmptyObject(req.query)) {
     console.log(req.query);
@@ -230,7 +230,7 @@ console.log("GET ORDERS");
     ${query}
     ORDER BY orderdate DESC`;
   return sql;
-}
+};
 
 router.get("/orders/retails", (req, res) => {
   let sql = getOrders(TABLEQUAL_ORDERS, req);
@@ -260,10 +260,6 @@ router.get("/reports/book", (req, res) => {
   ORDER BY authors.realname`;
   return getQueryWithStatus(sql, res);
 });
-
-
-
-
 
 function updateQuery(sql, data) {
   const pool = new Pool();
@@ -301,11 +297,15 @@ function getQueryWithPromise(sql) {
   });
 }
 
-
 function getQueryWithStatus(sql, res) {
   console.log(sql);
   console.log(
-    "ENV: (user)" + process.env.PGUSER + " pghost:" + process.env.PGHOST + " SSL:" + process.env.PGSSLMODE
+    "ENV: (user)" +
+      process.env.PGUSER +
+      " pghost:" +
+      process.env.PGHOST +
+      " SSL:" +
+      process.env.PGSSLMODE
   );
 
   const pool = new Pool();
@@ -324,13 +324,11 @@ const isEmptyObject = (value) => {
   return (
     value && value.constructor === Object && Object.keys(value).length === 0
   );
-}
+};
 
 app.use("/.netlify/functions/server", router); // path must route to lambda
 module.exports = app;
 module.exports.handler = serverless(app);
-
-
 
 // CREATE OR REPLACE PROCEDURE UpdateRoyalties(thisperiod text, nextperiod text)
 // LANGUAGE SQL
@@ -340,29 +338,28 @@ module.exports.handler = serverless(app);
 //     DELETE FROM "timm2006/athena"."royaltieshistory" WHERE period=nextperiod;
 
 //     INSERT INTO "timm2006/athena"."royaltieshistory"
-//     (id, authorid, author, period, 
+//     (id, authorid, author, period,
 //     startperiod, endperiod,
-//     royaltiesprevperiod, royaltiesthisperiod, royaltiestotal, 
-//     grossowed, netowed, tax, taxtotal, 
+//     royaltiesprevperiod, royaltiesthisperiod, royaltiestotal,
+//     grossowed, netowed, tax, taxtotal,
 //     paymentsprevperiod, paymentsthisperiod, paymentstotal,
-//     balance, paidsalesprevperiod, paidsalesthisperiod, paidsalestotal,    
+//     balance, paidsalesprevperiod, paidsalesthisperiod, paidsalestotal,
 //     freesalesprevperiod, freesalesthisperiod, freesalestotal,
 //     pagesreadprevperiod, pagesreadthisperiod, pagesreadtotal)
 
 //     SELECT gen_random_uuid(), authorid, author, nextperiod,
 //     TO_CHAR((TO_DATE(startperiod, 'YYYY-MM-DD') + interval '3 months'), 'YYYY-MM-DD'),
 //     TO_CHAR((TO_DATE(endperiod, 'YYYY-MM-DD') + interval '3 months'), 'YYYY-MM-DD'),
-//     royaltiesthisperiod, 0, royaltiestotal, 
-//     grossowed, netowed, tax, taxtotal, 
+//     royaltiesthisperiod, 0, royaltiestotal,
+//     grossowed, netowed, tax, taxtotal,
 //     paymentsthisperiod, 0, paymentstotal,
 //     balance, paidsalesthisperiod, 0, paidsalestotal,
 //     freesalesthisperiod, 0, freesalestotal,
 //     pagesreadthisperiod, 0, pagesreadtotal
 //     FROM "timm2006/athena"."royaltieshistory"
 //     WHERE period = thisperiod
-//     AND NOT EXISTS 
-//         (SELECT authorid FROM "timm2006/athena"."royaltieshistory" 
+//     AND NOT EXISTS
+//         (SELECT authorid FROM "timm2006/athena"."royaltieshistory"
 //         WHERE period = nextperiod);
-    
-// $$;
 
+// $$;

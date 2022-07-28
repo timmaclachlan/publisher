@@ -13,10 +13,10 @@ import {
   Stack,
   Divider,
   Box,
+  Skeleton,
 } from "@mui/material";
 
 import {
-  getQuarterListForDisplay,
   convertQuarterStringToDisplay,
   getFormattedCurrency,
 } from "../../utils";
@@ -30,6 +30,7 @@ const RoyaltiesPage = () => {
   const [selectedPeriodIndex, setSelectedPeriodIndex] = React.useState(-1);
   const [royalties, setRoyalties] = React.useState([]);
   const [sales, setSales] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const getRoyaltyPeriod = async () => {
@@ -37,6 +38,12 @@ const RoyaltiesPage = () => {
         const result = await readByIdAll("royalties", undefined, authorId);
         if (result.result && result.result.length > 0) {
           setRoyalties(result.result);
+
+          setSelectedPeriodIndex(0); // default to first
+          setSelectedPeriod(result.result[0].period);
+
+          setIsLoading(false);
+          debugger;
         }
       } catch (error) {
         console.log(error);
@@ -59,16 +66,17 @@ const RoyaltiesPage = () => {
   }, [authorId]);
 
   const RenderQuarters = () => {
-    let quarters = getQuarterListForDisplay();
-
-    return quarters.map((item, index) => {
+    return royalties.map((item, index) => {
       return (
         <ListItemButton
-          key={item.value}
-          onClick={(ev) => handleQuarterButtonClick(ev, item.value)}
-          selected={selectedPeriod === item.value}
+          key={item.period}
+          onClick={(ev) => handleQuarterButtonClick(ev, item.period)}
+          selected={selectedPeriodIndex === index}
         >
-          <ListItemText key={item.value} primary={item.label} />
+          <ListItemText
+            key={item.period}
+            primary={convertQuarterStringToDisplay(item.period)}
+          />
         </ListItemButton>
       );
     });
@@ -108,7 +116,7 @@ const RoyaltiesPage = () => {
 
       <Grid item md={9}>
         <>
-          {selectedPeriodIndex > -1 && (
+          {!isLoading && (
             <>
               <Paper elevation={12} sx={{ mt: 3, mr: 3 }}>
                 <Stack spacing={2} sx={{ padding: 2 }}>
@@ -153,24 +161,52 @@ const RoyaltiesPage = () => {
                           <Typography variant="subtitle2" align="center">
                             Paid Sales
                           </Typography>
-                          <Typography variant="h6" align="center">
-                            {getFormattedCurrency(
-                              royalties[selectedPeriodIndex]
-                                .royaltiesthisperiod -
-                                royalties[selectedPeriodIndex].kenproyalties
-                            )}
-                          </Typography>
+                          <Stack direction="row" spacing={2}>
+                            <Typography
+                              variant="h6"
+                              align="center"
+                              sx={{ pl: 2 }}
+                            >
+                              {getFormattedCurrency(
+                                royalties[selectedPeriodIndex]
+                                  .royaltiesthisperiod -
+                                  royalties[selectedPeriodIndex].kenproyalties
+                              )}
+                            </Typography>
+                            <Typography
+                              variant="h6"
+                              align="center"
+                              sx={{ pr: 2 }}
+                            >
+                              (
+                              {
+                                royalties[selectedPeriodIndex]
+                                  .paidsalesthisperiod
+                              }
+                              )
+                            </Typography>
+                          </Stack>
                         </Stack>
                         <Divider orientation="vertical" flexItem />
                         <Stack spacing={1} sx={{ flex: 0.5 }}>
                           <Typography variant="subtitle2" align="center">
                             Pages Read
                           </Typography>
-                          <Typography variant="h6" align="center">
-                            {getFormattedCurrency(
-                              royalties[selectedPeriodIndex].kenproyalties
-                            )}
-                          </Typography>
+                          <Stack direction="row" spacing={2}>
+                            <Typography variant="h6" sx={{ pl: 2 }}>
+                              {getFormattedCurrency(
+                                royalties[selectedPeriodIndex].kenproyalties
+                              )}
+                            </Typography>
+                            <Typography variant="h6" align="center">
+                              (
+                              {
+                                royalties[selectedPeriodIndex]
+                                  .pagesreadthisperiod
+                              }
+                              )
+                            </Typography>
+                          </Stack>
                         </Stack>
                       </Stack>
                     </Grid>
@@ -215,7 +251,7 @@ const RoyaltiesPage = () => {
                     </Grid>
 
                     <Grid item md={3}>
-                      <Typography variant="h6" color="primary.light">
+                      <Typography variant="h5" color="primary.light">
                         {getFormattedCurrency(
                           royalties[selectedPeriodIndex].paymentsthisperiod
                         )}
@@ -231,7 +267,7 @@ const RoyaltiesPage = () => {
                     </Grid>
 
                     <Grid item md={3}>
-                      <Typography variant="h6" color="primary.light">
+                      <Typography variant="h5" color="primary.light">
                         {getFormattedCurrency(
                           royalties[selectedPeriodIndex].balance
                         )}
@@ -268,6 +304,27 @@ const RoyaltiesPage = () => {
                     ></AgGridReact>
                   </Box>
                 </Stack>
+              </Paper>
+            </>
+          )}
+
+          {isLoading && (
+            <>
+              <Paper elevation={12} sx={{ mt: 3, mr: 3 }}>
+                <Skeleton
+                  width={900}
+                  height={400}
+                  variant="rectangular"
+                  animation="wave"
+                />
+              </Paper>
+              <Paper elevation={12} sx={{ mt: 3, mr: 3 }}>
+                <Skeleton
+                  width={900}
+                  height={400}
+                  variant="rectangular"
+                  animation="wave"
+                />
               </Paper>
             </>
           )}

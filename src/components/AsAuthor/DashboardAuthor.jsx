@@ -69,14 +69,6 @@ const Dashboard = () => {
   React.useEffect(() => {
     let authorId = user["https://rowanvale-athena/authorId"];
 
-    const getRoyaltyBalance = async () => {
-      const result = await readById("author", authorId);
-      if (result.result && result.result.length === 1) {
-        setAuthorRoyalties(result.result[0]);
-      }
-    };
-    getRoyaltyBalance();
-
     const retrieveHistory = async () => {
       try {
         const result = await readByIdAll(
@@ -84,6 +76,9 @@ const Dashboard = () => {
           "royaltieshistory",
           authorId
         );
+        if (result.result && result.result.length > 0) {
+          setAuthorRoyalties(result.result[0]);
+        }
         setDataHistory(result.result);
         setDataHistoryReady(true);
       } catch (error) {
@@ -92,66 +87,6 @@ const Dashboard = () => {
     };
     retrieveHistory();
   }, [user]);
-
-  const getSalesData = () => {
-    // reverse oldest first for chart
-    let chartHistory = dataHistory.slice().reverse();
-    let labels = chartHistory.map((item) =>
-      convertQuarterStringToDisplay(item.period)
-    );
-
-    let myData = {
-      labels: labels,
-      datasets: [
-        {
-          label: "Total Sales",
-          data: chartHistory.map((item) => item.paidsalestotal),
-          borderColor: "pink",
-          backgroundColor: "rgba(1, 50, 32, 0.5)",
-        },
-        {
-          label: "Paid Sales",
-          data: chartHistory.map((item) => item.paidsalesthisperiod),
-          borderColor: "darkgreen",
-          backgroundColor: "rgba(1, 50, 32, 0.5)",
-        },
-        {
-          label: "Free Sales",
-          data: chartHistory.map((item) => item.freesalesthisperiod),
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-        },
-      ],
-    };
-    return myData;
-  };
-
-  const getEarningsData = () => {
-    // reverse oldest first for chart
-    let chartHistory = dataHistory.slice().reverse();
-    let labels = chartHistory.map((item) =>
-      convertQuarterStringToDisplay(item.period)
-    );
-
-    let myData = {
-      labels: labels,
-      datasets: [
-        {
-          label: "Total Earnings",
-          data: chartHistory.map((item) => item.royaltiestotal),
-          borderColor: "pink",
-          backgroundColor: "#329644",
-        },
-        {
-          label: "Earnings",
-          data: chartHistory.map((item) => item.royaltiesthisperiod),
-          borderColor: "darkgreen",
-          backgroundColor: "#ea4e82",
-        },
-      ],
-    };
-    return myData;
-  };
 
   const displayField = (
     field,
@@ -172,34 +107,6 @@ const Dashboard = () => {
     );
   };
 
-  const getBarChart = () => {
-    if (!dataHistoryReady) {
-      return (
-        <Skeleton
-          variant="rectangular"
-          animation="wave"
-          width={550}
-          height={300}
-        />
-      );
-    }
-    return <Bar data={getEarningsData()} />;
-  };
-
-  const getLineChart = () => {
-    if (!dataHistoryReady) {
-      return (
-        <Skeleton
-          variant="rectangular"
-          animation="wave"
-          width={550}
-          height={300}
-        />
-      );
-    }
-    return <Line data={getSalesData()} />;
-  };
-
   const getAccountStatement = () => {
     if (!dataHistoryReady) {
       return (
@@ -218,7 +125,7 @@ const Dashboard = () => {
             <TableRow>
               <StyledTableCell padding="none">Period</StyledTableCell>
               <StyledTableCell padding="none" align="right">
-                Earnings
+                Royalties
               </StyledTableCell>
               <StyledTableCell padding="none" align="right">
                 Payments
@@ -271,7 +178,7 @@ const Dashboard = () => {
               <Grid item md={1.5}>
                 <Card sx={{ height: "128px" }}>
                   <CardTopHeader
-                    title="Account Balance"
+                    title="Balance"
                     icon={<BalanceIcon />}
                     themeColor="primary.light"
                   />
@@ -350,7 +257,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            This Quarter
+                            Quarter
                           </Typography>
                           {displayField(
                             authorRoyalties.paymentsthisperiod,
@@ -362,7 +269,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            In Total
+                            Total
                           </Typography>
                           {displayField(authorRoyalties.paymentstotal, "h5")}
                         </>
@@ -380,7 +287,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            This Quarter
+                            Quarter
                           </Typography>
                           <Typography variant="h5" align="center">
                             {displayField(authorRoyalties.tax, "h5")}
@@ -391,7 +298,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            In Total
+                            Total
                           </Typography>
                           <Typography variant="h5" align="center">
                             {displayField(authorRoyalties.taxtotal, "h5")}
@@ -411,7 +318,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            This Quarter
+                            Quarter
                           </Typography>
                           <Typography variant="h5" align="center">
                             {displayField(
@@ -426,7 +333,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            In Total
+                            Total
                           </Typography>
                           <Typography variant="h5" align="center">
                             {displayField(
@@ -439,13 +346,6 @@ const Dashboard = () => {
                       </Stack>
                     </Stack>
                   </CardContent>
-                </Card>
-              </Grid>
-
-              <Grid item md={5}>
-                <Card>
-                  <CardTopHeader title="Sales" icon={<ShowChartIcon />} />
-                  <CardContent>{getLineChart()}</CardContent>
                 </Card>
               </Grid>
 
@@ -466,13 +366,6 @@ const Dashboard = () => {
                     icon={<AccessTimeIcon />}
                   />
                   <CardContent>None as yet</CardContent>
-                </Card>
-              </Grid>
-
-              <Grid item md={5}>
-                <Card>
-                  <CardTopHeader title="Earnings" icon={<ShowChartIcon />} />
-                  <CardContent>{getBarChart()}</CardContent>
                 </Card>
               </Grid>
             </Grid>

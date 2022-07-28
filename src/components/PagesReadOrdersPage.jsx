@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 
-import { Typography, Box, Grid } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Stack,
+} from "@mui/material";
 
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
@@ -9,10 +17,90 @@ import { readAllSubAll } from "../fetcher";
 import { getFormattedDate, getFormattedCurrency } from "../utils";
 
 import LoadingOverlay from "./LoadingOverlay";
+import CardTopHeader from "./CardTopHeader";
 
 const PagesReadOrdersPage = () => {
   const gridRef = React.useRef(null);
   const [orders, setOrders] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+
+  const onSelectionChanged = () => {
+    var selectedRows = gridRef.current.api.getSelectedRows();
+    setSelected(selectedRows);
+  };
+
+  const onFilterChanged = (ev) => {
+    const rowsToDisplay = ev.api.rowModel.rowsToDisplay;
+    const filteredRows = rowsToDisplay.map((item) => item.data);
+    setFiltered(filteredRows);
+  };
+
+  const getTotals = () => {
+    const outputCount = (collection, field, title, isCurrency) => {
+      let totalSelected = 0;
+      if (isCurrency) {
+        totalSelected = collection.reduce(
+          (prev, curr) => prev + curr[field],
+          0
+        );
+      } else {
+        totalSelected = collection.reduce(
+          (prev, curr) => prev + parseInt(curr[field]),
+          0
+        );
+      }
+
+      return (
+        <Stack sx={{ pr: 2 }}>
+          <Typography variant="subtitle1" align="center">
+            {title}
+          </Typography>
+          <Typography variant="subtitle1" align="center">
+            {isCurrency ? getFormattedCurrency(totalSelected) : totalSelected}
+          </Typography>
+        </Stack>
+      );
+    };
+
+    return (
+      <Stack direction="horizontal" sx={{ pb: 2 }} spacing={5}>
+        <Card sx={{ mr: 2 }}>
+          <CardTopHeader title="Selected Totals"></CardTopHeader>
+          <CardContent>
+            <Stack direction="horizontal">
+              {outputCount(selected, "amountreceived", "Amount Received", true)}
+              {outputCount(selected, "royaltyauthor", "Author Royalty", true)}
+              {outputCount(
+                selected,
+                "royaltypublisher",
+                "Publisher Royalty",
+                true
+              )}
+              {outputCount(selected, "quantity", "Quantity", false)}
+            </Stack>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardTopHeader title="Filtered Totals"></CardTopHeader>
+          <CardContent>
+            <Stack direction="horizontal">
+              {outputCount(filtered, "amountreceived", "Amount Received", true)}
+              {outputCount(filtered, "royaltyauthor", "Author Royalty", true)}
+              {outputCount(
+                filtered,
+                "royaltypublisher",
+                "Publisher Royalty",
+                true
+              )}
+              {outputCount(filtered, "quantity", "Quantity", false)}
+            </Stack>
+          </CardContent>
+        </Card>
+      </Stack>
+    );
+  };
 
   const columnDefs = [
     {
@@ -33,6 +121,12 @@ const PagesReadOrdersPage = () => {
       headerName: "Date Amount Received",
       filter: "agNumberColumnFilter",
       valueFormatter: (params) => getFormattedDate(params.value),
+    },
+    {
+      field: "amountreceived",
+      headerName: "Received",
+      filter: "agNumberColumnFilter",
+      valueFormatter: (params) => getFormattedCurrency(params.value),
     },
     {
       headerName: "Royalties",
@@ -58,8 +152,8 @@ const PagesReadOrdersPage = () => {
       try {
         gridRef.current.api.showLoadingOverlay();
         const result = await readAllSubAll("order", "kbp");
-        debugger;
         setOrders(result.result);
+        setFiltered(result.result);
       } catch (error) {
         console.log(error);
       }
@@ -82,6 +176,8 @@ const PagesReadOrdersPage = () => {
         <Grid item md={3}></Grid>
       </Grid>
       <Box>
+        <Container fixed>{getTotals()}</Container>
+
         <AgGridReact
           ref={gridRef}
           className="ag-theme-alpine"
@@ -105,8 +201,11 @@ const PagesReadOrdersPage = () => {
           frameworkComponents={{}}
           pagination={true}
           paginationPageSize={15}
+          rowSelection={"multiple"}
           enableCellTextSelection={true}
           onGridReady={onGridReady}
+          onSelectionChanged={onSelectionChanged}
+          onFilterChanged={onFilterChanged}
         ></AgGridReact>
       </Box>
     </React.Fragment>

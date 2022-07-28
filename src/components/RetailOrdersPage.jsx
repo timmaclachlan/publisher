@@ -9,7 +9,6 @@ import {
   Button,
   Container,
   Stack,
-  Divider,
   Card,
   CardContent,
 } from "@mui/material";
@@ -21,7 +20,6 @@ import { getFormattedDate, getFormattedCurrency } from "../utils";
 
 import SalesQuarterFilter from "./Filters/SalesQuarterFilter";
 import LoadingOverlay from "./LoadingOverlay";
-import CardTop from "./CardTop";
 import CardTopHeader from "./CardTopHeader";
 
 const CustomTooltip = (props) => {
@@ -69,11 +67,19 @@ const RetailOrdersPage = () => {
   };
 
   const getTotals = () => {
-    const outputCount = (collection, field, title) => {
-      const totalSelected = collection.reduce(
-        (prev, curr) => prev + curr[field],
-        0
-      );
+    const outputCount = (collection, field, title, isCurrency) => {
+      let totalSelected = 0;
+      if (isCurrency) {
+        totalSelected = collection.reduce(
+          (prev, curr) => prev + curr[field],
+          0
+        );
+      } else {
+        totalSelected = collection.reduce(
+          (prev, curr) => prev + parseInt(curr[field]),
+          0
+        );
+      }
 
       return (
         <Stack sx={{ pr: 2 }}>
@@ -81,7 +87,7 @@ const RetailOrdersPage = () => {
             {title}
           </Typography>
           <Typography variant="subtitle1" align="center">
-            {getFormattedCurrency(totalSelected)}
+            {isCurrency ? getFormattedCurrency(totalSelected) : totalSelected}
           </Typography>
         </Stack>
       );
@@ -93,9 +99,15 @@ const RetailOrdersPage = () => {
           <CardTopHeader title="Selected Totals"></CardTopHeader>
           <CardContent>
             <Stack direction="horizontal">
-              {outputCount(selected, "amountreceived", "Amount Received")}
-              {outputCount(selected, "royaltyauthor", "Author Royalty")}
-              {outputCount(selected, "royaltypublisher", "Publisher Royalty")}
+              {outputCount(selected, "amountreceived", "Amount Received", true)}
+              {outputCount(selected, "royaltyauthor", "Author Royalty", true)}
+              {outputCount(
+                selected,
+                "royaltypublisher",
+                "Publisher Royalty",
+                true
+              )}
+              {outputCount(selected, "quantity", "Quantity", false)}
             </Stack>
           </CardContent>
         </Card>
@@ -104,9 +116,15 @@ const RetailOrdersPage = () => {
           <CardTopHeader title="Filtered Totals"></CardTopHeader>
           <CardContent>
             <Stack direction="horizontal">
-              {outputCount(filtered, "amountreceived", "Amount Received")}
-              {outputCount(filtered, "royaltyauthor", "Author Royalty")}
-              {outputCount(filtered, "royaltypublisher", "Publisher Royalty")}
+              {outputCount(filtered, "amountreceived", "Amount Received", true)}
+              {outputCount(filtered, "royaltyauthor", "Author Royalty", true)}
+              {outputCount(
+                filtered,
+                "royaltypublisher",
+                "Publisher Royalty",
+                true
+              )}
+              {outputCount(filtered, "quantity", "Quantity", false)}
             </Stack>
           </CardContent>
         </Card>
@@ -182,6 +200,7 @@ const RetailOrdersPage = () => {
         gridRef.current.api.showLoadingOverlay();
         const result = await readAllSubAll("order", "retail");
         setOrders(result.result);
+        setFiltered(result.result);
       } catch (error) {
         console.log(error);
       }

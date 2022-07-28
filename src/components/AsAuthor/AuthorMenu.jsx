@@ -31,7 +31,7 @@ const AuthorMenu = () => {
       />
 
       <ListItemLink
-        to="/"
+        to="/myprojects"
         primary="My Projects"
         icon={<LibraryBooksIcon color="success" />}
       />
