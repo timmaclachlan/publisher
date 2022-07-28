@@ -171,7 +171,7 @@ const columnDefsRoyaltiesHistory = [
         flex: 0.75,
         cellRenderer: (params) => {
           return (
-            <span>{parseFloat(params.value) === 0 ? "-" : params.value}</span>
+            <span>{parseInt(params.value) === 0 ? "-" : params.value}</span>
           );
         },
       },

@@ -223,7 +223,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            This Quarter
+                            Quarter
                           </Typography>
                           {displayField(
                             authorRoyalties.royaltiesthisperiod,
@@ -235,7 +235,7 @@ const Dashboard = () => {
                       <Stack sx={{ flex: 0.5 }}>
                         <>
                           <Typography variant="subtitle2" align="center">
-                            In Total
+                            Total
                           </Typography>
                           {displayField(authorRoyalties.royaltiestotal, "h5")}
                         </>

@@ -50,8 +50,8 @@ const AuthorRoyalties = ({ author, financials, loading }) => {
           "Current Financials",
           <BalanceIcon />,
           "Balance",
-          "Gross Royalties",
-          "Net Royalties",
+          "Gross Inc.",
+          "Net Inc.",
           financials.balance,
           financials.royaltiesthisperiod,
           financials.netroyalties,
@@ -64,9 +64,9 @@ const AuthorRoyalties = ({ author, financials, loading }) => {
         {renderHistorySummary(
           "Royalties",
           <BarChartIcon />,
-          "This Quarter",
-          "Previous Quarter",
-          "Total Royalties",
+          "This",
+          "Previous",
+          "Total",
           financials.royaltiesthisperiod,
           financials.royaltiesprevperiod,
           financials.royaltiestotal
@@ -77,35 +77,35 @@ const AuthorRoyalties = ({ author, financials, loading }) => {
         {renderHistorySummary(
           "Tax",
           <PaymentsIcon />,
-          "This Period",
+          "This",
           "",
-          "Total Tax",
+          "Total",
           financials.tax,
           undefined,
           financials.taxtotal
         )}
       </Grid>
 
-      <Grid item md={4}>
+      <Grid item md={3}>
         {renderHistorySummary(
           "Payments",
           <PaymentsIcon />,
-          "This Quarter",
-          "Previous Quarter",
-          "Total Payments",
+          "This",
+          "Previous",
+          "Total",
           financials.paymentsthisperiod,
           financials.paymentsprevperiod,
           financials.paymentstotal
         )}
       </Grid>
 
-      <Grid item md={4}>
+      <Grid item md={3}>
         {renderHistorySummary(
           "Paid Sales",
           <ShowChartIcon />,
-          "This Quarter",
-          "Previous Quarter",
-          "Total Sales",
+          "This",
+          "Previous",
+          "Total",
           financials.paidsalesthisperiod,
           financials.paidsalesprevperiod,
           financials.paidsalestotal,
@@ -113,13 +113,27 @@ const AuthorRoyalties = ({ author, financials, loading }) => {
         )}
       </Grid>
 
-      <Grid item md={4}>
+      <Grid item md={3}>
+        {renderHistorySummary(
+          "Pages Read",
+          <ShowChartIcon />,
+          "This",
+          "Previous",
+          "Total",
+          financials.pagesreadthisperiod,
+          financials.pagesreadprevperiod,
+          financials.pagesreadtotal,
+          false
+        )}
+      </Grid>
+
+      <Grid item md={3}>
         {renderHistorySummary(
           "Free Sales",
           <ShowChartIcon />,
-          "This Quarter",
-          "Previous Quarter",
-          "Total Sales",
+          "This",
+          "Previous",
+          "Total",
           financials.freesalesthisperiod,
           financials.freesalesprevperiod,
           financials.freesalestotal,

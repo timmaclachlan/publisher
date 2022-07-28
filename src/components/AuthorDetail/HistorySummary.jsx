@@ -19,7 +19,7 @@ import CardTop from "../CardTop";
 
 import LoadingOverlay from "../LoadingOverlay";
 
-import { readByIdAll } from "../../fetcher";
+import { readByIdAll, readAllByQuery } from "../../fetcher";
 import {
   getFormattedCurrency,
   convertQuarterStringToDisplay,
@@ -45,6 +45,10 @@ const HistorySummary = ({
 }) => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [dataHistory, setDataHistory] = React.useState([]);
+  const [visibleHistory, setVisibleHistory] = React.useState(false);
+  const [salesHistory, setSalesHistory] = React.useState([]);
+  const [salesPeriod, setSalesPeriod] = React.useState("");
+  const [isLoadingHistory, setIsLoadingHistory] = React.useState(false);
   const gridRef = React.useRef(null);
 
   const displayValue = (value) => {
@@ -68,6 +72,8 @@ const HistorySummary = ({
   const onGridReady = () => {
     const retrieveHistory = async () => {
       gridRef.current.api.showLoadingOverlay();
+      setSalesHistory([]);
+
       try {
         const result = await readByIdAll(
           "author",
@@ -79,75 +85,218 @@ const HistorySummary = ({
         console.log(error);
       }
     };
-    if (dataHistory.length === 0) retrieveHistory();
+    if (dataHistory.length === 0) {
+      retrieveHistory();
+    }
   };
 
-  const getOrdersForPeriod = () => {
+  const getOrdersForPeriod = (ev) => {
+    setVisibleHistory(true);
+    const retrieveOrders = async (authorid, startperiod, endperiod, period) => {
+      let query = `authorid=${authorid}&startperiod='${startperiod}'&endperiod='${endperiod}'`;
+      try {
+        setIsLoadingHistory(true);
+        const result = await readAllByQuery("sales/byquery", query);
+        setSalesHistory(result.result);
+        setSalesPeriod(convertQuarterStringToDisplay(period));
+        setIsLoadingHistory(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     debugger;
-    alert("here");
+    retrieveOrders(
+      ev.data.authorid,
+      ev.data.startperiod,
+      ev.data.endperiod,
+      ev.data.period
+    );
   };
 
   const columnDefs = [
     {
       field: "period",
-      cellRenderer: (params) => {
-        return (
-          <Typography variant="h6">
-            {convertQuarterStringToDisplay(params.value)}
-          </Typography>
-        );
-      },
+      flex: 0.25,
+      cellRenderer: (params) => convertQuarterStringToDisplay(params.value),
+      cellStyle: { color: "darkgreen", fontWeight: "bold" },
     },
     {
-      field: "paidsalesthisperiod",
-      headerName: "Copies Sold",
-      cellRenderer: (params) => {
-        return (
-          <Typography variant="h6">
-            {parseInt(params.value) === 0 ? "-" : params.value}
-          </Typography>
-        );
-      },
+      headerName: "Quantities",
+      children: [
+        {
+          field: "paidsalesthisperiod",
+          headerName: "Paid",
+          flex: 0.25,
+          cellRenderer: (params) => {
+            return (
+              <span>{parseInt(params.value) === 0 ? "-" : params.value}</span>
+            );
+          },
+        },
+        {
+          field: "freesalesthisperiod",
+          headerName: "Free Sales",
+          flex: 0.25,
+          columnGroupShow: "open",
+          cellRenderer: (params) => {
+            return (
+              <span>{parseFloat(params.value) === 0 ? "-" : params.value}</span>
+            );
+          },
+        },
+        {
+          field: "pagesreadthisperiod",
+          headerName: "Pages Read",
+          flex: 0.25,
+          columnGroupShow: "open",
+          cellRenderer: (params) => {
+            return (
+              <span>{parseFloat(params.value) === 0 ? "-" : params.value}</span>
+            );
+          },
+        },
+      ],
     },
     {
-      headerName: "Royalties (Gross)",
-      field: "royaltiesthisperiod",
-      cellStyle: { color: "darkgreen" },
-    },
-
-    {
-      headerName: "Royalties (Net)",
-      field: "netroyalties",
+      headerName: "Gross Royalties",
+      children: [
+        {
+          headerName: "Total",
+          columnGroupShow: "open",
+          field: "royaltiesthisperiod",
+          cellStyle: { color: "darkgreen", fontWeight: "bold" },
+        },
+        {
+          headerName: "Sold",
+          columnGroupShow: "open",
+          field: "royaltiesthisperiod",
+          cellStyle: { color: "darkgreen", fontWeight: "bold" },
+          cellRenderer: (params) => {
+            return (
+              <Typography variant="h6">
+                {getFormattedCurrency(params.value - params.data.kenproyalties)}
+              </Typography>
+            );
+          },
+        },
+        {
+          headerName: "KENP",
+          columnGroupShow: "open",
+          field: "kenproyalties",
+        },
+      ],
     },
     {
       field: "tax",
     },
     {
+      headerName: "Net",
+      field: "netroyalties",
+      cellStyle: { color: "darkgreen", fontWeight: "bold" },
+    },
+    {
       headerName: "Payments",
-      field: "paymentsthisperiod",
+      children: [
+        {
+          headerName: "Tax",
+          field: "taxpaymentsthisperiod",
+        },
+        {
+          headerName: "Author",
+          field: "paymentsthisperiod",
+        },
+      ],
     },
     {
-      headerName: "Tax Payments",
-      field: "taxpaymentsthisperiod",
+      headerName: "Balances",
+      children: [
+        {
+          headerName: "Tax",
+          field: "taxbalance",
+          cellStyle: { color: "darkgreen", fontWeight: "bold" },
+        },
+        {
+          headerName: "Author",
+          field: "balance",
+          cellStyle: { color: "darkgreen", fontWeight: "bold" },
+        },
+      ],
+    },
+  ];
+
+  const columnDefsSalesHistory = [
+    {
+      headerName: "Book Title",
+      field: "title",
+      flex: 0.2,
     },
     {
-      field: "balance",
-      cellStyle: { color: "darkgreen", fontWeight: "bold" },
-      cellRenderer: (params) => (
-        <Typography variant="h6">
-          {getFormattedCurrency(params.value)}
-        </Typography>
-      ),
+      headerName: "Dates",
+      children: [
+        {
+          headerName: "Order",
+          field: "orderdate",
+          cellRenderer: (params) => getFormattedDate(params.value),
+          columnGroupShow: "open",
+        },
+        {
+          headerName: "Received",
+          field: "dateamountreceived",
+          cellRenderer: (params) => getFormattedDate(params.value),
+        },
+      ],
+      flex: 0.2,
     },
     {
-      headerName: "Tax Balance",
-      field: "taxbalance",
-      cellStyle: { color: "darkgreen", fontWeight: "bold" },
-      cellRenderer: (params) => (
-        <Typography variant="h6">
-          {getFormattedCurrency(params.value)}
-        </Typography>
-      ),
+      headerName: "Quantity",
+      field: "quantity",
+    },
+    {
+      headerName: "Received",
+      field: "amountreceived",
+      cellRenderer: (params) => getFormattedCurrency(params.value),
+    },
+    {
+      headerName: "Original Amounts",
+      children: [
+        {
+          headerName: "Currency",
+          field: "origcurrency",
+        },
+        {
+          headerName: "Gross",
+          field: "amountgross",
+          cellRenderer: (params) => getFormattedCurrency(params.value),
+        },
+        {
+          headerName: "Net",
+          field: "amountnet",
+          cellRenderer: (params) => getFormattedCurrency(params.value),
+          columnGroupShow: "open",
+        },
+        {
+          headerName: "FX Rate",
+          field: "fxrate",
+          columnGroupShow: "open",
+        },
+      ],
+    },
+    {
+      headerName: "Royalty",
+      field: "royaltyauthor",
+      cellRenderer: (params) => getFormattedCurrency(params.value),
+    },
+    {
+      headerName: "Source",
+      field: "salessource",
+    },
+    {
+      headerName: "Method",
+      field: "salesmethod",
+      flex: 0.2,
+    },
+    {
+      field: "ordertype",
     },
   ];
 
@@ -179,13 +328,39 @@ const HistorySummary = ({
           pagination={true}
           paginationPageSize={15}
           onGridReady={onGridReady}
-          onRowClicked={() => getOrdersForPeriod()}
+          onRowClicked={getOrdersForPeriod}
           gridOptions={{
             loadingOverlayComponent: LoadingOverlay,
           }}
         ></AgGridReact>
       );
     return null;
+  };
+
+  const renderSalesHistory = () => {
+    if (isLoadingHistory)
+      return <Skeleton variant="rectangular" width={1400} height={250} />;
+
+    if (salesHistory.length > 0) {
+      return (
+        <AgGridReact
+          defaultColDef={{
+            flex: 0.1,
+          }}
+          containerStyle={{
+            height: 250,
+            width: 1400,
+          }}
+          rowData={salesHistory}
+          columnDefs={columnDefsSalesHistory}
+        ></AgGridReact>
+      );
+    }
+    return (
+      <Typography variant="subtitle1" sx={{ pl: 2 }}>
+        No sales history found
+      </Typography>
+    );
   };
 
   return (
@@ -201,7 +376,17 @@ const HistorySummary = ({
         <Box className="ag-theme-alpine" sx={{ width: "fit-content" }}>
           {renderGrid()}
         </Box>
+
+        {visibleHistory && (
+          <Box className="ag-theme-alpine" sx={{ width: "fit-content" }}>
+            <Typography variant="h6" sx={{ pl: 2, pt: 1 }}>
+              Sales History for quarter/period {salesPeriod}
+            </Typography>
+            {renderSalesHistory()}
+          </Box>
+        )}
       </Dialog>
+
       <Card>
         <CardTopHeader title={headerTitle} icon={headerIcon} />
         <CardContent>

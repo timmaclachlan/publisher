@@ -28,6 +28,7 @@ let routeBuilder = (path) => {
     paymentsthisperiod,paymentsprevperiod,paymentstotal,
     paidsalesthisperiod,paidsalesprevperiod,paidsalestotal,
     freesalesthisperiod,freesalesprevperiod,freesalestotal,
+    pagesreadthisperiod,pagesreadprevperiod,pagesreadtotal,
     tax, taxtotal
     FROM ${TABLEQUAL_ROYALITESHISTORY} 
     WHERE authorid='${req.params.id}' 
@@ -79,7 +80,7 @@ let routeBuilder = (path) => {
       req.body.accountno,
       req.body.paypal,
       req.body.active,
-      req.body.notax
+      req.body.notax,
     ];
     return updateQuery(sql, data, res);
   });
@@ -122,7 +123,7 @@ let routeBuilder = (path) => {
       req.body.email2,
       req.body.phonenumber2,
       req.body.notax,
-      req.body.terminated
+      req.body.terminated,
     ];
 
     return updateQuery(sql, data, res);
@@ -167,14 +168,14 @@ function deleteQuery(sql, res) {
   const pool = new Pool();
   console.log("DELETE QUERY:" + sql);
   pool.query(sql, (error) => {
-    if(error) {
+    if (error) {
       console.error(error);
       res.statusCode = 500;
       return res.json({ errors: ["Failed to delete record:" + error] });
     }
     res.statusCode = 200;
     res.json({ message: "success" });
-  })
+  });
 }
 
 module.exports = routeBuilder;
