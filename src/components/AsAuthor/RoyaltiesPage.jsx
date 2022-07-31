@@ -134,16 +134,14 @@ const RoyaltiesPage = () => {
                     <Grid item md={9}>
                       <Typography variant="h6">
                         {getFormattedCurrency(
-                          selectedPeriodIndex > 0
-                            ? royalties[selectedPeriodIndex - 1].balance
-                            : 0
+                          royalties[selectedPeriodIndex + 1].balance
                         )}
                       </Typography>
                     </Grid>
 
                     <Grid item md={3}>
                       <Typography variant="subtitle1">
-                        Royalties this quarter/period
+                        Gross Royalties this quarter
                       </Typography>
                     </Grid>
 
@@ -188,7 +186,7 @@ const RoyaltiesPage = () => {
                           </Stack>
                         </Stack>
                         <Divider orientation="vertical" flexItem />
-                        <Stack spacing={1} sx={{ flex: 0.5 }}>
+                        <Stack spacing={1} sx={{ flex: 0.5, pr: 2 }}>
                           <Typography variant="subtitle2" align="center">
                             Pages Read
                           </Typography>
@@ -208,10 +206,44 @@ const RoyaltiesPage = () => {
                             </Typography>
                           </Stack>
                         </Stack>
+
+                        <Divider orientation="vertical" flexItem />
+                        <Stack spacing={1} sx={{ flex: 0.5 }}>
+                          <Typography variant="subtitle2" align="center">
+                            Free Copies
+                          </Typography>
+                          <Stack direction="row" spacing={2}>
+                            <Typography variant="h6" sx={{ pl: 2 }}>
+                              £0.00
+                            </Typography>
+                            <Typography variant="h6" align="center">
+                              (
+                              {
+                                royalties[selectedPeriodIndex]
+                                  .freesalesthisperiod
+                              }
+                              )
+                            </Typography>
+                          </Stack>
+                        </Stack>
                       </Stack>
                     </Grid>
 
                     <Grid item md={3}></Grid>
+
+                    <Grid item md={3}>
+                      <Typography variant="subtitle1">Tax Withheld</Typography>
+                    </Grid>
+
+                    <Grid item md={3}>
+                      <Typography variant="h6">
+                        {getFormattedCurrency(
+                          royalties[selectedPeriodIndex].tax
+                        )}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item md={6}></Grid>
 
                     <Grid item md={3}>
                       <Typography variant="subtitle1">
@@ -227,22 +259,7 @@ const RoyaltiesPage = () => {
                       </Typography>
                     </Grid>
 
-                    <Grid item md={3}>
-                      <Stack direction="row">
-                        <Stack spacing={1} sx={{ flex: 0.5 }}>
-                          <Typography variant="subtitle2" align="center">
-                            Tax Withheld
-                          </Typography>
-                          <Typography variant="h6" align="center">
-                            {getFormattedCurrency(
-                              royalties[selectedPeriodIndex].tax
-                            )}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                    </Grid>
-
-                    <Grid item md={3}></Grid>
+                    <Grid item md={6}></Grid>
 
                     <Grid item md={3}>
                       <Typography variant="subtitle1">

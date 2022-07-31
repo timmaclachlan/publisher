@@ -113,7 +113,7 @@ const Dashboard = () => {
         <Skeleton
           variant="rectangular"
           animation="wave"
-          width={350}
+          width={550}
           height={300}
         />
       );
@@ -128,7 +128,16 @@ const Dashboard = () => {
                 Royalties
               </StyledTableCell>
               <StyledTableCell padding="none" align="right">
+                Tax
+              </StyledTableCell>
+              <StyledTableCell padding="none" align="right">
+                Net
+              </StyledTableCell>
+              <StyledTableCell padding="none" align="right">
                 Payments
+              </StyledTableCell>
+              <StyledTableCell padding="none" align="right">
+                Tax Payments
               </StyledTableCell>
               <StyledTableCell padding="none" align="right">
                 Balance
@@ -146,7 +155,16 @@ const Dashboard = () => {
                     {getFormattedCurrency(row.royaltiesthisperiod)}
                   </StyledTableCell>
                   <StyledTableCell padding="none" align="right">
+                    {getFormattedCurrency(row.tax)}
+                  </StyledTableCell>
+                  <StyledTableCell padding="none" align="right">
+                    {getFormattedCurrency(row.netroyalties)}
+                  </StyledTableCell>
+                  <StyledTableCell padding="none" align="right">
                     {getFormattedCurrency(row.paymentsthisperiod)}
+                  </StyledTableCell>
+                  <StyledTableCell padding="none" align="right">
+                    {getFormattedCurrency(row.taxpaymentsthisperiod)}
                   </StyledTableCell>
                   <StyledTableCell padding="none" align="right">
                     {getFormattedCurrency(row.balance)}
@@ -349,7 +367,7 @@ const Dashboard = () => {
                 </Card>
               </Grid>
 
-              <Grid item md={3}>
+              <Grid item md={6}>
                 <Card>
                   <CardTopHeader
                     title="Balance History"

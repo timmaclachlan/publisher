@@ -48,7 +48,7 @@ const AuthorView = ({
   isFavorite,
   isOneBookPublished,
   onFavoriteToggle,
-  onCreateLogin
+  onCreateLogin,
 }) => {
   const loading = isEmptyObject(author);
   const navigate = useNavigate();
@@ -269,7 +269,7 @@ const AuthorView = ({
                           tooltipFalse="Author is not retained"
                         />
                       </Stack>
-                      
+
                       <Stack spacing={1} alignItems="center">
                         <ViewChip
                           label="Terminated"
@@ -294,7 +294,6 @@ const AuthorView = ({
                   </CardContent>
                 </Card>
               </Grid>
-
 
               <Grid item md={2}>
                 <Avatar
@@ -428,7 +427,7 @@ const AuthorView = ({
                 </Card>
               </Grid>
 
-              {isOneBookPublished && (
+              {isOneBookPublished && !isEmptyObject(financials) && (
                 <AuthorRoyalties
                   author={author}
                   financials={financials}
